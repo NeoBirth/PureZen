@@ -20,3 +20,8 @@ description = """
 travis-ci = { repository = "NeoBirth/PureZen" }
 
 [dependencies]
+
+[features]
+default = ["std"]
+alloc = []
+std = ["alloc"]

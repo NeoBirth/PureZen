@@ -12,9 +12,10 @@ install:
   - rustup component add clippy
 
 script:
-  - cargo fmt --all -- --check
-  - cargo clippy --all
-  - cargo build --all --release
-  - cargo test --all
-  - cargo test --all --release
+  - cargo fmt -- --check
+  - cargo clippy
+  - cargo build --no-default-features --release
+  - cargo build --release
+  - cargo test
+  - cargo test --release
   - cargo doc --all --no-deps
