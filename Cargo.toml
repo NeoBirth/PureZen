@@ -4,6 +4,7 @@ version     = "0.0.0" # Also update html_root_url in lib.rs when bumping this
 authors     = ["Tony Arcieri <bascule@gmail.com>", "Martin Roth <mhroth@rjdj.me>"]
 license     = "LGPL-3.0"
 edition     = "2018"
+readme      = "README.md"
 repository  = "https://github.com/neobirth/purezen"
 categories  = ["embedded", "multimedia::audio", "no-std"]
 keywords    = ["audio", "music", "puredata", "signal-processing", "sound"]
