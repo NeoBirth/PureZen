@@ -2,7 +2,7 @@
  *  Copyright 2009,2011,2012 Reality Jockey, Ltd.
  *                 info@rjdj.me
  *                 http://rjdj.me/
- * 
+ *
  *  This file is part of ZenGarden.
  *
  *  ZenGarden is free software: you can redistribute it and/or modify
@@ -14,7 +14,7 @@
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU Lesser General Public License for more details.
- *  
+ *
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with ZenGarden.  If not, see <http://www.gnu.org/licenses/>.
  *
@@ -23,16 +23,16 @@
 #include "PdMessage.h"
 #include "utils.h"
 
-void PdMessage::initWithSARb(unsigned int maxElements, char *initString, PdMessage *arguments,
+void PdMessage::init_with_sarb(unsigned int maxElements, char *initString, PdMessage *arguments,
     char *buffer, unsigned int bufferLength) {
   resolveString(initString, arguments, 0, buffer, bufferLength); // resolve string
   initWithString(0.0, maxElements, buffer);
 }
 
-void PdMessage::initWithString(double ts, unsigned int maxElements, char *initString) {
+void PdMessage::init_with_string(double ts, unsigned int maxElements, char *initString) {
   timestamp = ts;
-  
-  char *token = strtok(initString, " ;");  
+
+  char *token = strtok(initString, " ;");
   if (token == NULL || strlen(initString) == 0) {
     initWithTimestampAndBang(ts); // just in case, there is always at least one element in a message
   } else {
@@ -40,12 +40,12 @@ void PdMessage::initWithString(double ts, unsigned int maxElements, char *initSt
     do {
       parseAndSetMessageElement(i++, token);
     } while (((token = strtok(NULL, " ;")) != NULL) && (i < maxElements));
-    
+
     numElements = i;
   }
 }
 
-void PdMessage::parseAndSetMessageElement(unsigned int index, char *token) {
+void PdMessage::parse_and_set_message_element(unsigned int index, char *token) {
   if (utils::is_numeric(token)) {
     setFloat(index, atof(token)); // element is a float
   } else if (!strcmp("!", token) || !strcmp("bang", token)) {
@@ -55,13 +55,13 @@ void PdMessage::parseAndSetMessageElement(unsigned int index, char *token) {
   }
 }
 
-void PdMessage::resolveString(char *initString, PdMessage *arguments, unsigned int offset,
+void PdMessage::resolve_string(char *initString, PdMessage *arguments, unsigned int offset,
     char *buffer, unsigned int bufferLength) {
   int bufferPos = 0;
   int initPos = 0;
   char *argPos = NULL;
   int numCharsWritten = 0;
-  
+
   if (initString == NULL) {
     buffer[0] = '\0'; // a NULL string input yields a string of length zero
   } else if (arguments == NULL) {
@@ -119,7 +119,7 @@ void PdMessage::resolveString(char *initString, PdMessage *arguments, unsigned i
         printf("$var is out of bounds. WTF are you doing?\n");
       }
     }
-    
+
     // no more arguments remaining. copy the remainder of the string including '\0'
     strcpy(buffer + bufferPos, initString + initPos);
   }
@@ -129,11 +129,11 @@ PdMessage::~PdMessage() {
   // nothing to do. Use freeMessage().
 }
 
-unsigned int PdMessage::numBytes() {
-  return PdMessage::numBytes(numElements);
+unsigned int PdMessage::len() {
+  return PdMessage::len(numElements);
 }
 
-void PdMessage::resolveSymbolsToType() {
+void PdMessage::resolve_symbols_to_type() {
   for (int i = 0; i < numElements; i++) {
     if (isSymbol(i)) {
       if (isSymbol(i, "symbol") || isSymbol(i, "s")) {
@@ -158,11 +158,11 @@ int PdMessage::getNumElements() {
   return numElements;
 }
 
-MessageAtom *PdMessage::getElement(unsigned int index) {
+MessageAtom *PdMessage::get_element(unsigned int index) {
   return (&messageAtom)+index;
 }
 
-bool PdMessage::atomIsEqualTo(unsigned int index, MessageAtom *messageAtom) {
+bool PdMessage::atom_is_equal_to(unsigned int index, MessageAtom *messageAtom) {
   MessageAtom *atom = getElement(index);
   if (atom->type == messageAtom->type) {
     switch (atom->type) {
@@ -175,11 +175,11 @@ bool PdMessage::atomIsEqualTo(unsigned int index, MessageAtom *messageAtom) {
   return false;
 }
 
-void PdMessage::setTimestamp(double timestamp) {
+void PdMessage::set_timestamp(double timestamp) {
   this->timestamp = timestamp;
 }
 
-double PdMessage::getTimestamp() {
+double PdMessage::get_timestamp() {
   return timestamp;
 }
 
@@ -187,26 +187,26 @@ double PdMessage::getTimestamp() {
 #pragma mark -
 #pragma mark initWithTimestampeAnd
 
-void PdMessage::initWithTimestampAndNumElements(double aTimestamp, unsigned int numElem) {
+void PdMessage::init_with_timestamp_and_num_elements(double aTimestamp, unsigned int numElem) {
   memset(this, 0, numBytes(numElem)); // clear the entire contents of the message
   timestamp = aTimestamp;
   numElements = numElem;
   setBang(0); // default value
 }
 
-void PdMessage::initWithTimestampAndFloat(double aTimestamp, float constant) {
+void PdMessage::init_with_timestamp_and_float(double aTimestamp, float constant) {
   timestamp = aTimestamp;
   numElements = 1;
   setFloat(0, constant);
 }
 
-void PdMessage::initWithTimestampAndBang(double aTimestamp) {
+void PdMessage::init_with_timestamp_and_bang(double aTimestamp) {
   timestamp = aTimestamp;
   numElements = 1;
   setBang(0);
 }
 
-void PdMessage::initWithTimestampAndSymbol(double aTimestamp, char *symbol) {
+void PdMessage::init_with_timestamp_and_symbol(double aTimestamp, char *symbol) {
   timestamp = aTimestamp;
   numElements = 1;
   setSymbol(0, symbol);
@@ -216,7 +216,7 @@ void PdMessage::initWithTimestampAndSymbol(double aTimestamp, char *symbol) {
 #pragma mark -
 #pragma mark isElement
 
-bool PdMessage::isFloat(unsigned int index) {
+bool PdMessage::is_float(unsigned int index) {
   if (index < numElements) {
     return ((&messageAtom)[index].type == FLOAT);
   } else {
@@ -224,7 +224,7 @@ bool PdMessage::isFloat(unsigned int index) {
   }
 }
 
-bool PdMessage::isSymbol(unsigned int index) {
+bool PdMessage::is_symbol(unsigned int index) {
   if (index < numElements) {
     return ((&messageAtom)[index].type == SYMBOL);
   } else {
@@ -232,7 +232,7 @@ bool PdMessage::isSymbol(unsigned int index) {
   }
 }
 
-bool PdMessage::isSymbol(unsigned int index, const char *test) {
+bool PdMessage::is_symbol_with_test(unsigned int index, const char *test) {
   if (index < numElements) {
     MessageAtom messageElement = (&messageAtom)[index];
     if (messageElement.type == SYMBOL) {
@@ -245,7 +245,7 @@ bool PdMessage::isSymbol(unsigned int index, const char *test) {
   }
 }
 
-bool PdMessage::isBang(unsigned int index) {
+bool PdMessage::is_bang(unsigned int index) {
   if (index < numElements) {
     return ((&messageAtom)[index].type == BANG);
   } else {
@@ -253,7 +253,7 @@ bool PdMessage::isBang(unsigned int index) {
   }
 }
 
-bool PdMessage::hasFormat(const char *format) {
+bool PdMessage::has_format(const char *format) {
   if (format == NULL) return false;
   if (strlen(format) != numElements) return false;
   for (int i = 0; i < numElements; i++) {
@@ -267,7 +267,7 @@ bool PdMessage::hasFormat(const char *format) {
   return true;
 }
 
-MessageElementType PdMessage::getType(unsigned int index) {
+MessageElementType PdMessage::get_type(unsigned int index) {
   if (index < numElements) {
     return (&messageAtom)[index].type;
   } else {
@@ -279,35 +279,35 @@ MessageElementType PdMessage::getType(unsigned int index) {
 #pragma mark -
 #pragma mark get/setElement
 
-float PdMessage::getFloat(unsigned int index) {
+float PdMessage::get_float(unsigned int index) {
   return (&messageAtom)[index].constant;
 }
 
-void PdMessage::setFloat(unsigned int index, float value) {
+void PdMessage::set_float(unsigned int index, float value) {
   (&messageAtom)[index].type = FLOAT;
   (&messageAtom)[index].constant = value;
 }
 
-char *PdMessage::getSymbol(unsigned int index) {
+char *PdMessage::get_symbol(unsigned int index) {
   return (&messageAtom)[index].symbol;
 }
 
-void PdMessage::setSymbol(unsigned int index, char *symbol) {
+void PdMessage::set_symbol(unsigned int index, char *symbol) {
   (&messageAtom)[index].type = SYMBOL;
   (&messageAtom)[index].symbol = symbol;
 }
 
-void PdMessage::setBang(unsigned int index) {
+void PdMessage::set_bang(unsigned int index) {
   (&messageAtom)[index].type = BANG;
   (&messageAtom)[index].symbol = NULL;
 }
 
-void PdMessage::setAnything(unsigned int index) {
+void PdMessage::set_anything(unsigned int index) {
   (&messageAtom)[index].type = ANYTHING;
   (&messageAtom)[index].symbol = NULL;
 }
 
-void PdMessage::setList(unsigned int index) {
+void PdMessage::set_list(unsigned int index) {
   (&messageAtom)[index].type = LIST;
   (&messageAtom)[index].symbol = NULL;
 }
@@ -315,7 +315,7 @@ void PdMessage::setList(unsigned int index) {
 
 #pragma mark - copy/free
 
-PdMessage *PdMessage::copyToHeap() {
+PdMessage *PdMessage::copy_to_heap() {
   PdMessage *pdMessage = (PdMessage *) malloc(numBytes());
   memcpy(pdMessage, this, numBytes()); // copy entire structure (but symbol pointers must be replaced)
   for (int i = 0; i < numElements; i++) {
@@ -326,7 +326,7 @@ PdMessage *PdMessage::copyToHeap() {
   return pdMessage;
 }
 
-void PdMessage::freeMessage() {
+void PdMessage::free_message() {
   for (int i = 0; i < numElements; i++) {
     if (isSymbol(i)) {
       free(getSymbol(i));
@@ -339,13 +339,13 @@ void PdMessage::freeMessage() {
 #pragma mark -
 #pragma mark toString
 
-char *PdMessage::toString() {
+char *PdMessage::to_string() {
   // http://stackoverflow.com/questions/295013/using-sprintf-without-a-manually-allocated-buffer
   int lengths[numElements]; // how long is the string of each atom
   char *finalString; // the final buffer we will pass back after concatenating all strings - user should free it
   int size = 0; // the total length of our final buffer
   int pos = 0;
-  
+
   // loop through every element in our list of atoms
   // first loop figures out how long our buffer should be
   // chrism: apparently this might fail under MSVC because of snprintf(NULL) - do we care?
@@ -360,7 +360,7 @@ char *PdMessage::toString() {
     // total length of our string is each atom plus a space, or \0 on the end
     size += lengths[i] + 1;
   }
-  
+
   // now we do the piecewise concatenation into our final string
   finalString = (char *) malloc(size * sizeof(char));
   for (int i = 0; i < numElements; i++) {

@@ -112,7 +112,7 @@ void MessageMessageBox::processMessage(int inletIndex, PdMessage *message) {
       if (messageTemplate->isSymbol(i)) {
         char *buffer = (char *) alloca(RES_BUFFER_LENGTH * sizeof(char));
         // TODO(mhroth): resolve string, but may be in stack buffer
-        PdMessage::resolveString(messageTemplate->getSymbol(i), message, 1, buffer, RES_BUFFER_LENGTH);
+        PdMessage::resolve_string(messageTemplate->getSymbol(i), message, 1, buffer, RES_BUFFER_LENGTH);
         outgoingMessage->parseAndSetMessageElement(i, buffer); // buffer is resolved to float or string
       }
     }
@@ -123,7 +123,7 @@ void MessageMessageBox::processMessage(int inletIndex, PdMessage *message) {
   for (int i = 0; i < remoteMessageList.size(); i++) {
     MessageNamedDestination namedDestination = remoteMessageList.at(i);
 
-    PdMessage::resolveString(namedDestination.first, message, 1, resolvedName, RES_BUFFER_LENGTH);
+    PdMessage::resolve_string(namedDestination.first, message, 1, resolvedName, RES_BUFFER_LENGTH);
     
     PdMessage *messageTemplate = namedDestination.second;
     int numElements = messageTemplate->getNumElements();
@@ -133,7 +133,7 @@ void MessageMessageBox::processMessage(int inletIndex, PdMessage *message) {
       if (messageTemplate->isSymbol(i)) {
         char *buffer = (char *) alloca(RES_BUFFER_LENGTH * sizeof(char));
         // TODO(mhroth): resolve string, but may be in stack buffer
-        PdMessage::resolveString(messageTemplate->getSymbol(i), message, 1, buffer, RES_BUFFER_LENGTH);
+        PdMessage::resolve_string(messageTemplate->getSymbol(i), message, 1, buffer, RES_BUFFER_LENGTH);
         outgoingMessage->setSymbol(i, buffer);
       }
     }

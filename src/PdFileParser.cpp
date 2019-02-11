@@ -183,7 +183,7 @@ PdGraph *PdFileParser::execute(PdMessage *initMsg, PdGraph *graph, PdContext *co
         char *objectLabel = strtok(NULL, " ;\r"); // delimit with " " or ";"
         
         char resBufferLabel[OBJECT_LABEL_RESOLUTION_BUFFER_LENGTH];
-        PdMessage::resolveString(objectLabel, graph->getArguments(), 0,
+        PdMessage::resolve_string(objectLabel, graph->getArguments(), 0,
           resBufferLabel, OBJECT_LABEL_RESOLUTION_BUFFER_LENGTH); // object labels are always strings
                                                                   // even if they are numbers, e.g. "1"
         

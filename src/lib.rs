@@ -32,9 +32,11 @@
 #![deny(
     warnings,
     missing_docs,
+    trivial_casts,
+    trivial_numeric_casts,
+    unsafe_code,
     unused_import_braces,
-    unused_qualifications,
-    trivial_casts
+    unused_qualifications
 )]
 #![forbid(unsafe_code)]
 #![doc(html_root_url = "https://docs.rs/purezen/0.0.0")]
