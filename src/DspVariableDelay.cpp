@@ -31,7 +31,7 @@ MessageObject *DspVariableDelay::newObject(PdMessage *initMessage, PdGraph *grap
 
 DspVariableDelay::DspVariableDelay(PdMessage *initMessage, PdGraph *graph) : DelayReceiver(0, 1, 0, 1, graph) {
   if (initMessage->isSymbol(0)) {
-    name = StaticUtils::copyString(initMessage->getSymbol(0));
+    name = utils::copy_string(initMessage->getSymbol(0));
     sampleRate = graph->getSampleRate();
   } else {
     graph->printErr("vd~ requires the name of a delayline. None given.");
@@ -54,7 +54,7 @@ void DspVariableDelay::processDspWithIndex(int fromIndex, int toIndex) {
   float xArray[blockSizeInt];
   float targetIndexBaseArray[blockSizeInt];
   
-  // calculate delay in samples (vector version of StaticUtils::millisecondsToSamples)
+  // calculate delay in samples (vector version of utils::millisecondsToSamples)
   float samplesPerMillisecond = sampleRate / 1000.0f;
   vDSP_vsmul(dspBufferAtInlet[0], 1, &samplesPerMillisecond, xArray, 1, blockSizeInt);
   
@@ -77,7 +77,7 @@ void DspVariableDelay::processDspWithIndex(int fromIndex, int toIndex) {
   #else
   float *inputbuffer = dspBufferAtInlet[0];
   for (int i = 0; i < blockSizeInt; i++, targetIndexBase+=1.0f) {
-    float delayInSamples = StaticUtils::millisecondsToSamples(inputbuffer[i], sampleRate);
+    float delayInSamples = utils::millisecondsToSamples(inputbuffer[i], sampleRate);
     if (delayInSamples < 0.0f) {
       delayInSamples = 0.0f;
     } else if (delayInSamples > bufferLengthFloat) {

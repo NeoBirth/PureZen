@@ -32,7 +32,7 @@ MessageObject *MessageTable::newObject(PdMessage *initMessage, PdGraph *graph) {
 
 MessageTable::MessageTable(PdMessage *initMessage, PdGraph *graph) : RemoteMessageReceiver(0, 0, graph) {
   if (initMessage->isSymbol(0)) {
-    name = StaticUtils::copyString(initMessage->getSymbol(0));
+    name = utils::copy_string(initMessage->getSymbol(0));
     // by default, the buffer length is 1024. The buffer should never be NULL.
     bufferLength = initMessage->isFloat(1) ? (int) initMessage->getFloat(1) : DEFAULT_BUFFER_LENGTH;
     buffer = (float *) calloc(bufferLength, sizeof(float));

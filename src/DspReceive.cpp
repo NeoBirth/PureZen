@@ -30,7 +30,7 @@ MessageObject *DspReceive::newObject(PdMessage *initMessage, PdGraph *graph) {
 
 DspReceive::DspReceive(PdMessage *initMessage, PdGraph *graph) : DspObject(1, 0, 0, 1, graph) {
   if (initMessage->isSymbol(0)) {
-    name = StaticUtils::copyString(initMessage->getSymbol(0));
+    name = utils::copy_string(initMessage->getSymbol(0));
     dspBufferAtOutlet[0] = ALLOC_ALIGNED_BUFFER(graph->getBlockSize() * sizeof(float));
   } else {
     name = NULL;

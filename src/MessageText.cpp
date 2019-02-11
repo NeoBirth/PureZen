@@ -27,7 +27,7 @@ MessageObject *MessageText::newObject(PdMessage *initMessage, PdGraph *graph) {
 }
 
 MessageText::MessageText(PdMessage *initMessage, PdGraph *graph) : MessageObject(0, 0, graph) {
-  comment = initMessage->isSymbol(0) ? StaticUtils::copyString(initMessage->getSymbol(0)) : NULL;
+  comment = initMessage->isSymbol(0) ? utils::copy_string(initMessage->getSymbol(0)) : NULL;
 }
 
 MessageText::~MessageText() {

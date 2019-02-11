@@ -27,7 +27,7 @@ MessageObject *MessageMakefilename::newObject(PdMessage *initMessage, PdGraph *g
 }
 
 MessageMakefilename::MessageMakefilename(PdMessage *initMessage, PdGraph *graph) : MessageObject(1, 1, graph) {
-  format = StaticUtils::copyString(initMessage->isSymbol(0) ? initMessage->getSymbol(0) : "");
+  format = utils::copy_string(initMessage->isSymbol(0) ? initMessage->getSymbol(0) : "");
 }
 
 MessageMakefilename::~MessageMakefilename() {
@@ -48,7 +48,7 @@ void MessageMakefilename::processMessage(int inletIndex, PdMessage *message) {
       case SYMBOL: {
         if (message->isSymbol(0, "set") && message->isSymbol(1)) {
           free(format);
-          format = StaticUtils::copyString(message->getSymbol(1));
+          format = utils::copy_string(message->getSymbol(1));
         } else {
           char str[snprintf(NULL, 0, format, message->getSymbol(0))+1];
           snprintf(str, sizeof(str), format, message->getSymbol(0));

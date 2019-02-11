@@ -28,7 +28,7 @@ MessageObject *MessageSymbol::newObject(PdMessage *initMessage, PdGraph *graph) 
 
 MessageSymbol::MessageSymbol(PdMessage *initMessage, PdGraph *graph) : MessageObject(2, 1, graph) {
   if (initMessage->isSymbol(0)) {
-    copyString(initMessage->getSymbol(0));
+    copy_string(initMessage->getSymbol(0));
   } else {
     memset(symbol, 0, SYMBOL_BUFFER_LENGTH * sizeof(char));
   }
@@ -38,7 +38,7 @@ MessageSymbol::~MessageSymbol() {
   // nothing to do
 }
 
-bool MessageSymbol::copyString(const char *s) {
+bool MessageSymbol::copy_string(const char *s) {
   if (strlen(s) < SYMBOL_BUFFER_LENGTH) {
     strcpy(symbol, s);
     return true;
@@ -52,7 +52,7 @@ void MessageSymbol::processMessage(int inletIndex, PdMessage *message) {
     case 0: {
       switch (message->getType(0)) {
         case SYMBOL: {
-          copyString(message->getSymbol(0));
+          copy_string(message->getSymbol(0));
           // allow fallthrough
         }
         case BANG: {
@@ -67,7 +67,7 @@ void MessageSymbol::processMessage(int inletIndex, PdMessage *message) {
     }
     case 1: {
       if (message->isSymbol(0)) {
-        copyString(message->getSymbol(0));
+        copy_string(message->getSymbol(0));
       }
       break;
     }

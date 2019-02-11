@@ -42,17 +42,17 @@ MessageObject *MessageMessageBox::newObject(PdMessage *initString, PdGraph *grap
  */
 MessageMessageBox::MessageMessageBox(char *initString, PdGraph *graph) : MessageObject(1, 1, graph) {
   // parse the entire initialisation string
-  vector<string> messageInitListAll = StaticUtils::tokenizeString(initString, "\\;");
+  vector<string> messageInitListAll = utils::tokenize_string(initString, "\\;");
   
   // parse the first "message" for individual messages that should be sent from the outlet 
-  vector<string> messageInitList = StaticUtils::tokenizeString((char *) messageInitListAll[0].c_str(), "\\,");
+  vector<string> messageInitList = utils::tokenize_string((char *) messageInitListAll[0].c_str(), "\\,");
   for (int i = 0; i < messageInitList.size(); i++) {
     string initString = messageInitList[i];
     int maxElements = (initString.size()/2)+1;
     // NOTE(mhroth): though this is alloca is in a for loop, it is not expected that the compiler
     // will do anything funny, like unrolling the loop, thereby causing unexpected stack overflows
     PdMessage *message = PD_MESSAGE_ON_STACK(maxElements);
-    // StaticUtils::tokenizeString does not remove the trailing ";" from the
+    // utils::tokenize_string does not remove the trailing ";" from the
     // original string. We should not process it because it will result in an empty message. 
     if (strcmp(initString.c_str(), ";") != 0) {
       char str[initString.size()+1]; strcpy(str, initString.c_str());
@@ -75,7 +75,7 @@ MessageMessageBox::MessageMessageBox(char *initString, PdGraph *graph) : Message
       char str[messageString.size()+1]; strcpy(str, messageString.c_str());
       message->initWithString(0.0, maxElements, str);
       MessageNamedDestination namedDestination = 
-          make_pair(StaticUtils::copyString(name.c_str()), message->copyToHeap());
+          make_pair(utils::copy_string(name.c_str()), message->copyToHeap());
       remoteMessageList.push_back(namedDestination);
     }
   }

@@ -22,7 +22,7 @@
 
 #include <string.h>
 #include "DeclareList.h"
-#include "StaticUtils.h"
+#include "utils.h"
 
 DeclareList::DeclareList() {
   declareList = list<string>();

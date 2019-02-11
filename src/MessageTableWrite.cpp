@@ -28,7 +28,7 @@ MessageObject *MessageTableWrite::newObject(PdMessage *initMessage, PdGraph *gra
 }
 
 MessageTableWrite::MessageTableWrite(PdMessage *initMessage, PdGraph *graph) : MessageObject(2, 0, graph) {
-  name = initMessage->isSymbol(0) ? StaticUtils::copyString(initMessage->getSymbol(0)) : NULL;
+  name = initMessage->isSymbol(0) ? utils::copy_string(initMessage->getSymbol(0)) : NULL;
   table = NULL;
   index = 0;
 }
@@ -66,7 +66,7 @@ void MessageTableWrite::processMessage(int inletIndex, PdMessage *message) {
         case SYMBOL: {
           if (message->isSymbol(0, "set") && message->isSymbol(1)) {
             free(name);
-            name = StaticUtils::copyString(message->getSymbol(1));
+            name = utils::copy_string(message->getSymbol(1));
             table = graph->getTable(name);
           }
           break;

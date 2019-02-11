@@ -64,8 +64,8 @@ void MessagePack::processMessage(int inletIndex, PdMessage *message) {
         onBangAtInlet(inletIndex, message->getTimestamp());
       } else {
         graph->printErr("pack: type mismatch: %s expected but got %s at inlet %i.\n",
-            StaticUtils::messageElementTypeToString(outgoingMessage->getType(inletIndex)),
-            StaticUtils::messageElementTypeToString(message->getType(0)),
+            utils::message_element_type_to_string(outgoingMessage->getType(inletIndex)),
+            utils::message_element_type_to_string(message->getType(0)),
             inletIndex + 1);
         return;
       }
@@ -77,12 +77,12 @@ void MessagePack::processMessage(int inletIndex, PdMessage *message) {
         // replaced often
         free(outgoingMessage->getSymbol(inletIndex)); // free the preexisting symbol on the heap
         // create a new symbol on the heap and store it in the outgoing message
-        outgoingMessage->setSymbol(inletIndex, StaticUtils::copyString(message->getSymbol(0)));
+        outgoingMessage->setSymbol(inletIndex, utils::copy_string(message->getSymbol(0)));
         onBangAtInlet(inletIndex, message->getTimestamp());
       } else {
         graph->printErr("pack: type mismatch: %s expected but got %s at inlet %i.\n",
-            StaticUtils::messageElementTypeToString(outgoingMessage->getType(inletIndex)),
-            StaticUtils::messageElementTypeToString(message->getType(0)),
+            utils::message_element_type_to_string(outgoingMessage->getType(inletIndex)),
+            utils::message_element_type_to_string(message->getType(0)),
             inletIndex + 1);
         return;
       }

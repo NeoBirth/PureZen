@@ -113,7 +113,7 @@ void DspVariableLine::updatePathWithMessage(PdMessage *message) {
     slope = 0.0f;
   } else {
     target = message->getFloat(0);
-    numSamplesToTarget = StaticUtils::millisecondsToSamples(message->getFloat(1), graph->getSampleRate());
+    numSamplesToTarget = utils::millisecondsToSamples(message->getFloat(1), graph->getSampleRate());
     if (numSamplesToTarget == 0.0f) {
       lastOutputSample = target;
       slope = 0.0f;

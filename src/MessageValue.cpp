@@ -29,7 +29,7 @@ MessageObject *MessageValue::newObject(PdMessage *initMessage, PdGraph *graph) {
 
 MessageValue::MessageValue(PdMessage *initMessage, PdGraph *graph) : MessageObject(1, 1, graph) {
   if (initMessage->isSymbol(0)) {
-    name = StaticUtils::copyString(initMessage->getSymbol(0));
+    name = utils::copy_string(initMessage->getSymbol(0));
   } else {
     name = NULL;
     graph->printErr("Object \"value\" MUST be initialised with a name.");

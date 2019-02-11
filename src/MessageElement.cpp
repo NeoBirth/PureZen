@@ -23,7 +23,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "MessageElement.h"
-#include "StaticUtils.h"
+#include "utils.h"
 
 MessageElement::MessageElement() {
   constant = 0.0f;

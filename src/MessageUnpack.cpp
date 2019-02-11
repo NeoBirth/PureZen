@@ -103,8 +103,8 @@ void MessageUnpack::processMessage(int inletIndex, PdMessage *message) {
       }
     } else {
       graph->printErr("unpack: type mismatch: %s expected but got %s.",
-          StaticUtils::messageElementTypeToString(elementType),
-          StaticUtils::messageElementTypeToString(message->getType(i)));
+          utils::message_element_type_to_string(elementType),
+          utils::message_element_type_to_string(message->getType(i)));
     }
   }
 }

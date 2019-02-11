@@ -10,7 +10,7 @@ Runtime for the [Pure Data] (Pd) audio programming language, implemented as an
 extensible audio library allowing full control over signal processing, message
 passing, and graph manipulation.
 
-Implemented in Rust with intent to target embedded (i.e. `no_std`) platforms.
+Written in Rust with intent to target embedded (i.e. `no_std`) platforms.
 Adapted from [ZenGarden], which was written in C++.
 
 ## Concepts
@@ -72,7 +72,7 @@ For more information, please see [CODE_OF_CONDUCT.md].
 
 ## License
 
-Copyright © 2009-2019 Tony Arcieri, Reality Jockey, Ltd.
+Copyright © 2009-2019 NeoBirth Developers, Reality Jockey, Ltd.
 
 **PureZen** is licensed under the [LGPL 3.0], which means:
 

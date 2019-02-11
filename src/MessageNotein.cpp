@@ -38,7 +38,7 @@ MessageNotein::MessageNotein(PdMessage *initMessage, PdGraph *graph) :
   } else {
     // no channel provided, use omni
     channel = -1;
-    name = StaticUtils::copyString((char *) "zg_notein_omni");
+    name = utils::copy_string((char *) "zg_notein_omni");
   }
 }
 
