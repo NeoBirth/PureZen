@@ -28,7 +28,7 @@ MessageObject *MessageTableRead::newObject(PdMessage *initMessage, PdGraph *grap
 }
 
 MessageTableRead::MessageTableRead(PdMessage *initMessage, PdGraph *graph) : MessageObject(1, 1, graph) {
-  name = initMessage->isSymbol(0) ? StaticUtils::copyString(initMessage->getSymbol(0)) : NULL;
+  name = initMessage->isSymbol(0) ? utils::copy_string(initMessage->getSymbol(0)) : NULL;
   table = NULL; // registration process will set the correct pointer
 }
 
@@ -62,7 +62,7 @@ void MessageTableRead::processMessage(int inletIndex, PdMessage *message) {
     case SYMBOL: {
       if (message->isSymbol(0, "set") && message->isSymbol(1)) {
         free(name);
-        name = StaticUtils::copyString(message->getSymbol(1));
+        name = utils::copy_string(message->getSymbol(1));
         table = graph->getTable(name);
       }
       break;

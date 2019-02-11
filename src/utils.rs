@@ -25,17 +25,17 @@
 #include <stdlib.h>
 #include <string.h>
 #include "regex.h"
-#include "StaticUtils.h"
+#include "utils.h"
 
-StaticUtils::StaticUtils() {
+utils::utils() {
   // nothing to do
 }
 
-StaticUtils::~StaticUtils() {
+utils::~utils() {
   // nothing to do
 }
 
-char *StaticUtils::copyString(const char *str) {
+char *utils::copy_string(const char *str) {
   if (str == NULL) {
     return NULL;
   } else {
@@ -45,7 +45,7 @@ char *StaticUtils::copyString(const char *str) {
   }
 }
 
-bool StaticUtils::isNumeric(const char *str) {
+bool utils::is_numeric(const char *str) {
   // http://www.regular-expressions.info/floatingpoint.html
   regex_t preg;
   regcomp(&preg, "^[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?$", REG_NOSUB | REG_EXTENDED);
@@ -54,7 +54,7 @@ bool StaticUtils::isNumeric(const char *str) {
   return isFloat;
 }
 
-char *StaticUtils::concatStrings(const char *path0, const char *path1) {
+char *utils::concat_strings(const char *path0, const char *path1) {
   if (path0 == NULL || path1 == NULL) {
     return NULL;
   } else {
@@ -65,7 +65,7 @@ char *StaticUtils::concatStrings(const char *path0, const char *path1) {
   }
 }
 
-float StaticUtils::sineApprox(float x) {
+float utils::sine_approx(float x) {
   const static float a = 4.0f / M_PI; // 1.273239544735163
   const static float b = 4.0f / (M_PI * M_PI); // 0.405284734569351
   return (a * x) - (b * x) * fabsf(x);
@@ -75,7 +75,7 @@ float StaticUtils::sineApprox(float x) {
   //return (1.273239544735163f * x) - (0.405284734569351f * x) * (*(float *)&y);
 }
 
-vector<string> StaticUtils::tokenizeString(const char *str, const char *delim) {
+vector<string> utils::tokenize_string(const char *str, const char *delim) {
   vector<string> tokenizedStrings = vector<string>();
   string s0 = string(str);
   
@@ -95,7 +95,7 @@ vector<string> StaticUtils::tokenizeString(const char *str, const char *delim) {
   return tokenizedStrings;
 }
 
-const char *StaticUtils::messageElementTypeToString(MessageElementType type) {
+const char *utils::message_element_type_to_string(MessageElementType type) {
   switch (type) {
     case FLOAT: return "FLOAT";
     case SYMBOL: return "SYMBOL";
@@ -106,7 +106,7 @@ const char *StaticUtils::messageElementTypeToString(MessageElementType type) {
   }
 }
 
-bool StaticUtils::fileExists(const char *path) {
+bool utils::file_exists(const char *path) {
   FILE *fp = fopen(path, "r");
   if (fp != NULL) {
     fclose(fp);

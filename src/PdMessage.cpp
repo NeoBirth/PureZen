@@ -21,7 +21,7 @@
  */
 
 #include "PdMessage.h"
-#include "StaticUtils.h"
+#include "utils.h"
 
 void PdMessage::initWithSARb(unsigned int maxElements, char *initString, PdMessage *arguments,
     char *buffer, unsigned int bufferLength) {
@@ -46,7 +46,7 @@ void PdMessage::initWithString(double ts, unsigned int maxElements, char *initSt
 }
 
 void PdMessage::parseAndSetMessageElement(unsigned int index, char *token) {
-  if (StaticUtils::isNumeric(token)) {
+  if (utils::is_numeric(token)) {
     setFloat(index, atof(token)); // element is a float
   } else if (!strcmp("!", token) || !strcmp("bang", token)) {
     setBang(index); // element is a bang
@@ -320,7 +320,7 @@ PdMessage *PdMessage::copyToHeap() {
   memcpy(pdMessage, this, numBytes()); // copy entire structure (but symbol pointers must be replaced)
   for (int i = 0; i < numElements; i++) {
     if (isSymbol(i)) {
-      pdMessage->setSymbol(i, StaticUtils::copyString(getSymbol(i)));
+      pdMessage->setSymbol(i, utils::copy_string(getSymbol(i)));
     }
   }
   return pdMessage;

@@ -33,7 +33,7 @@
 #include "MessageTableWrite.h"
 #include "PdContext.h"
 #include "PdGraph.h"
-#include "StaticUtils.h"
+#include "utils.h"
 
 
 #pragma mark - Constructor/Deconstructor
@@ -352,10 +352,10 @@ void PdGraph::attachToContext(bool isAttached) {
 
 char *PdGraph::resolveFullPath(const char *filename) {
   if (DeclareList::isFullPath(filename)) {
-    return StaticUtils::fileExists(filename) ? StaticUtils::copyString(filename) : NULL;
+    return utils::file_exists(filename) ? utils::copy_string(filename) : NULL;
   } else {
     string directory = findFilePath(filename);
-    return (!directory.empty()) ? StaticUtils::concatStrings(directory.c_str(), filename) : NULL;
+    return (!directory.empty()) ? utils::concat_strings(directory.c_str(), filename) : NULL;
   }
 }
 
@@ -363,7 +363,7 @@ string PdGraph::findFilePath(const char *filename) {
   for (list<string>::iterator it = declareList->getIterator(); it != declareList->getEnd(); ++it) {
     string directory = *it;
     string fullPath = directory + string(filename);
-    if (StaticUtils::fileExists(fullPath.c_str())) {
+    if (utils::file_exists(fullPath.c_str())) {
       return directory;
     }
   }

@@ -38,7 +38,7 @@ void zg_remove_graph(PdContext *context, PdGraph *graph) {
 */
 
 ZGObject *zg_graph_add_new_object(PdGraph *graph, const char *objectString, float canvasX, float canvasY) {
-  char *objectStringCopy = StaticUtils::copyString(objectString);
+  char *objectStringCopy = utils::copy_string(objectString);
   char *objectLabel = strtok(objectStringCopy, " ;");
   char *initString = strtok(NULL, ";");
   char resolutionBuffer[256];
@@ -455,7 +455,7 @@ void zg_message_set_float(PdMessage *message, unsigned int index, float f) {
 void zg_message_set_symbol(PdMessage *message, unsigned int index, const char *s) {
   char *symbol = message->getSymbol(index);
   free(symbol); // free it if it is not already NULL
-  message->setSymbol(index, StaticUtils::copyString((char *) s));
+  message->setSymbol(index, utils::copy_string((char *) s));
 }
 
 void zg_message_set_bang(PdMessage *message, unsigned int index) {

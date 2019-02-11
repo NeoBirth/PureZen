@@ -29,7 +29,7 @@ MessageObject *DspTableRead::newObject(PdMessage *initMessage, PdGraph *graph) {
 }
 
 DspTableRead::DspTableRead(PdMessage *initMessage, PdGraph *graph) : DspObject(2, 1, 0, 1, graph) {
-  name = initMessage->isSymbol(0) ? StaticUtils::copyString(initMessage->getSymbol(0)) : NULL;
+  name = initMessage->isSymbol(0) ? utils::copy_string(initMessage->getSymbol(0)) : NULL;
   table = NULL;
   offset = 0.0f;
 }
@@ -48,7 +48,7 @@ void DspTableRead::processMessage(int inletIndex, PdMessage *message) {
       if (message->isSymbol(0, "set") && message->isSymbol(1)) {
         // change the table from which this object reads
         free(name);
-        name = StaticUtils::copyString(message->getSymbol(1));
+        name = utils::copy_string(message->getSymbol(1));
         table = graph->getTable(name);
       }
       break;

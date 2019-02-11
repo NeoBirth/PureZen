@@ -28,7 +28,7 @@ MessageObject *DspPrint::newObject(PdMessage *initMessage, PdGraph *graph) {
 }
 
 DspPrint::DspPrint(PdMessage *initMessage, PdGraph *graph) : DspObject(1, 1, 0, 0, graph) {
-  name = StaticUtils::copyString(initMessage->isSymbol(0) ? initMessage->getSymbol(0) : (char *) "print~");
+  name = utils::copy_string(initMessage->isSymbol(0) ? initMessage->getSymbol(0) : (char *) "print~");
 }
 
 DspPrint::~DspPrint() {

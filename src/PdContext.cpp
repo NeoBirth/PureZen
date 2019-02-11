@@ -225,7 +225,7 @@ MessageObject *PdContext::newObject(const char *objectLabel, PdMessage *initMess
   MessageObject *messageObject = objectFactoryMap->newObject(objectLabel, initMessage, graph);
   if (messageObject != NULL) {
     return messageObject;
-  } else if(StaticUtils::isNumeric(objectLabel)) {
+  } else if(utils::is_numeric(objectLabel)) {
     // special case for constructing a float object from a number
     PdMessage *initMsg = PD_MESSAGE_ON_STACK(1);
     initMsg->initWithTimestampAndFloat(0.0, atof(objectLabel));

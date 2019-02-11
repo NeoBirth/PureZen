@@ -29,7 +29,7 @@ MessageObject *DspTablePlay::newObject(PdMessage *initMessage, PdGraph *graph) {
 }
 
 DspTablePlay::DspTablePlay(PdMessage *initMessage, PdGraph *graph) : DspObject(1, 0, 2, 1, graph) {
-  name = initMessage->isSymbol(0) ? StaticUtils::copyString(initMessage->getSymbol(0)) : NULL;
+  name = initMessage->isSymbol(0) ? utils::copy_string(initMessage->getSymbol(0)) : NULL;
   table = NULL;
   outgoingMessage = NULL;
   currentTableIndex = 0;
