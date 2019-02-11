@@ -64,6 +64,12 @@ Graph attachement generally involves registering global senders and receivers
 and ensuring that existing objects are aware of the new ones. Similarly, a
 graph can be unattached from a context, leaving it in memory yet inert.
 
+## Code of Conduct
+
+We abide by the [Contributor Covenant][cc] and ask that you do as well.
+
+For more information, please see [CODE_OF_CONDUCT.md].
+
 ## License
 
 Copyright © 2009-2019 Tony Arcieri, Reality Jockey, Ltd.
@@ -86,4 +92,6 @@ Copyright © 2009-2019 Tony Arcieri, Reality Jockey, Ltd.
 [gitter-link]: https://gitter.im/NeoBirth/PureZen
 [Pure Data]: https://puredata.info/
 [ZenGarden]: https://github.com/mhroth/ZenGarden
+[cc]: https://contributor-covenant.org
+[CODE_OF_CONDUCT.md]: https://github.com/NeoBirth/PureZen/blob/master/CODE_OF_CONDUCT.md
 [LGPL 3.0]: https://www.gnu.org/licenses/lgpl-3.0.en.html
