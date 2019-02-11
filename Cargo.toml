@@ -15,4 +15,7 @@ description = """
               creating interactive music and multimedia works.
               """
 
+[badges]
+travis-ci = { repository = "NeoBirth/PureZen" }
+
 [dependencies]
