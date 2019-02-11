@@ -1,5 +1,11 @@
 # PureZen
 
+[![Crate][crate-image]][crate-link]
+[![Docs][docs-image]][docs-link]
+[![Build Status][build-image]][build-link]
+[![LGPL 3.0 licensed][license-image]][license-link]
+[![Gitter Chat][gitter-image]][gitter-link]
+
 Runtime for the [Pure Data] (Pd) audio programming language, implemented as an
 extensible audio library allowing full control over signal processing, message
 passing, and graph manipulation.
@@ -60,7 +66,7 @@ graph can be unattached from a context, leaving it in memory yet inert.
 
 ## License
 
-Copyright © 2009-2019 Tony Arcieri, Martin Roth.
+Copyright © 2009-2019 Tony Arcieri, Reality Jockey, Ltd.
 
 **PureZen** is licensed under the [LGPL 3.0], which means:
 
@@ -68,6 +74,16 @@ Copyright © 2009-2019 Tony Arcieri, Martin Roth.
 - If you extend the library (not including externals), you must make that code public.
 - You may use this library for any application, including commerical ones.
 
+[crate-image]: https://img.shields.io/crates/v/purezen.svg
+[crate-link]: https://crates.io/crates/purezen
+[docs-image]: https://docs.rs/purezen/badge.svg
+[docs-link]: https://docs.rs/purezen/
+[build-image]: https://secure.travis-ci.org/NeoBirth/PureZen.svg?branch=master
+[build-link]: https://travis-ci.org/NeoBirth/PureZen
+[license-image]: https://img.shields.io/badge/license-LGPL%203.0-blue.svg
+[license-link]: https://github.com/NeoBirth/PureZen/blob/master/COPYING.LESSER
+[gitter-image]: https://badges.gitter.im/NeoBirth/PureZen.svg
+[gitter-link]: https://gitter.im/NeoBirth/PureZen
 [Pure Data]: https://puredata.info/
 [ZenGarden]: https://github.com/mhroth/ZenGarden
 [LGPL 3.0]: https://www.gnu.org/licenses/lgpl-3.0.en.html
