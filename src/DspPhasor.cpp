@@ -31,7 +31,7 @@ MessageObject *DspPhasor::newObject(PdMessage *initMessage, PdGraph *graph) {
 
 DspPhasor::DspPhasor(PdMessage *initMessage, PdGraph *graph) : DspObject(2, 2, 0, 1, graph) {  
   PdMessage *message = PD_MESSAGE_ON_STACK(1);
-  message->initWithTimestampAndFloat(0.0, initMessage->isFloat(0) ? initMessage->getFloat(0) : 0.0f);
+  message->initWithTimestampAndFloat(0.0, initMessage->is_float(0) ? initMessage->get_float(0) : 0.0f);
   processMessage(0, message);
 
   processFunction = &processScalar;
@@ -55,8 +55,8 @@ void DspPhasor::onInletConnectionUpdate(unsigned int inletIndex) {
 void DspPhasor::processMessage(int inletIndex, PdMessage *message) {
   switch (inletIndex) {
     case 0: { // update the frequency
-      if (message->isFloat(0)) {
-        frequency = message->getFloat(0);
+      if (message->is_float(0)) {
+        frequency = message->get_float(0);
         #if __SSE3__
         float sampleStep = frequency * 65536.0f / graph->getSampleRate();
         short s = (short) sampleStep; // signed as step size may be negative as well!

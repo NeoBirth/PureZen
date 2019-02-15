@@ -2,7 +2,7 @@
  *  Copyright 2009,2010 Reality Jockey, Ltd.
  *                 info@rjdj.me
  *                 http://rjdj.me/
- * 
+ *
  *  This file is part of ZenGarden.
  *
  *  ZenGarden is free software: you can redistribute it and/or modify
@@ -14,7 +14,7 @@
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU Lesser General Public License for more details.
- *  
+ *
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with ZenGarden.  If not, see <http://www.gnu.org/licenses/>.
  *
@@ -31,10 +31,10 @@ MessageObject *MessageTable::newObject(PdMessage *initMessage, PdGraph *graph) {
 }
 
 MessageTable::MessageTable(PdMessage *initMessage, PdGraph *graph) : RemoteMessageReceiver(0, 0, graph) {
-  if (initMessage->isSymbol(0)) {
-    name = utils::copy_string(initMessage->getSymbol(0));
+  if (initMessage->is_symbol(0)) {
+    name = utils::copy_string(initMessage->get_symbol(0));
     // by default, the buffer length is 1024. The buffer should never be NULL.
-    bufferLength = initMessage->isFloat(1) ? (int) initMessage->getFloat(1) : DEFAULT_BUFFER_LENGTH;
+    bufferLength = initMessage->is_float(1) ? (int) initMessage->get_float(1) : DEFAULT_BUFFER_LENGTH;
     buffer = (float *) calloc(bufferLength, sizeof(float));
   } else {
     name = NULL;
@@ -72,20 +72,20 @@ float *MessageTable::resizeBuffer(int newBufferLength) {
 
 void MessageTable::processMessage(int inletIndex, PdMessage *message) {
   // TODO(mhroth): process all of the commands which can be sent to tables
-  if (message->isSymbol(0, "read")) {
-    if (message->isSymbol(1))  {
+  if (message->is_symbol_str(0, "read")) {
+    if (message->is_symbol_str(1))  {
       // read the file and fill the table
     }
-  } else if (message->isSymbol(0, "write")) {
+  } else if (message->is_symbol_str(0, "write")) {
     // write the contents of the table to file
-  } else if (message->isSymbol(0, "normalize")) {
+  } else if (message->is_symbol_str(0, "normalize")) {
     // normalise the contents of the table to the given value. Default to 1.
     #if __APPLE__
     float sum = 0.0f;
     vDSP_sve(buffer, 1, &sum, bufferLength);
     if (sum != 0.0f) {
       // ensure that element do not change sign during normalisation
-      sum = fabsf(sum) / (message->isFloat(1) ? message->getFloat(1) : 1.0f);
+      sum = fabsf(sum) / (message->is_float(1) ? message->get_float(1) : 1.0f);
       vDSP_vsdiv(buffer, 1, &sum, buffer, 1, bufferLength);
     }
     #else
@@ -94,15 +94,15 @@ void MessageTable::processMessage(int inletIndex, PdMessage *message) {
       sum += buffer[i];
     }
     if (sum != 0.0f) {
-      sum = fabsf(sum) / (message->isFloat(1) ? message->getFloat(1) : 1.0f);
+      sum = fabsf(sum) / (message->is_float(1) ? message->get_float(1) : 1.0f);
       for (int i = 0; i < bufferLength; i++) {
         buffer[i] /= sum;
       }
     }
     #endif
-  } else if (message->isSymbol(0, "resize")) {
-    if (message->isFloat(1)) {
-      int newBufferLength = (int) message->getFloat(1);
+  } else if (message->is_symbol_str(0, "resize")) {
+    if (message->is_float(1)) {
+      int newBufferLength = (int) message->get_float(1);
       resizeBuffer(newBufferLength);
     }
   }

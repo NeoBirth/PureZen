@@ -45,12 +45,21 @@ pub fn concat_strings(s0: &str, s1: &str) -> String {
     s0.to_owned() + s1
 }
 
+/// Calculate number of samples in the given number of milliseconds
+#[inline]
+pub fn milliseconds_to_samples(delay_in_ms: f32, sample_rate: f32) -> f32 {
+    (delay_in_ms / 1000.0f32) * sample_rate
+}
+
 /// Legacy since approximation function
 // TODO: replace all usages with `f32::sin`?
 pub fn sine_approx(x: f32) -> f32 {
     let a = 4.0f32 / PI; // 1.273239544735163
     let b = 4.0f32 / (PI * PI); // 0.405284734569351
-    (a * x) - (b * x) * x.abs()
+
+    // TODO(tarcieri): `f32::abs` isn't available in `no_std`?
+    let x_abs = if x >= 0.0 { x } else { -x };
+    (a * x) - (b * x) * x_abs
 }
 
 /// Legacy string tokenization function

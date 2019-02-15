@@ -27,7 +27,7 @@ MessageObject *MessageInteger::newObject(PdMessage *initMessage, PdGraph *graph)
 }
 
 MessageInteger::MessageInteger(PdMessage *initMessage, PdGraph *graph) : MessageObject(2, 1, graph) {
-  constant = initMessage->isFloat(0) ? truncf(initMessage->getFloat(0)) : 0.0f;
+  constant = initMessage->is_float(0) ? truncf(initMessage->get_float(0)) : 0.0f;
 }
 
 MessageInteger::~MessageInteger() {
@@ -37,14 +37,14 @@ MessageInteger::~MessageInteger() {
 void MessageInteger::processMessage(int inletIndex, PdMessage *message) {
   switch (inletIndex) {
     case 0: {
-      switch (message->getType(0)) {
+      switch (message->get_type(0)) {
         case FLOAT: {
-          constant = truncf(message->getFloat(0));
+          constant = truncf(message->get_float(0));
           // allow fallthrough
         }
         case BANG: {
           PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(1);
-          outgoingMessage->initWithTimestampAndFloat(message->getTimestamp(), constant);
+          outgoingMessage->initWithTimestampAndFloat(message->get_timestamp(), constant);
           sendMessage(0, outgoingMessage);
           break;
         }
@@ -55,8 +55,8 @@ void MessageInteger::processMessage(int inletIndex, PdMessage *message) {
       break;
     }
     case 1: {
-      if (message->isFloat(0)) {
-        constant = truncf(message->getFloat(0));
+      if (message->is_float(0)) {
+        constant = truncf(message->get_float(0));
       }
       break;
     }

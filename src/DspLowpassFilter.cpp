@@ -2,7 +2,7 @@
  *  Copyright 2009,2010,2011,2012 Reality Jockey, Ltd.
  *                 info@rjdj.me
  *                 http://rjdj.me/
- * 
+ *
  *  This file is part of ZenGarden.
  *
  *  ZenGarden is free software: you can redistribute it and/or modify
@@ -14,7 +14,7 @@
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU Lesser General Public License for more details.
- *  
+ *
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with ZenGarden.  If not, see <http://www.gnu.org/licenses/>.
  *
@@ -28,7 +28,7 @@ MessageObject *DspLowpassFilter::newObject(PdMessage *initMessage, PdGraph *grap
 }
 
 DspLowpassFilter::DspLowpassFilter(PdMessage *initMessage, PdGraph *graph) : DspFilter(2, graph) {
-  calcFiltCoeff(initMessage->isFloat(0) ? initMessage->getFloat(0) : graph->getSampleRate()/2.0f);
+  calcFiltCoeff(initMessage->is_float(0) ? initMessage->get_float(0) : graph->getSampleRate()/2.0f);
 }
 
 DspLowpassFilter::~DspLowpassFilter() {
@@ -39,7 +39,7 @@ DspLowpassFilter::~DspLowpassFilter() {
 void DspLowpassFilter::calcFiltCoeff(float fc) {
   if (fc > 0.5f * graph->getSampleRate()) fc = 0.5f * graph->getSampleRate();
   else if (fc < 0.0f) fc = 0.0f;
-  
+
   float wc = 2.0f*M_PI*fc;
   float alpha = wc / (wc + graph->getSampleRate());
   b[0] = alpha;
@@ -52,13 +52,13 @@ void DspLowpassFilter::calcFiltCoeff(float fc) {
 void DspLowpassFilter::processMessage(int inletIndex, PdMessage *message) {
   switch (inletIndex) {
     case 0: {
-      switch (message->getType(0)) {
+      switch (message->get_type(0)) {
         case FLOAT: {
-//          signalConstant = message->getFloat(0);
+//          signalConstant = message->get_float(0);
           break;
         }
         case SYMBOL: {
-          if (message->isSymbol(0, "clear")) {
+          if (message->is_symbol_str(0, "clear")) {
             x1 = x2 = dspBufferAtOutlet[0][0] = dspBufferAtOutlet[0][1] = 0.0f;
           }
           break;
@@ -68,7 +68,7 @@ void DspLowpassFilter::processMessage(int inletIndex, PdMessage *message) {
       break;
     }
     case 1: {
-      if (message->isFloat(0)) calcFiltCoeff(message->getFloat(0));
+      if (message->is_float(0)) calcFiltCoeff(message->get_float(0));
       break;
     }
     default: break;

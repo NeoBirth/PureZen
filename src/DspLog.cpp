@@ -29,7 +29,7 @@ MessageObject *DspLog::newObject(PdMessage *initMessage, PdGraph *graph) {
 
 DspLog::DspLog(PdMessage *initMessage, PdGraph *graph) : DspObject(2, 2, 0, 1, graph) {
   // by default assume ln
-  invLog2Base = initMessage->isFloat(0) ? 1.0f/log2f(initMessage->getFloat(0)) : 1.0f/M_LOG2E;
+  invLog2Base = initMessage->is_float(0) ? 1.0f/log2f(initMessage->get_float(0)) : 1.0f/M_LOG2E;
   processFunction = &processScalar;
   processFunctionNoMessage = &processScalar;
 }
@@ -45,11 +45,11 @@ void DspLog::onInletConnectionUpdate(unsigned int inletIndex) {
 
 void DspLog::processMessage(int inletIndex, PdMessage *message) {
   if (inletIndex == 1) {
-    if (message->isFloat(0)) {
-      if (message->getFloat(0) <= 0.0f) {
-        graph->printErr("log~ base cannot be set to a non-positive number: %d\n", message->getFloat(0));
+    if (message->is_float(0)) {
+      if (message->get_float(0) <= 0.0f) {
+        graph->printErr("log~ base cannot be set to a non-positive number: %d\n", message->get_float(0));
       } else {
-        invLog2Base = 1.0f/log2f(message->getFloat(0));
+        invLog2Base = 1.0f/log2f(message->get_float(0));
       }
     }
   }

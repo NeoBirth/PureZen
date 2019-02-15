@@ -40,31 +40,31 @@ MessageSoundfiler::~MessageSoundfiler() {
 
 void MessageSoundfiler::processMessage(int inletIndex, PdMessage *message)
 {
-  if (message->isSymbol(0, "read"))
+  if (message->is_symbol_str(0, "read"))
   {
     int currentElementIndex;
     bool shouldResizeTable = false;
     char *tabName;
     char *soundfilePath;
     MessageTable *table;
-    
+
     for (currentElementIndex = 1;
-         currentElementIndex < message->getNumElements();
+         currentElementIndex < message->get_num_elements();
          ++currentElementIndex)
     {
-      if (message->isSymbol(currentElementIndex, "-resize"))
+      if (message->is_symbol_str(currentElementIndex, "-resize"))
         shouldResizeTable = true;
       /* else if other flags... */
       else
         break;
     }
-    if (message->getNumElements() - currentElementIndex - 2 < 0)
+    if (message->get_num_elements() - currentElementIndex - 2 < 0)
     {
       graph->printErr("[soundfiler]: parameters are incorrect");
       return;
     }
-    soundfilePath = message->getSymbol(currentElementIndex++);
-    tabName = message->getSymbol(currentElementIndex++);
+    soundfilePath = message->get_symbol(currentElementIndex++);
+    tabName = message->get_symbol(currentElementIndex++);
     if ((table = graph->getTable(tabName)) == NULL)
     {
       graph->printErr("[soundfiler]: table '%s' cannot be found", tabName);
@@ -77,7 +77,7 @@ void MessageSoundfiler::processMessage(int inletIndex, PdMessage *message)
       graph->printErr("[soundfiler]: file '%s' cannot be found.", soundfilePath);
       return;
     }
-    
+
     SNDFILE *sndFile = sf_open(fullPath, SFM_READ, &sfInfo);
     if (sndFile == NULL)
     {
@@ -86,7 +86,7 @@ void MessageSoundfiler::processMessage(int inletIndex, PdMessage *message)
       return; // there was an error reading the file. Move on with life.
     }
     delete fullPath;
-    
+
     // It is assumed that the channels are interleaved.
     int samplesPerChannel = static_cast<int>(sfInfo.frames);
     int bufferLength = samplesPerChannel * sfInfo.channels;
@@ -94,7 +94,7 @@ void MessageSoundfiler::processMessage(int inletIndex, PdMessage *message)
     float *buffer = (float *) malloc(bufferLength * sizeof(float));
     sf_read_float(sndFile, buffer, bufferLength); // read the whole file into memory
     sf_close(sndFile); // release the handle to the file
-    
+
     if (sfInfo.channels > 0) // sanity check
     {
       // get the table's buffer. Resize the buffer if necessary.
@@ -106,16 +106,16 @@ void MessageSoundfiler::processMessage(int inletIndex, PdMessage *message)
         // avoid trying to read more into the table buffer than is available
         tableLength = samplesPerChannel;
       }
-      
+
       // extract the first channel
       for (int i = 0, j = 0; i < bufferLength; i+=sfInfo.channels, j++)
       {
         tableBuffer[j] = buffer[i];
       }
-      
+
       // extract the second channel (if it exists and if there is a table to write it to)
       if (sfInfo.channels > 1 &&
-          (tabName = message->getSymbol(currentElementIndex++)) != NULL &&
+          (tabName = message->get_symbol(currentElementIndex++)) != NULL &&
           (table = graph->getTable(tabName)) != NULL)
       {
         tableLength = samplesPerChannel;
@@ -131,13 +131,13 @@ void MessageSoundfiler::processMessage(int inletIndex, PdMessage *message)
       }
     }
     delete buffer;
-    
+
     // send message with sample length when all tables have been filled
     PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(1);
-    outgoingMessage->initWithTimestampAndFloat(message->getTimestamp(), samplesPerChannel);
+    outgoingMessage->initWithTimestampAndFloat(message->get_timestamp(), samplesPerChannel);
     sendMessage(0, outgoingMessage);
   }
-  else if (message->isSymbol(0, "write"))
+  else if (message->is_symbol_str(0, "write"))
   {
     //Not implemented yet
     graph->printErr("[soundfiler]: The 'write' command is not supported yet.");

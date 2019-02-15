@@ -2,7 +2,7 @@
  *  Copyright 2010 Reality Jockey, Ltd.
  *                 info@rjdj.me
  *                 http://rjdj.me/
- * 
+ *
  *  This file is part of ZenGarden.
  *
  *  ZenGarden is free software: you can redistribute it and/or modify
@@ -14,7 +14,7 @@
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU Lesser General Public License for more details.
- *  
+ *
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with ZenGarden.  If not, see <http://www.gnu.org/licenses/>.
  *
@@ -28,7 +28,7 @@ MessageObject *MessageTableWrite::newObject(PdMessage *initMessage, PdGraph *gra
 }
 
 MessageTableWrite::MessageTableWrite(PdMessage *initMessage, PdGraph *graph) : MessageObject(2, 0, graph) {
-  name = initMessage->isSymbol(0) ? utils::copy_string(initMessage->getSymbol(0)) : NULL;
+  name = initMessage->is_symbol(0) ? utils::copy_string(initMessage->get_symbol(0)) : NULL;
   table = NULL;
   index = 0;
 }
@@ -52,21 +52,21 @@ bool MessageTableWrite::shouldDistributeMessageToInlets() {
 void MessageTableWrite::processMessage(int inletIndex, PdMessage *message) {
   switch (inletIndex) {
     case 0: {
-      switch (message->getType(0)) {
+      switch (message->get_type(0)) {
         case FLOAT: {
           if (table != NULL) {
             int bufferLength = 0;
             float *buffer = table->getBuffer(&bufferLength);
             if (index >= 0 && index < bufferLength) {
-              buffer[index] = message->getFloat(0);
+              buffer[index] = message->get_float(0);
             }
           }
           break;
         }
         case SYMBOL: {
-          if (message->isSymbol(0, "set") && message->isSymbol(1)) {
+          if (message->is_symbol_str(0, "set") && message->is_symbol(1)) {
             free(name);
-            name = utils::copy_string(message->getSymbol(1));
+            name = utils::copy_string(message->get_symbol(1));
             table = graph->getTable(name);
           }
           break;
@@ -78,8 +78,8 @@ void MessageTableWrite::processMessage(int inletIndex, PdMessage *message) {
       break;
     }
     case 1: {
-      if (message->isFloat(0)) {
-        index = (int) message->getFloat(0);
+      if (message->is_float(0)) {
+        index = (int) message->get_float(0);
       }
       break;
     }

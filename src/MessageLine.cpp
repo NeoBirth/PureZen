@@ -2,7 +2,7 @@
  *  Copyright 2009,2010 Reality Jockey, Ltd.
  *                 info@rjdj.me
  *                 http://rjdj.me/
- * 
+ *
  *  This file is part of ZenGarden.
  *
  *  ZenGarden is free software: you can redistribute it and/or modify
@@ -14,7 +14,7 @@
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU Lesser General Public License for more details.
- *  
+ *
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with ZenGarden.  If not, see <http://www.gnu.org/licenses/>.
  *
@@ -30,8 +30,8 @@ MessageObject *MessageLine::newObject(PdMessage *initMessage, PdGraph *graph) {
 }
 
 MessageLine::MessageLine(PdMessage *initMessage, PdGraph *graph) : MessageObject(2, 1, graph) {
-  currentValue = initMessage->isFloat(0) ? initMessage->getFloat(0) : 0.0f;
-  grainRate = initMessage->isFloat(1) ? (double) initMessage->getFloat(1) : DEFAULT_GRAIN_RATE;
+  currentValue = initMessage->is_float(0) ? initMessage->get_float(0) : 0.0f;
+  grainRate = initMessage->is_float(1) ? (double) initMessage->get_float(1) : DEFAULT_GRAIN_RATE;
   slope = 0.0f;
   pendingMessage = NULL;
   lastMessageTimestamp = 0.0;
@@ -45,52 +45,52 @@ MessageLine::~MessageLine() {
 void MessageLine::processMessage(int inletIndex, PdMessage *message) {
   switch (inletIndex) {
     case 0: {
-      switch (message->getNumElements()) {
+      switch (message->get_num_elements()) {
         case 1: {
-          if (message->isFloat(0)) {
+          if (message->is_float(0)) {
             cancelPendingMessage();
-            
+
             // update the current value of the [line] object
-            targetValue = currentValue = message->getFloat(0);
-            
+            targetValue = currentValue = message->get_float(0);
+
             // jump to the given value
-            lastMessageTimestamp = message->getTimestamp();
+            lastMessageTimestamp = message->get_timestamp();
             PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(1);
-            outgoingMessage->initWithTimestampAndFloat(message->getTimestamp(), currentValue);
+            outgoingMessage->initWithTimestampAndFloat(message->get_timestamp(), currentValue);
             sendMessage(0, outgoingMessage);
-          } else if (message->isSymbol(0, "stop")) {
+          } else if (message->is_symbol_set(0, "stop")) {
             cancelPendingMessage();
           }
           break;
         }
         case 2: {
-          if (message->hasFormat("ff")) {
+          if (message->has_format("ff")) {
             // set value and target
-            targetValue = message->getFloat(0);
-            float duration = message->getFloat(1);
-            
+            targetValue = message->get_float(0);
+            float duration = message->get_float(1);
+
             if (pendingMessage != NULL) {
               // the target value has not yet been reached
               // calculate the new current value depending on when the last message as sent from this object
-              currentValue += (message->getTimestamp() - lastMessageTimestamp) * slope;
+              currentValue += (message->get_timestamp() - lastMessageTimestamp) * slope;
             }
             slope = (targetValue - currentValue) / duration;
-            
+
             // cancel any previous pending messages. The next message will be scheduled in sendMessage()
             cancelPendingMessage();
-            
+
             if (slope != 0.0f) {
               // send the current message (if the slope isn't flat)
-              lastMessageTimestamp = message->getTimestamp();
+              lastMessageTimestamp = message->get_timestamp();
               PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(1);
-              outgoingMessage->initWithTimestampAndFloat(message->getTimestamp(), currentValue);
+              outgoingMessage->initWithTimestampAndFloat(message->get_timestamp(), currentValue);
               sendMessage(0, outgoingMessage);
             }
-          } else if (message->isSymbol(0, "set") && message->isFloat(1)) {
+          } else if (message->is_symbol_str(0, "set") && message->is_float(1)) {
             cancelPendingMessage();
-            
+
             // set the current value to the given input, without outputting any message
-            currentValue = message->getFloat(1);
+            currentValue = message->get_float(1);
           }
           break;
         }
@@ -102,9 +102,9 @@ void MessageLine::processMessage(int inletIndex, PdMessage *message) {
     }
     case 1: {
       // not sure what to do in this case
-      if (message->isFloat(0)) {
+      if (message->is_float(0)) {
         // update the grain rate, because somehow that makes sense. Could be completely wrong :-/
-        grainRate = (double) message->getFloat(0);
+        grainRate = (double) message->get_float(0);
       }
       break;
     }
@@ -121,35 +121,35 @@ void MessageLine::cancelPendingMessage() {
   }
 }
 
-void MessageLine::sendMessage(int outletIndex, PdMessage *message) {  
+void MessageLine::sendMessage(int outletIndex, PdMessage *message) {
   // now that this message is being sent, the current value of this [line] object is certain
-  currentValue = message->getFloat(0);
+  currentValue = message->get_float(0);
   if (slope > 0.0f) {
     if (currentValue < targetValue) {
       pendingMessage = PD_MESSAGE_ON_STACK(1);
-      pendingMessage->initWithTimestampAndFloat(message->getTimestamp() + grainRate,
+      pendingMessage->initWithTimestampAndFloat(message->get_timestamp() + grainRate,
           currentValue + slope * grainRate);
       pendingMessage = graph->scheduleMessage(this, 0, pendingMessage);
     } else { // currentValue >= targetValue
       // in case the current value is greater than the target value, due to floating-point precision error
       currentValue = targetValue;
-      message->setFloat(0, currentValue);
+      message->set_float(0, currentValue);
       pendingMessage = NULL;
     }
   } else if (slope < 0.0f) {
     if (currentValue > targetValue) {
       pendingMessage = PD_MESSAGE_ON_STACK(1);
-      pendingMessage->initWithTimestampAndFloat(message->getTimestamp() + grainRate,
+      pendingMessage->initWithTimestampAndFloat(message->get_timestamp() + grainRate,
           currentValue + slope * grainRate);
       pendingMessage = graph->scheduleMessage(this, 0, pendingMessage);
     } else { // currentValue <= targetValue
       currentValue = targetValue;
-      message->setFloat(0, currentValue);
+      message->set_float(0, currentValue);
       pendingMessage = NULL;
     }
   }
   // do nothing if slope == 0.0f (i.e., flat)
 
-  lastMessageTimestamp = message->getTimestamp();
+  lastMessageTimestamp = message->get_timestamp();
   MessageObject::sendMessage(outletIndex, message);
 }

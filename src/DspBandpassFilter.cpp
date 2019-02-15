@@ -2,7 +2,7 @@
  *  Copyright 2009,2010,2011,2012 Reality Jockey, Ltd.
  *                 info@rjdj.me
  *                 http://rjdj.me/
- * 
+ *
  *  This file is part of ZenGarden.
  *
  *  ZenGarden is free software: you can redistribute it and/or modify
@@ -14,7 +14,7 @@
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU Lesser General Public License for more details.
- *  
+ *
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with ZenGarden.  If not, see <http://www.gnu.org/licenses/>.
  *
@@ -28,8 +28,8 @@ MessageObject *DspBandpassFilter::newObject(PdMessage *initMessage, PdGraph *gra
 }
 
 DspBandpassFilter::DspBandpassFilter(PdMessage *initMessage, PdGraph *graph) : DspFilter(3, graph) {
-  fc = initMessage->isFloat(0) ? initMessage->getFloat(0) : graph->getSampleRate()/2.0f;
-  q = initMessage->isFloat(1) ? initMessage->getFloat(1) : 1.0f;
+  fc = initMessage->is_float(0) ? initMessage->get_float(0) : graph->getSampleRate()/2.0f;
+  q = initMessage->is_float(1) ? initMessage->get_float(1) : 1.0f;
   calcFiltCoeff(fc, q);
 }
 
@@ -42,10 +42,10 @@ void DspBandpassFilter::calcFiltCoeff(float fc, float q) {
   if (fc > 0.5f * graph->getSampleRate()) fc = 0.5f * graph->getSampleRate();
   else if (fc < 0.0f) fc = 0.0f;
   if (q < 0.0f) q = 0.0f;
-  
+
   float wc = 2.0f*M_PI*fc/graph->getSampleRate();
   float alpha = sinf(wc)/(2.0f*q);
-  
+
   b[0] = alpha/(1.0f+alpha);
   b[1] = 0.0f;
   b[2] = -alpha/(1.0f+alpha);
@@ -56,17 +56,17 @@ void DspBandpassFilter::calcFiltCoeff(float fc, float q) {
 void DspBandpassFilter::processMessage(int inletIndex, PdMessage *message) {
   switch (inletIndex) {
     case 0: {
-      if (message->isSymbol(0, "clear")) {
+      if (message->is_symbol_str(0, "clear")) {
         x1 = x2 = dspBufferAtOutlet[0][0] = dspBufferAtOutlet[0][1] = 0.0f;
       }
       break;
     }
     case 1: {
-      if (message->isFloat(0)) calcFiltCoeff(message->getFloat(0), q);
+      if (message->is_float(0)) calcFiltCoeff(message->get_float(0), q);
       break;
     }
     case 2: {
-      if (message->isFloat(0)) calcFiltCoeff(fc, message->getFloat(0));
+      if (message->is_float(0)) calcFiltCoeff(fc, message->get_float(0));
       break;
     }
     default: break;

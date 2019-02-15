@@ -27,7 +27,7 @@ MessageObject *MessageMakefilename::newObject(PdMessage *initMessage, PdGraph *g
 }
 
 MessageMakefilename::MessageMakefilename(PdMessage *initMessage, PdGraph *graph) : MessageObject(1, 1, graph) {
-  format = utils::copy_string(initMessage->isSymbol(0) ? initMessage->getSymbol(0) : "");
+  format = utils::copy_string(initMessage->is_symbol(0) ? initMessage->get_symbol(0) : "");
 }
 
 MessageMakefilename::~MessageMakefilename() {
@@ -36,24 +36,24 @@ MessageMakefilename::~MessageMakefilename() {
 
 void MessageMakefilename::processMessage(int inletIndex, PdMessage *message) {
   if (inletIndex == 0) {
-    switch (message->getType(0)) {
+    switch (message->get_type(0)) {
       case FLOAT: {
-        char str[snprintf(NULL, 0, format, (int) message->getFloat(0))+1];
-        snprintf(str, sizeof(str), format, (int) message->getFloat(0));
+        char str[snprintf(NULL, 0, format, (int) message->get_float(0))+1];
+        snprintf(str, sizeof(str), format, (int) message->get_float(0));
         PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(1);
-        outgoingMessage->initWithTimestampAndSymbol(message->getTimestamp(), str);
+        outgoingMessage->initWithTimestampAndSymbol(message->get_timestamp(), str);
         sendMessage(0, outgoingMessage);
         break;
       }
       case SYMBOL: {
-        if (message->isSymbol(0, "set") && message->isSymbol(1)) {
+        if (message->is_symbol_str(0, "set") && message->is_symbol(1)) {
           free(format);
-          format = utils::copy_string(message->getSymbol(1));
+          format = utils::copy_string(message->get_symbol(1));
         } else {
-          char str[snprintf(NULL, 0, format, message->getSymbol(0))+1];
-          snprintf(str, sizeof(str), format, message->getSymbol(0));
+          char str[snprintf(NULL, 0, format, message->get_symbol(0))+1];
+          snprintf(str, sizeof(str), format, message->get_symbol(0));
           PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(1);
-          outgoingMessage->initWithTimestampAndSymbol(message->getTimestamp(), str);
+          outgoingMessage->initWithTimestampAndSymbol(message->get_timestamp(), str);
           sendMessage(0, outgoingMessage);
         }
         break;

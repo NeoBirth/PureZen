@@ -28,9 +28,9 @@ MessageObject *MessageSend::newObject(PdMessage *initMessage, PdGraph *graph) {
 }
 
 MessageSend::MessageSend(PdMessage *initMessage, PdGraph *graph) :
-    MessageObject(initMessage->isSymbol(0) ? 1 : 2, 0, graph) {
-  name = utils::copy_string(initMessage->isSymbol(0)
-      ? initMessage->getSymbol(0) : "zg_default_sendreceive_name");
+    MessageObject(initMessage->is_symbol(0) ? 1 : 2, 0, graph) {
+  name = utils::copy_string(initMessage->is_symbol(0)
+      ? initMessage->get_symbol(0) : "zg_default_sendreceive_name");
 }
 
 MessageSend::~MessageSend() {
@@ -41,9 +41,9 @@ void MessageSend::receiveMessage(int inletIndex, PdMessage *message) {
   switch (inletIndex) {
     case 0: graph->sendMessageToNamedReceivers(name, message); break;
     case 1: {
-      if (message->isSymbol(0)) {
+      if (message->is_symbol(0)) {
         free(name);
-        name = utils::copy_string(message->getSymbol(0));
+        name = utils::copy_string(message->get_symbol(0));
       }
       break;
     }

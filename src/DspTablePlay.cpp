@@ -2,7 +2,7 @@
  *  Copyright 2009,2010 Reality Jockey, Ltd.
  *                 info@rjdj.me
  *                 http://rjdj.me/
- * 
+ *
  *  This file is part of ZenGarden.
  *
  *  ZenGarden is free software: you can redistribute it and/or modify
@@ -14,7 +14,7 @@
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU Lesser General Public License for more details.
- *  
+ *
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with ZenGarden.  If not, see <http://www.gnu.org/licenses/>.
  *
@@ -29,7 +29,7 @@ MessageObject *DspTablePlay::newObject(PdMessage *initMessage, PdGraph *graph) {
 }
 
 DspTablePlay::DspTablePlay(PdMessage *initMessage, PdGraph *graph) : DspObject(1, 0, 2, 1, graph) {
-  name = initMessage->isSymbol(0) ? utils::copy_string(initMessage->getSymbol(0)) : NULL;
+  name = initMessage->is_symbol(0) ? utils::copy_string(initMessage->get_symbol(0)) : NULL;
   table = NULL;
   outgoingMessage = NULL;
   currentTableIndex = 0;
@@ -55,21 +55,21 @@ void DspTablePlay::sendMessage(int outletIndex, PdMessage *message) {
 }
 
 void DspTablePlay::processMessage(int inletIndex, PdMessage *message) {
-  switch (message->getType(0)) {
+  switch (message->get_type(0)) {
     case FLOAT: {
-      playTable((int) message->getFloat(0),
-          message->isFloat(1) ? (int) message->getFloat(1) : -1,
-          message->getTimestamp());
+      playTable((int) message->get_float(0),
+          message->is_float(1) ? (int) message->get_float(1) : -1,
+          message->get_timestamp());
       break;
     }
     case SYMBOL: {
-      if (message->isSymbol(0, "set") && message->isSymbol(1)) {
-        table = graph->getTable(message->getSymbol(1));
+      if (message->is_symbol_str(0, "set") && message->is_symbol(1)) {
+        table = graph->getTable(message->get_symbol(1));
       }
       break;
     }
     case BANG: {
-      playTable(0, -1, message->getTimestamp());
+      playTable(0, -1, message->get_timestamp());
       break;
     }
     default: {

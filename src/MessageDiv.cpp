@@ -27,7 +27,7 @@ MessageObject *MessageDiv::newObject(PdMessage *initMessage, PdGraph *graph) {
 }
 
 MessageDiv::MessageDiv(PdMessage *initMessage, PdGraph *graph) : MessageObject(2, 1, graph) {
-  constant = initMessage->isFloat(0) ? initMessage->getFloat(0) : 1.0f;
+  constant = initMessage->is_float(0) ? initMessage->get_float(0) : 1.0f;
   if (constant == 0.0f) constant = 1.0f;
   else if (constant < 0.0f) constant = -constant;
 }
@@ -39,19 +39,19 @@ MessageDiv::~MessageDiv() {
 void MessageDiv::processMessage(int inletIndex, PdMessage *message) {
   switch (inletIndex) {
     case 0: {
-      if (message->isFloat(0)) {
-        float f = message->getFloat(0);
+      if (message->is_float(0)) {
+        float f = message->get_float(0);
         if (f < 0.0f) f -= (constant-1.0f);
         float result = truncf(f/constant);
         PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(1);
-        outgoingMessage->initWithTimestampAndFloat(message->getTimestamp(), result);
+        outgoingMessage->initWithTimestampAndFloat(message->get_timestamp(), result);
         sendMessage(0, outgoingMessage);
       }
       break;
     }
     case 1: {
-      if (message->isFloat(0)) {
-        constant = message->getFloat(0);
+      if (message->is_float(0)) {
+        constant = message->get_float(0);
         if (constant == 0.0f) constant = 1.0f;
         else if (constant < 0.0f) constant = -constant;
       }

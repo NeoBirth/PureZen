@@ -30,7 +30,7 @@ MessageObject *DspMinimum::newObject(PdMessage *initMessage, PdGraph *graph) {
 }
 
 DspMinimum::DspMinimum(PdMessage *initMessage, PdGraph *graph) : DspObject(2, 2, 0, 1, graph) {
-  constant = initMessage->isFloat(0) ? initMessage->getFloat(0) : 0.0f;
+  constant = initMessage->is_float(0) ? initMessage->get_float(0) : 0.0f;
   processFunction = &processScalar;
   processFunctionNoMessage = &processScalar;
 }
@@ -47,7 +47,7 @@ string DspMinimum::toString() {
 
 void DspMinimum::processMessage(int inletIndex, PdMessage *message) {
   if (inletIndex == 1) {
-    if (message->isFloat(0)) constant = message->getFloat(0);
+    if (message->is_float(0)) constant = message->get_float(0);
   }
 }
 

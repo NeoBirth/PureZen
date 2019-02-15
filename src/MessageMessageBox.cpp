@@ -24,7 +24,7 @@
 #include "PdGraph.h"
 
 MessageObject *MessageMessageBox::newObject(PdMessage *initString, PdGraph *graph) {
-  return new MessageMessageBox(initString->getSymbol(0), graph);
+  return new MessageMessageBox(initString->get_symbol(0), graph);
 }
 
 /*
@@ -56,8 +56,8 @@ MessageMessageBox::MessageMessageBox(char *initString, PdGraph *graph) : Message
     // original string. We should not process it because it will result in an empty message. 
     if (strcmp(initString.c_str(), ";") != 0) {
       char str[initString.size()+1]; strcpy(str, initString.c_str());
-      message->initWithString(0.0, maxElements, str);
-      localMessageList.push_back(message->copyToHeap());
+      message->from_string(0.0, maxElements, str);
+      localMessageList.push_back(message->clone_on_heap());
     }
   }
   
@@ -73,9 +73,9 @@ MessageMessageBox::MessageMessageBox(char *initString, PdGraph *graph) : Message
       int maxElements = (messageString.size()/2)+1;
       PdMessage *message = PD_MESSAGE_ON_STACK(maxElements);
       char str[messageString.size()+1]; strcpy(str, messageString.c_str());
-      message->initWithString(0.0, maxElements, str);
+      message->from_string(0.0, maxElements, str);
       MessageNamedDestination namedDestination = 
-          make_pair(utils::copy_string(name.c_str()), message->copyToHeap());
+          make_pair(utils::copy_string(name.c_str()), message->clone_on_heap());
       remoteMessageList.push_back(namedDestination);
     }
   }
@@ -105,14 +105,14 @@ void MessageMessageBox::processMessage(int inletIndex, PdMessage *message) {
   // send local messages
   for (int i = 0; i < localMessageList.size(); i++) {
     PdMessage *messageTemplate = localMessageList.at(i);
-    int numElements = messageTemplate->getNumElements();
-    outgoingMessage->initWithTimestampAndNumElements(message->getTimestamp(), numElements);
-    memcpy(outgoingMessage->getElement(0), messageTemplate->getElement(0), numElements*sizeof(MessageAtom));
+    int numElements = messageTemplate->get_num_elements();
+    outgoingMessage->from_timestamp(message->get_timestamp(), numElements);
+    memcpy(outgoingMessage->get_element(0), messageTemplate->get_element(0), numElements*sizeof(MessageAtom));
     for (int i = 0; i < numElements; i++) {
-      if (messageTemplate->isSymbol(i)) {
+      if (messageTemplate->is_symbol(i)) {
         char *buffer = (char *) alloca(RES_BUFFER_LENGTH * sizeof(char));
         // TODO(mhroth): resolve string, but may be in stack buffer
-        PdMessage::resolveString(messageTemplate->getSymbol(i), message, 1, buffer, RES_BUFFER_LENGTH);
+        PdMessage::resolve_string(messageTemplate->get_symbol(i), message, 1, buffer, RES_BUFFER_LENGTH);
         outgoingMessage->parseAndSetMessageElement(i, buffer); // buffer is resolved to float or string
       }
     }
@@ -123,18 +123,18 @@ void MessageMessageBox::processMessage(int inletIndex, PdMessage *message) {
   for (int i = 0; i < remoteMessageList.size(); i++) {
     MessageNamedDestination namedDestination = remoteMessageList.at(i);
 
-    PdMessage::resolveString(namedDestination.first, message, 1, resolvedName, RES_BUFFER_LENGTH);
+    PdMessage::resolve_string(namedDestination.first, message, 1, resolvedName, RES_BUFFER_LENGTH);
     
     PdMessage *messageTemplate = namedDestination.second;
-    int numElements = messageTemplate->getNumElements();
-    outgoingMessage->initWithTimestampAndNumElements(message->getTimestamp(), numElements);
-    memcpy(outgoingMessage->getElement(0), messageTemplate->getElement(0), numElements*sizeof(MessageAtom));
+    int numElements = messageTemplate->get_num_elements();
+    outgoingMessage->from_timestamp(message->get_timestamp(), numElements);
+    memcpy(outgoingMessage->get_element(0), messageTemplate->get_element(0), numElements*sizeof(MessageAtom));
     for (int i = 0; i < numElements; i++) {
-      if (messageTemplate->isSymbol(i)) {
+      if (messageTemplate->is_symbol(i)) {
         char *buffer = (char *) alloca(RES_BUFFER_LENGTH * sizeof(char));
         // TODO(mhroth): resolve string, but may be in stack buffer
-        PdMessage::resolveString(messageTemplate->getSymbol(i), message, 1, buffer, RES_BUFFER_LENGTH);
-        outgoingMessage->setSymbol(i, buffer);
+        PdMessage::resolve_string(messageTemplate->get_symbol(i), message, 1, buffer, RES_BUFFER_LENGTH);
+        outgoingMessage->set_symbol(i, buffer);
       }
     }
     graph->sendMessageToNamedReceivers(resolvedName, outgoingMessage);

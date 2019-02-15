@@ -24,7 +24,7 @@
 #include "MessageListSplit.h"
 
 MessageListSplit::MessageListSplit(PdMessage *initMessage, PdGraph *graph) : MessageObject(2, 3, graph) {
-  splitIndex = initMessage->isFloat(0) ? (int) initMessage->getFloat(0) : 0;
+  splitIndex = initMessage->is_float(0) ? (int) initMessage->get_float(0) : 0;
 }
 
 MessageListSplit::~MessageListSplit() {
@@ -34,28 +34,28 @@ MessageListSplit::~MessageListSplit() {
 void MessageListSplit::processMessage(int inletIndex, PdMessage *message) {
   switch (inletIndex) {
     case 0: {
-      int numElements = message->getNumElements();
+      int numElements = message->get_num_elements();
       if (numElements <= splitIndex) {
         // if there aren't enough elements to split on, forward the message on the third outlet
         sendMessage(2, message);
       } else {
         int numElems = numElements-splitIndex;
         PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(numElems);
-        outgoingMessage->initWithTimestampAndNumElements(message->getTimestamp(), numElems);
-        memcpy(outgoingMessage->getElement(0), message->getElement(splitIndex), numElems * sizeof(MessageAtom));
+        outgoingMessage->from_timestamp(message->get_timestamp(), numElems);
+        memcpy(outgoingMessage->get_element(0), message->get_element(splitIndex), numElems * sizeof(MessageAtom));
         sendMessage(1, outgoingMessage);
         
         outgoingMessage = PD_MESSAGE_ON_STACK(splitIndex);
-        outgoingMessage->initWithTimestampAndNumElements(message->getTimestamp(), splitIndex);
-        memcpy(outgoingMessage->getElement(0), message->getElement(0), splitIndex * sizeof(MessageAtom));
+        outgoingMessage->from_timestamp(message->get_timestamp(), splitIndex);
+        memcpy(outgoingMessage->get_element(0), message->get_element(0), splitIndex * sizeof(MessageAtom));
         sendMessage(0, outgoingMessage);
       }
       break;
     }
     case 1: {
-      if (message->isFloat(0)) {
+      if (message->is_float(0)) {
         // split index may not be negative
-        splitIndex = (message->getFloat(0) < 0.0f) ? 0 : (int) message->getFloat(0);
+        splitIndex = (message->get_float(0) < 0.0f) ? 0 : (int) message->get_float(0);
       }
       break;
     }

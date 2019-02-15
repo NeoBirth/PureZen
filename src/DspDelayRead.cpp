@@ -30,9 +30,9 @@ MessageObject *DspDelayRead::newObject(PdMessage *initMessage, PdGraph *graph) {
 }
 
 DspDelayRead::DspDelayRead(PdMessage *initMessage, PdGraph *graph) : DelayReceiver(1, 0, 0, 1, graph) {
-  if (initMessage->isSymbol(0) && initMessage->isFloat(1)) {
-    name = utils::copy_string(initMessage->getSymbol(0));
-    delayInSamples = utils::millisecondsToSamples(initMessage->getFloat(1), graph->getSampleRate());
+  if (initMessage->is_symbol(0) && initMessage->is_float(1)) {
+    name = utils::copy_string(initMessage->get_symbol(0));
+    delayInSamples = utils::millisecondsToSamples(initMessage->get_float(1), graph->getSampleRate());
   } else {
     graph->printErr("delread~ must be initialised in the format [delread~ name delay].");
     delayInSamples = 0.0f;
@@ -52,9 +52,9 @@ void DspDelayRead::onInletConnectionUpdate(unsigned int inletIndex) {
 }
 
 void DspDelayRead::processMessage(int inletIndex, PdMessage *message) {
-  if (inletIndex == 0 && message->isFloat(0)) {
+  if (inletIndex == 0 && message->is_float(0)) {
     // update the delay time
-    delayInSamples = utils::millisecondsToSamples(message->getFloat(0), graph->getSampleRate());
+    delayInSamples = utils::millisecondsToSamples(message->get_float(0), graph->getSampleRate());
   }
 }
 

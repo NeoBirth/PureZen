@@ -28,7 +28,7 @@ MessageObject *MessageSwap::newObject(PdMessage *initMessage, PdGraph *graph) {
 
 MessageSwap::MessageSwap(PdMessage *initMessage, PdGraph *graph) : MessageObject(2, 2, graph) {
   left = 0.0f;
-  right = initMessage->isFloat(0) ? initMessage->getFloat(0) : 0.0f;
+  right = initMessage->is_float(0) ? initMessage->get_float(0) : 0.0f;
 }
 
 MessageSwap::~MessageSwap() {
@@ -38,17 +38,17 @@ MessageSwap::~MessageSwap() {
 void MessageSwap::processMessage(int inletIndex, PdMessage *message) {
   switch (inletIndex) {
     case 0: {
-      switch (message->getType(0)) {
+      switch (message->get_type(0)) {
         case FLOAT: {
-          left = message->getFloat(0);
+          left = message->get_float(0);
           // allow fallthrough
         }
         case BANG: {
           PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(1);
-          outgoingMessage->initWithTimestampAndFloat(message->getTimestamp(), left);
+          outgoingMessage->initWithTimestampAndFloat(message->get_timestamp(), left);
           sendMessage(1, outgoingMessage); // send a message from outlet 1
           
-          outgoingMessage->initWithTimestampAndFloat(message->getTimestamp(), right);
+          outgoingMessage->initWithTimestampAndFloat(message->get_timestamp(), right);
           sendMessage(0, outgoingMessage); // send a message from outlet 0
           break;
         }
@@ -59,8 +59,8 @@ void MessageSwap::processMessage(int inletIndex, PdMessage *message) {
       break;
     }
     case 1: {
-      if (message->isFloat(0)) {
-        right = message->getFloat(0);
+      if (message->is_float(0)) {
+        right = message->get_float(0);
       }
       break;
     }

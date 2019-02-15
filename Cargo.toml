@@ -20,6 +20,10 @@ description = """
 travis-ci = { repository = "NeoBirth/PureZen" }
 
 [dependencies]
+failure = { version = "0.1", default-features = false }
+failure_derive = "0.1"
+heapless = "0.4"
+typenum = { version = "1", default-features = false }
 
 [features]
 default = ["std"]

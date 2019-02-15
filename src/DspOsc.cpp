@@ -32,7 +32,7 @@ MessageObject *DspOsc::newObject(PdMessage *initMessage, PdGraph *graph) {
 }
 
 DspOsc::DspOsc(PdMessage *initMessage, PdGraph *graph) : DspObject(2, 2, 0, 1, graph) {
-  frequency = initMessage->isFloat(0) ? initMessage->getFloat(0) : 0.0f;
+  frequency = initMessage->is_float(0) ? initMessage->get_float(0) : 0.0f;
   sampleStep = frequency * 65536.0f / graph->getSampleRate();
   #if __SSE3__
   short step = (short) roundf(sampleStep);
@@ -73,8 +73,8 @@ string DspOsc::toString() {
 void DspOsc::processMessage(int inletIndex, PdMessage *message) {
   switch (inletIndex) {
     case 0: { // update the frequency
-      if (message->isFloat(0)) {
-        frequency = fabsf(message->getFloat(0));
+      if (message->is_float(0)) {
+        frequency = fabsf(message->get_float(0));
         sampleStep = frequency * 65536.0f / graph->getSampleRate();
         
         #if __SSE3__

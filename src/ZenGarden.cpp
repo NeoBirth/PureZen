@@ -43,7 +43,7 @@ ZGObject *zg_graph_add_new_object(PdGraph *graph, const char *objectString, floa
   char *initString = strtok(NULL, ";");
   char resolutionBuffer[256];
   PdMessage *initMessage = PD_MESSAGE_ON_STACK(32);
-  initMessage->initWithSARb(32, initString, graph->getArguments(), resolutionBuffer, 256);
+  initMessage->from_string_and_args(32, initString, graph->getArguments(), resolutionBuffer, 256);
   MessageObject *messageObject = graph->getContext()->newObject(objectLabel, initMessage, graph);
   free(objectStringCopy);
   
@@ -151,7 +151,7 @@ void zg_context_delete(ZGContext *context) {
 
 ZGGraph *zg_context_new_empty_graph(PdContext *context) {
   PdMessage *initMessage = PD_MESSAGE_ON_STACK(0); // create an empty message to use for initialisation
-  initMessage->initWithTimestampAndNumElements(0.0, 0);
+  initMessage->from_timestamp(0.0, 0);
   // the new graph has no parent graph and is created in the given context with a unique id
   PdGraph *graph = new PdGraph(initMessage, NULL, context, context->getNextGraphId(), "zg_free");
   return graph;
@@ -385,7 +385,7 @@ void zg_graph_remove_connection(ZGGraph *graph, ZGObject *fromObject, int outlet
 }
 
 unsigned int zg_graph_get_dollar_zero(ZGGraph *graph) {
-  return (graph != NULL) ? (unsigned int) graph->getArguments()->getFloat(0) : 0;
+  return (graph != NULL) ? (unsigned int) graph->getArguments()->get_float(0) : 0;
 }
 
 ZGObject **zg_graph_get_objects(ZGGraph *graph, unsigned int *n) {
@@ -430,18 +430,18 @@ void zg_table_set_buffer(MessageObject *table, float *buffer, unsigned int n) {
 
 ZGMessage *zg_message_new(double timetamp, unsigned int numElements) {
   PdMessage *message = PD_MESSAGE_ON_STACK(numElements);
-  message->initWithTimestampAndNumElements(timetamp, numElements);
-  return message->copyToHeap();
+  message->from_timestamp(timetamp, numElements);
+  return message->clone_on_heap();
 }
 
 ZGMessage *zg_message_new_from_string(double timetamp, const char *initString) {
   unsigned int maxElements = (strlen(initString)/2)+1;
   PdMessage *message = PD_MESSAGE_ON_STACK(maxElements);
-  // make a local copy of the initString so that strtok in initWithString won't break it
+  // make a local copy of the initString so that strtok in from_string won't break it
   char str[strlen(initString)+1]; strcpy(str, initString);
   // numElements set to correct number after string is parsed
-  message->initWithString(timetamp, maxElements, str);
-  return message->copyToHeap();
+  message->from_string(timetamp, maxElements, str);
+  return message->clone_on_heap();
 }
 
 void zg_message_delete(PdMessage *message) {
@@ -449,29 +449,29 @@ void zg_message_delete(PdMessage *message) {
 }
 
 void zg_message_set_float(PdMessage *message, unsigned int index, float f) {
-  message->setFloat(index, f);
+  message->set_float(index, f);
 }
 
 void zg_message_set_symbol(PdMessage *message, unsigned int index, const char *s) {
-  char *symbol = message->getSymbol(index);
+  char *symbol = message->get_symbol(index);
   free(symbol); // free it if it is not already NULL
-  message->setSymbol(index, utils::copy_string((char *) s));
+  message->set_symbol(index, utils::copy_string((char *) s));
 }
 
 void zg_message_set_bang(PdMessage *message, unsigned int index) {
-  message->setBang(index);
+  message->set_bang(index);
 }
 
 unsigned int zg_message_get_num_elements(PdMessage *message) {
-  return message->getNumElements();
+  return message->get_num_elements();
 }
 
 double zg_message_get_timestamp(PdMessage *message) {
-  return message->getTimestamp();
+  return message->get_timestamp();
 }
 
 ZGMessageElementType zg_message_get_element_type(PdMessage *message, unsigned int index) {
-  switch (message->getType(index)) {
+  switch (message->get_type(index)) {
     case FLOAT: return ZG_MESSAGE_ELEMENT_FLOAT;
     case SYMBOL: return ZG_MESSAGE_ELEMENT_SYMBOL;
     default: return ZG_MESSAGE_ELEMENT_BANG;
@@ -479,11 +479,11 @@ ZGMessageElementType zg_message_get_element_type(PdMessage *message, unsigned in
 }
 
 float zg_message_get_float(PdMessage *message, unsigned int index) {
-  return message->getFloat(index);
+  return message->get_float(index);
 }
 
 const char *zg_message_get_symbol(PdMessage *message, unsigned int index) {
-  return message->getSymbol(index);
+  return message->get_symbol(index);
 }
 
 char *zg_message_to_string(ZGMessage *message) {

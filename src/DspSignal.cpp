@@ -29,7 +29,7 @@ MessageObject *DspSignal::newObject(PdMessage *initMessage, PdGraph *graph) {
 }
 
 DspSignal::DspSignal(PdMessage *initMessage, PdGraph *graph) : DspObject(1, 0, 0, 1, graph) {
-  constant = initMessage->isFloat(0) ? initMessage->getFloat(0) : 0.0f;
+  constant = initMessage->is_float(0) ? initMessage->get_float(0) : 0.0f;
   processFunction = &processScalar;
   processFunctionNoMessage = &processScalar;
 }
@@ -45,8 +45,8 @@ string DspSignal::toString() {
 }
 
 void DspSignal::processMessage(int inletIndex, PdMessage *message) {
-  if (message->isFloat(0)) {
-    constant = message->getFloat(0);
+  if (message->is_float(0)) {
+    constant = message->get_float(0);
   }
 }
 

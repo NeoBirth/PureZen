@@ -2,7 +2,7 @@
  *  Copyright 2010,2011 Reality Jockey, Ltd.
  *                 info@rjdj.me
  *                 http://rjdj.me/
- * 
+ *
  *  This file is part of ZenGarden.
  *
  *  ZenGarden is free software: you can redistribute it and/or modify
@@ -14,7 +14,7 @@
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU Lesser General Public License for more details.
- *  
+ *
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with ZenGarden.  If not, see <http://www.gnu.org/licenses/>.
  *
@@ -55,18 +55,18 @@ PdContext::PdContext(int numInputChannels, int numOutputChannels, int blockSize,
   objectFactoryMap = new ObjectFactoryMap();
   globalGraphId = 0;
   bufferPool = new BufferPool(blockSize);
-  
+
   numBytesInInputBuffers = blockSize * numInputChannels * sizeof(float);
   numBytesInOutputBuffers = blockSize * numOutputChannels * sizeof(float);
   globalDspInputBuffers = (numBytesInInputBuffers > 0) ? ALLOC_ALIGNED_BUFFER(numBytesInInputBuffers) : NULL;
   memset(globalDspInputBuffers, 0, numBytesInInputBuffers);
   globalDspOutputBuffers = (numBytesInOutputBuffers > 0) ? ALLOC_ALIGNED_BUFFER(numBytesInOutputBuffers) : NULL;
   memset(globalDspOutputBuffers, 0, numBytesInOutputBuffers);
-  
+
   sendController = new MessageSendController(this);
 
   abstractionDatabase = new PdAbstractionDataBase();
-  
+
   // configure the context lock, which is recursive
   pthread_mutexattr_t mta;
   pthread_mutexattr_init(&mta);
@@ -77,12 +77,12 @@ PdContext::PdContext(int numInputChannels, int numOutputChannels, int blockSize,
 PdContext::~PdContext() {
   FREE_ALIGNED_BUFFER(globalDspInputBuffers);
   FREE_ALIGNED_BUFFER(globalDspOutputBuffers);
-  
+
   delete messageCallbackQueue;
   delete sendController;
   delete objectFactoryMap;
   delete bufferPool;
-  
+
   // delete all of the PdGraphs in the graph list
   for (int i = 0; i < graphList.size(); i++) {
     delete graphList[i];
@@ -149,10 +149,10 @@ int PdContext::getNextGraphId() {
 
 void PdContext::process(float *inputBuffers, float *outputBuffers) {
   lock(); // lock the context
-  
+
   // set up adc~ buffers
   memcpy(globalDspInputBuffers, inputBuffers, numBytesInInputBuffers);
-  
+
   // clear the global output audio buffers so that dac~ nodes can write to it
   memset(globalDspOutputBuffers, 0, numBytesInOutputBuffers);
 
@@ -160,25 +160,25 @@ void PdContext::process(float *inputBuffers, float *outputBuffers) {
   ObjectMessageLetPair omlPair;
   double nextBlockStartTimestamp = blockStartTimestamp + blockDurationMs;
   while (!messageCallbackQueue->empty() &&
-      (omlPair = messageCallbackQueue->peek()).second.first->getTimestamp() < nextBlockStartTimestamp) {
-    
+      (omlPair = messageCallbackQueue->peek()).second.first->get_timestamp() < nextBlockStartTimestamp) {
+
     messageCallbackQueue->pop(); // remove the message from the queue
 
     MessageObject *object = omlPair.first;
     PdMessage *message = omlPair.second.first;
     unsigned int outletIndex = omlPair.second.second;
-    if (message->getTimestamp() < blockStartTimestamp) {
+    if (message->get_timestamp() < blockStartTimestamp) {
       // messages injected into the system with a timestamp behind the current block are automatically
       // rescheduled for the beginning of the current block. This is done in order to normalise
       // the treament of messages, but also to avoid difficulties in cases when messages are scheduled
       // in subgraphs with different block sizes.
-      message->setTimestamp(blockStartTimestamp);
+      message->set_timestamp(blockStartTimestamp);
     }
-    
+
     object->sendMessage(outletIndex, message);
     message->freeMessage(); // free the message now that it has been sent and processed
   }
-  
+
   switch (graphList.size()) {
     case 0: break;
     case 1: graphList.front()->processFunction(graphList.front(), 0, 0); break;
@@ -190,12 +190,12 @@ void PdContext::process(float *inputBuffers, float *outputBuffers) {
       }
     }
   }
-  
+
   blockStartTimestamp = nextBlockStartTimestamp;
-  
+
   // copy the output audio to the given buffer
   memcpy(outputBuffers, globalDspOutputBuffers, numBytesInOutputBuffers);
-  
+
   unlock(); // unlock the context
 }
 
@@ -250,7 +250,7 @@ void PdContext::printErr(const char *msg, ...) {
   va_start(ap, msg);
   vsnprintf(stringBuffer, sizeof(stringBuffer), msg, ap);
   va_end(ap);
-  
+
   printErr(stringBuffer);
 }
 
@@ -266,7 +266,7 @@ void PdContext::printStd(const char *msg, ...) {
   va_start(ap, msg);
   vsnprintf(stringBuffer, sizeof(stringBuffer), msg, ap);
   va_end(ap);
-  
+
   printStd(stringBuffer);
 }
 
@@ -277,7 +277,7 @@ void PdContext::registerDspReceive(DspReceive *dspReceive) {
   // NOTE(mhroth): no duplicate check is made for dspReceive
   list<DspReceive *> *receiveList = &(dspReceiveMap[string(dspReceive->getName())]);
   receiveList->push_back(dspReceive);
-  
+
   // connect receive~ to associated send~
   DspSend *dspSend = getDspSend(dspReceive->getName());
   if (dspSend != NULL) {
@@ -298,14 +298,14 @@ void PdContext::registerDspSend(DspSend *dspSend) {
     return;
   }
   dspSendList.push_back(dspSend);
-  
+
   // connect associated receive~s to send~.
   updateDspReceiveForSendWitBuffer(dspSend->getName(), dspSend->getDspBufferAtOutlet(0));
 }
 
 void PdContext::unregisterDspSend(DspSend *dspSend) {
   dspSendList.remove(dspSend);
-  
+
   // inform all previously connected receive~s that the send~ buffer does not exist anymore.
   updateDspReceiveForSendWitBuffer(dspSend->getName(), dspSend->getGraph()->getBufferPool()->getZeroBuffer());
 }
@@ -342,7 +342,7 @@ void PdContext::registerDelayline(DspDelayWrite *delayline) {
     return;
   }
   delaylineList.push_back(delayline);
-  
+
   // connect this delayline to all same-named delay receivers
   for (list<DelayReceiver *>::iterator it = delayReceiverList.begin(); it != delayReceiverList.end(); it++) {
     if (!strcmp((*it)->getName(), delayline->getName())) (*it)->setDelayline(delayline);
@@ -351,7 +351,7 @@ void PdContext::registerDelayline(DspDelayWrite *delayline) {
 
 void PdContext::registerDelayReceiver(DelayReceiver *delayReceiver) {
   delayReceiverList.push_back(delayReceiver);
-  
+
   // connect the delay receiver to the named delayline
   DspDelayWrite *delayline = getDelayline(delayReceiver->getName());
   delayReceiver->setDelayline(delayline);
@@ -367,7 +367,7 @@ DspDelayWrite *PdContext::getDelayline(const char *name) {
 void PdContext::registerDspThrow(DspThrow *dspThrow) {
   // NOTE(mhroth): no duplicate testing for the same object more than once
   throwList.push_back(dspThrow);
-  
+
   DspCatch *dspCatch = getDspCatch(dspThrow->getName());
   if (dspCatch != NULL) {
     dspCatch->addThrow(dspThrow);
@@ -381,7 +381,7 @@ void PdContext::registerDspCatch(DspCatch *dspCatch) {
     return;
   }
   catchList.push_back(dspCatch);
-  
+
   // connect catch~ to all associated throw~s
   for (list<DspThrow *>::iterator it = throwList.begin(); it != throwList.end(); it++) {
     if (!strcmp((*it)->getName(), dspCatch->getName())) dspCatch->addThrow((*it));
@@ -395,13 +395,13 @@ DspCatch *PdContext::getDspCatch(const char *name) {
   return NULL;
 }
 
-void PdContext::registerTable(MessageTable *table) {  
+void PdContext::registerTable(MessageTable *table) {
   if (getTable(table->getName()) != NULL) {
     printErr("Table with name \"%s\" already exists.", table->getName());
     return;
   }
   tableList.push_back(table);
-  
+
   for (list<TableReceiverInterface *>::iterator it = tableReceiverList.begin();
       it != tableReceiverList.end(); it++) {
     // in case the table receiver doesn't have the table name yet
@@ -420,7 +420,7 @@ MessageTable *PdContext::getTable(const char *name) {
 
 void PdContext::registerTableReceiver(TableReceiverInterface *tableReceiver) {
   tableReceiverList.push_back(tableReceiver); // add the new receiver
-  
+
   // in case the tableread doesnt have the name of the table yet
   if (tableReceiver->getName()) {
     MessageTable *table = getTable(tableReceiver->getName());
@@ -464,16 +464,16 @@ void PdContext::scheduleExternalMessageV(const char *receiverName, double timest
     const char *messageFormat, va_list ap) {
   int numElements = strlen(messageFormat);
   PdMessage *message = PD_MESSAGE_ON_STACK(numElements);
-  message->initWithTimestampAndNumElements(timestamp, numElements);
+  message->from_timestamp(timestamp, numElements);
   for (int i = 0; i < numElements; i++) { // format message
     switch (messageFormat[i]) {
-      case 'f': message->setFloat(i, (float) va_arg(ap, double)); break;
-      case 's': message->setSymbol(i, (char *) va_arg(ap, char *)); break;
-      case 'b': message->setBang(i); break;
+      case 'f': message->set_float(i, (float) va_arg(ap, double)); break;
+      case 's': message->set_symbol(i, (char *) va_arg(ap, char *)); break;
+      case 'b': message->set_bang(i); break;
       default: break;
     }
   }
-  
+
   scheduleExternalMessage(receiverName, message);
 }
 
@@ -491,8 +491,8 @@ void PdContext::scheduleExternalMessage(const char *receiverName, double timesta
   int maxElements = (strlen(initString)/2)+1;
   PdMessage *message = PD_MESSAGE_ON_STACK(maxElements);
   char str[strlen(initString)+1]; strcpy(str, initString);
-  message->initWithString(timestamp, maxElements, str);
-  
+  message->from_string(timestamp, maxElements, str);
+
   lock(); // lock and load
   int receiverNameIndex = sendController->getNameIndex(receiverName);
   if (receiverNameIndex >= 0) { // if the receiver exists
@@ -505,7 +505,7 @@ PdMessage *PdContext::scheduleMessage(MessageObject *messageObject, unsigned int
   // basic argument checking. It may happen that the message is NULL in case a cancel message
   // is sent multiple times to a particular object, when no message is pending
   if (message != NULL && messageObject != NULL) {
-    message = message->copyToHeap();
+    message = message->clone_on_heap();
     messageCallbackQueue->insertMessage(messageObject, outletIndex, message);
     return message;
   }
@@ -521,11 +521,11 @@ void PdContext::cancelMessage(MessageObject *messageObject, int outletIndex, PdM
 
 void PdContext::receiveSystemMessage(PdMessage *message) {
   // TODO(mhroth): What are all of the possible system messages?
-  if (message->isSymbol(0, "obj")) {
+  if (message->is_symbol_str(0, "obj")) {
     // TODO(mhroth): dynamic patching
   } else if (callbackFunction != NULL) {
-    if (message->isSymbol(0, "dsp") && message->isFloat(1)) {
-      int result = (message->getFloat(1) != 0.0f) ? 1 : 0;
+    if (message->is_symbol_str(0, "dsp") && message->is_float(1)) {
+      int result = (message->get_float(1) != 0.0f) ? 1 : 0;
       callbackFunction(ZG_PD_DSP, callbackUserData, &result);
     }
   } else {

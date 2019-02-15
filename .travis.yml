@@ -16,6 +16,8 @@ script:
   - cargo clippy
   - cargo build --no-default-features --release
   - cargo build --release
+  - cargo test --no-default-features
   - cargo test
+  - cargo test --no-default-features --release
   - cargo test --release
   - cargo doc --all --no-deps

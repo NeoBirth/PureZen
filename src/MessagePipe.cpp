@@ -2,7 +2,7 @@
  *  Copyright 2009,2010,2011 Reality Jockey, Ltd.
  *                 info@rjdj.me
  *                 http://rjdj.me/
- * 
+ *
  *  This file is part of ZenGarden.
  *
  *  ZenGarden is free software: you can redistribute it and/or modify
@@ -14,7 +14,7 @@
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU Lesser General Public License for more details.
- *  
+ *
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with ZenGarden.  If not, see <http://www.gnu.org/licenses/>.
  *
@@ -28,7 +28,7 @@ MessageObject *MessagePipe::newObject(PdMessage *initMessage, PdGraph *graph) {
 }
 
 MessagePipe::MessagePipe(PdMessage *initMessage, PdGraph *graph) : MessageObject(2, 1, graph) {
-  delayMs = initMessage->isFloat(0) ? (double) initMessage->getFloat(0) : 0.0;
+  delayMs = initMessage->is_float(0) ? (double) initMessage->get_float(0) : 0.0;
 }
 
 MessagePipe::~MessagePipe() {
@@ -48,21 +48,21 @@ void MessagePipe::sendMessage(int outletIndex, PdMessage *message) {
 void MessagePipe::processMessage(int inletIndex, PdMessage *message) {
   switch (inletIndex) {
     case 0: {
-      switch (message->getType(0)) {
+      switch (message->get_type(0)) {
         case SYMBOL: {
-          if (message->isSymbol(0, "flush")) {
+          if (message->is_symbol_str(0, "flush")) {
             // cancel all scheduled messages and send them immediately
             for(list<PdMessage *>::iterator it = scheduledMessagesList.begin();
                 it != scheduledMessagesList.end(); it++) {
               // send the message using the super class's sendMessage because otherwise the
               // list will be changed while iterating over it. Leads to badness.
-              (*it)->setTimestamp(message->getTimestamp());
+              (*it)->set_timestamp(message->get_timestamp());
               MessageObject::sendMessage(0, *it);
               graph->cancelMessage(this, 0, *it); // cancel the scheduled message and free it from memory
             }
             scheduledMessagesList.clear();
             break;
-          } else if (message->isSymbol(0, "clear")) {
+          } else if (message->is_symbol_str(0, "clear")) {
             // cancel all scheduled messages
             for(list<PdMessage *>::iterator it = scheduledMessagesList.begin();
                 it != scheduledMessagesList.end(); it++) {
@@ -76,10 +76,10 @@ void MessagePipe::processMessage(int inletIndex, PdMessage *message) {
         case FLOAT:
         case BANG: {
           // copy the message, update the timestamp, schedule it to be sent later
-          int numElements = message->getNumElements();
+          int numElements = message->get_num_elements();
           PdMessage *scheduledMessage = PD_MESSAGE_ON_STACK(numElements);
-          scheduledMessage->initWithTimestampAndNumElements(message->getTimestamp() + delayMs, numElements);
-          memcpy(scheduledMessage->getElement(0), message->getElement(0), numElements * sizeof(MessageAtom));
+          scheduledMessage->from_timestamp(message->get_timestamp() + delayMs, numElements);
+          memcpy(scheduledMessage->get_element(0), message->get_element(0), numElements * sizeof(MessageAtom));
           scheduledMessagesList.push_back(graph->scheduleMessage(this, 0, scheduledMessage));
           break;
         }
@@ -89,8 +89,8 @@ void MessagePipe::processMessage(int inletIndex, PdMessage *message) {
       }
     }
     case 1: {
-      if (message->isFloat(0)) {
-        delayMs = (double) message->getFloat(0);
+      if (message->is_float(0)) {
+        delayMs = (double) message->get_float(0);
       }
       break;
     }

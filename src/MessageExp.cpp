@@ -35,9 +35,9 @@ MessageExp::~MessageExp() {
 }
 
 void MessageExp::processMessage(int inletIndex, PdMessage *message) {
-  if (message->isFloat(0)) {
+  if (message->is_float(0)) {
     PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(1);
-    outgoingMessage->initWithTimestampAndFloat(message->getTimestamp(), expf(message->getFloat(0)));
+    outgoingMessage->initWithTimestampAndFloat(message->get_timestamp(), expf(message->get_float(0)));
     sendMessage(0, outgoingMessage);    
   }
 }

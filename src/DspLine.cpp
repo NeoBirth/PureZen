@@ -41,14 +41,14 @@ DspLine::~DspLine() {
 
 void DspLine::processMessage(int inletIndex, PdMessage *message) {
   if (inletIndex == 0) { // not sure what the right inlet is for
-    switch (message->getNumElements()) {
+    switch (message->get_num_elements()) {
       case 0: {
         break; // nothing to do
       }
       case 1: {
         // jump to value
-        if (message->isFloat(0)) {
-          target = message->getFloat(0);
+        if (message->is_float(0)) {
+          target = message->get_float(0);
           lastOutputSample = target;
           slope = 0.0f;
           numSamplesToTarget = 0.0f;
@@ -57,9 +57,9 @@ void DspLine::processMessage(int inletIndex, PdMessage *message) {
       }
       default: { // at least two inputs
         // new ramp
-        if (message->isFloat(0) && message->isFloat(1)) {
-          target = message->getFloat(0);
-          float timeToTargetMs = message->getFloat(1); // no negative time to targets!
+        if (message->is_float(0) && message->is_float(1)) {
+          target = message->get_float(0);
+          float timeToTargetMs = message->get_float(1); // no negative time to targets!
           numSamplesToTarget = utils::millisecondsToSamples(
               (timeToTargetMs < 1.0f) ? 1.0f : timeToTargetMs, graph->getSampleRate());
           slope = (target - lastOutputSample) / numSamplesToTarget;

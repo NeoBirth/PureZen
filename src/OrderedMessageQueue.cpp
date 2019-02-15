@@ -39,7 +39,7 @@ void OrderedMessageQueue::insertMessage(MessageObject *messageObject, int outlet
   ObjectMessageLetPair omlPair = make_pair(messageObject, make_pair(message, outletIndex));
   for (list<ObjectMessageLetPair>::iterator it = orderedMessageQueue.begin();
        it != orderedMessageQueue.end(); ++it) {
-    if (message->getTimestamp() < it->second.first->getTimestamp()) {
+    if (message->get_timestamp() < it->second.first->get_timestamp()) {
       orderedMessageQueue.insert(it, omlPair);
       return;
     }

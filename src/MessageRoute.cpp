@@ -27,8 +27,8 @@ MessageObject *MessageRoute::newObject(PdMessage *initMessage, PdGraph *graph) {
 }
 
 MessageRoute::MessageRoute(PdMessage *initMessage, PdGraph *graph) : 
-    MessageObject(1, initMessage->getNumElements()+1, graph) {
-  routeMessage = initMessage->copyToHeap();
+    MessageObject(1, initMessage->get_num_elements()+1, graph) {
+  routeMessage = initMessage->clone_on_heap();
 }
 
 MessageRoute::~MessageRoute() {
@@ -36,12 +36,12 @@ MessageRoute::~MessageRoute() {
 }
 
 void MessageRoute::processMessage(int inletIndex, PdMessage *message) {
-  int numRouteChecks = routeMessage->getNumElements();
+  int numRouteChecks = routeMessage->get_num_elements();
   int outletIndex = numRouteChecks; // by default, send the message out of the right outlet
   // find which indicator that message matches
-  MessageAtom *messageAtom = message->getElement(0);
+  MessageAtom *messageAtom = message->get_element(0);
   for (int i = 0; i < numRouteChecks; i++) {
-    if (routeMessage->atomIsEqualTo(i, messageAtom)) {
+    if (routeMessage->atom_is_equal_to(i, messageAtom)) {
       outletIndex = i;
       break;
     }
@@ -52,10 +52,10 @@ void MessageRoute::processMessage(int inletIndex, PdMessage *message) {
     sendMessage(outletIndex, message);
   } else {
     // construct a new message to send from the given outlet
-    int numElements = message->getNumElements() - 1;
+    int numElements = message->get_num_elements() - 1;
     PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(numElements);
-    outgoingMessage->initWithTimestampAndNumElements(message->getTimestamp(), numElements);
-    memcpy(outgoingMessage->getElement(0), message->getElement(1), numElements*sizeof(MessageAtom));
+    outgoingMessage->from_timestamp(message->get_timestamp(), numElements);
+    memcpy(outgoingMessage->get_element(0), message->get_element(1), numElements*sizeof(MessageAtom));
     sendMessage(outletIndex, outgoingMessage);
   }
 }

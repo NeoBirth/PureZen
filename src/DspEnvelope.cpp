@@ -32,14 +32,14 @@ MessageObject *DspEnvelope::newObject(PdMessage *initMessage, PdGraph *graph) {
 }
 
 DspEnvelope::DspEnvelope(PdMessage *initMessage, PdGraph *graph) : DspObject(0, 1, 1, 0, graph) {
-  if (initMessage->isFloat(0)) {
-    if (initMessage->isFloat(1)) {
+  if (initMessage->is_float(0)) {
+    if (initMessage->is_float(1)) {
       // if two parameters are provided, set the window size and window interval
-      windowSize = initMessage->getFloat(0);
-      windowInterval = initMessage->getFloat(1);
+      windowSize = initMessage->get_float(0);
+      windowInterval = initMessage->get_float(1);
     } else {
       // if one parameter is provided, set the window size
-      windowSize = (int) initMessage->getFloat(0);
+      windowSize = (int) initMessage->get_float(0);
       setWindowInterval(windowSize/2);
     }
   } else {

@@ -27,7 +27,7 @@ MessageObject *MessageDivide::newObject(PdMessage *initMessage, PdGraph *graph) 
 }
 
 MessageDivide::MessageDivide(PdMessage *initMessage, PdGraph *graph) : MessageObject(2, 1, graph) {
-  constant = initMessage->isFloat(0) ? initMessage->getFloat(0) : 0.0f;
+  constant = initMessage->is_float(0) ? initMessage->get_float(0) : 0.0f;
   last = 0.0f;
 }
 
@@ -44,14 +44,14 @@ std::string MessageDivide::toString() {
 void MessageDivide::processMessage(int inletIndex, PdMessage *message) {
   switch (inletIndex) {
     case 0: {
-      switch (message->getType(0)) {
+      switch (message->get_type(0)) {
         case FLOAT: {
-          last = constant == 0.0f ? 0.0f : message->getFloat(0) / constant;
+          last = constant == 0.0f ? 0.0f : message->get_float(0) / constant;
           // allow fallthrough
         }
         case BANG: {
           PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(1);
-          outgoingMessage->initWithTimestampAndFloat(message->getTimestamp(), last);
+          outgoingMessage->initWithTimestampAndFloat(message->get_timestamp(), last);
           sendMessage(0, outgoingMessage);
           break;
         }
@@ -60,8 +60,8 @@ void MessageDivide::processMessage(int inletIndex, PdMessage *message) {
       break;
     }
     case 1: {
-      if (message->isFloat(0)) {
-        constant = message->getFloat(0);
+      if (message->is_float(0)) {
+        constant = message->get_float(0);
       }
       break;
     }

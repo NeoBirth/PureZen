@@ -188,7 +188,7 @@ void DspObject::receiveMessage(int inletIndex, PdMessage *message) {
   if (graph->isSwitchedOn()) {
     // Copy the message to the heap so that it is available to process later.
     // The message is released once it is consumed in processDsp().
-    messageQueue.push(make_pair(message->copyToHeap(), inletIndex));
+    messageQueue.push(make_pair(message->clone_on_heap(), inletIndex));
     
     // only process the message if the process function is set to the default no-message function.
     // If it is set to anything else, then it is assumed that messages should not be processed.

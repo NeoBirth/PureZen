@@ -2,7 +2,7 @@
  *  Copyright 2009,2010 Reality Jockey, Ltd.
  *                 info@rjdj.me
  *                 http://rjdj.me/
- * 
+ *
  *  This file is part of ZenGarden.
  *
  *  ZenGarden is free software: you can redistribute it and/or modify
@@ -14,7 +14,7 @@
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU Lesser General Public License for more details.
- *  
+ *
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with ZenGarden.  If not, see <http://www.gnu.org/licenses/>.
  *
@@ -30,43 +30,43 @@
 
 /** Implements a Pd message element. */
 class MessageElement {
-  
+
   public:
     MessageElement();
     MessageElement(float newConstant);
     MessageElement(char *newSymbol);
     ~MessageElement();
-    
-    MessageElementType getType();
-    bool isFloat();
-    bool isSymbol();
-    bool isBang();
-    bool isSymbolAnythingOrA();
-    bool isSymbolBangOrB();
-    bool isSymbolFloatOrF();
-    bool isSymbolListOrL();
+
+    message::element::Type getType();
+    bool is_float();
+    bool is_smbol();
+    bool is_bang();
+    bool is_symbol_anything_or_a();
+    bool is_symbol_bang_or_b();
+    bool is_symbol_float_or_f();
+    bool is_symbol_list_or_l();
     bool isSymbolSymbolOrS();
-    
-    void setFloat(float constant);
-    float getFloat();
-    
-    void setSymbol(char *symbol);
-    char *getSymbol();
-  
-    void setBang();
-  
+
+    void set_float(float constant);
+    float get_float();
+
+    void set_symbol(char *symbol);
+    char *get_symbol();
+
+    void set_bang();
+
     /** Sets the type of this element to ANYTHING. What that means is otherwise undefined. */
-    void setAnything();
-  
+    void set_anything();
+
     /** Sets the type of this element to LIST. What that means is otherwise undefined. */
-    void setList();
-  
+    void set_list();
+
     MessageElement *copy();
-  
+
     bool equals(MessageElement *messageElement);
-    
+
   private:
-    MessageElementType currentType;
+    message::element::Type currentType;
     float constant;
     char symbol[SYMBOL_BUFFER_LENGTH];
 };

@@ -27,11 +27,11 @@ MessageObject *MessageClip::newObject(PdMessage *initMessage, PdGraph *graph) {
 }
 
 MessageClip::MessageClip(PdMessage *initMessage, PdGraph *graph) : MessageObject(3, 1, graph) {
-  if (initMessage->isFloat(0)) {
-    if (initMessage->isFloat(1)) {
-      init(initMessage->getFloat(0), initMessage->getFloat(1));
+  if (initMessage->is_float(0)) {
+    if (initMessage->is_float(1)) {
+      init(initMessage->get_float(0), initMessage->get_float(1));
     } else {
-      init(initMessage->getFloat(0), 0.0f);
+      init(initMessage->get_float(0), 0.0f);
     }
   } else {
     init(0.0f, 0.0f);
@@ -50,28 +50,28 @@ void MessageClip::init(float lowerBound, float upperBound) {
 void MessageClip::processMessage(int inletIndex, PdMessage *message) {
   switch (inletIndex) {
     case 0: {
-      if (message->isFloat(0)) {
-        float output = message->getFloat(0);
+      if (message->is_float(0)) {
+        float output = message->get_float(0);
         if (output < lowerBound) {
           output = lowerBound;
         } else if (output > upperBound) {
           output = upperBound;
         }
         PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(1);
-        outgoingMessage->initWithTimestampAndFloat(message->getTimestamp(), output);
+        outgoingMessage->initWithTimestampAndFloat(message->get_timestamp(), output);
         sendMessage(0, outgoingMessage);
       }
       break;
     }
     case 1: {
-      if (message->isFloat(0)) {
-        lowerBound = message->getFloat(0);
+      if (message->is_float(0)) {
+        lowerBound = message->get_float(0);
       }
       break;
     }
     case 2: {
-      if (message->isFloat(0)) {
-        upperBound = message->getFloat(0);
+      if (message->is_float(0)) {
+        upperBound = message->get_float(0);
       }
       break;
     }

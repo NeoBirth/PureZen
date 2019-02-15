@@ -27,7 +27,7 @@ MessageObject *MessageLessThan::newObject(PdMessage *initMessage, PdGraph *graph
 }
 
 MessageLessThan::MessageLessThan(PdMessage *initMessage, PdGraph *graph) : MessageObject(2, 1, graph) {
-  constant = initMessage->isFloat(0) ? initMessage->getFloat(0) : 0.0f;
+  constant = initMessage->is_float(0) ? initMessage->get_float(0) : 0.0f;
   lastOutput = 0.0f;
 }
 
@@ -38,14 +38,14 @@ MessageLessThan::~MessageLessThan() {
 void MessageLessThan::processMessage(int inletIndex, PdMessage *message) {
   switch (inletIndex) {
     case 0: {
-      switch (message->getType(0)) {
+      switch (message->get_type(0)) {
         case FLOAT: {
-          lastOutput = (message->getFloat(0) < constant) ? 1.0f : 0.0f;
+          lastOutput = (message->get_float(0) < constant) ? 1.0f : 0.0f;
           // allow fallthrough
         }
         case BANG: {
           PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(1);
-          outgoingMessage->initWithTimestampAndFloat(message->getTimestamp(), lastOutput);
+          outgoingMessage->initWithTimestampAndFloat(message->get_timestamp(), lastOutput);
           sendMessage(0, outgoingMessage);
           break;
         }
@@ -56,8 +56,8 @@ void MessageLessThan::processMessage(int inletIndex, PdMessage *message) {
       break;
     }
     case 1: {
-      if (message->isFloat(0)) {
-        constant = message->getFloat(0);
+      if (message->is_float(0)) {
+        constant = message->get_float(0);
       }
       break;
     }

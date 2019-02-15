@@ -35,9 +35,9 @@ MessageTangent::~MessageTangent() {
 }
 
 void MessageTangent::processMessage(int inletIndex, PdMessage *message) {
-  if (message->isFloat(0)) {
+  if (message->is_float(0)) {
     PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(1);
-    outgoingMessage->initWithTimestampAndFloat(message->getTimestamp(), tanf(message->getFloat(0)));
+    outgoingMessage->initWithTimestampAndFloat(message->get_timestamp(), tanf(message->get_float(0)));
     sendMessage(0, outgoingMessage);
   }
 }
