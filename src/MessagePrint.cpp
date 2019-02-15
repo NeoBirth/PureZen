@@ -28,8 +28,8 @@ MessageObject *MessagePrint::newObject(PdMessage *initMessage, PdGraph *graph) {
 }
 
 MessagePrint::MessagePrint(PdMessage *initMessage, PdGraph *graph) : MessageObject(1, 0, graph) {
-  if (initMessage->isSymbol(0)) {
-    name = initMessage->isSymbol(0, "-n") ? NULL : utils::copy_string(initMessage->getSymbol(0));
+  if (initMessage->is_symbol(0)) {
+    name = initMessage->is_symbol_str(0, "-n") ? NULL : utils::copy_string(initMessage->get_symbol(0));
   } else {
     name = utils::copy_string((char *) "print");
   }
@@ -42,9 +42,9 @@ MessagePrint::~MessagePrint() {
 void MessagePrint::processMessage(int inletIndex, PdMessage *message) {
   char *out = message->toString();
   if (name != NULL) {
-    graph->printStd("[@ %.3fms] %s: %s", message->getTimestamp(), name, out);
+    graph->printStd("[@ %.3fms] %s: %s", message->get_timestamp(), name, out);
   } else {
-    graph->printStd("[@ %.3fms] %s", message->getTimestamp(), out);
+    graph->printStd("[@ %.3fms] %s", message->get_timestamp(), out);
   }
   free(out);
 }

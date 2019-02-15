@@ -53,24 +53,24 @@ void MessageObject::receiveMessage(int inletIndex, PdMessage *message) {
   int numMessageInlets = incomingMessageConnections.size();
   if (inletIndex == 0 &&
       numMessageInlets > 1 &&
-      message->getNumElements() > 1 &&
+      message->get_num_elements() > 1 &&
       shouldDistributeMessageToInlets()) {
     // if the message should be distributed across the inlets
-    int maxInletToDistribute = (message->getNumElements() < numMessageInlets)
-        ? message->getNumElements() : numMessageInlets;
+    int maxInletToDistribute = (message->get_num_elements() < numMessageInlets)
+        ? message->get_num_elements() : numMessageInlets;
     PdMessage *distributedMessage = PD_MESSAGE_ON_STACK(1);
     for (int i = maxInletToDistribute-1; i >= 0; i--) { // send to right-most inlet first
-      switch (message->getType(i)) {
+      switch (message->get_type(i)) {
         case FLOAT: {
-          distributedMessage->initWithTimestampAndFloat(message->getTimestamp(), message->getFloat(i));
+          distributedMessage->initWithTimestampAndFloat(message->get_timestamp(), message->get_float(i));
           break;
         }
         case SYMBOL: {
-          distributedMessage->initWithTimestampAndSymbol(message->getTimestamp(), message->getSymbol(i));
+          distributedMessage->initWithTimestampAndSymbol(message->get_timestamp(), message->get_symbol(i));
           break;
         }
         case BANG: {
-          distributedMessage->initWithTimestampAndBang(message->getTimestamp());
+          distributedMessage->initWithTimestampAndBang(message->get_timestamp());
           break;
         }
         default: {

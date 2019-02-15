@@ -2,7 +2,7 @@
  *  Copyright 2012 Reality Jockey, Ltd.
  *                 info@rjdj.me
  *                 http://rjdj.me/
- * 
+ *
  *  This file is part of ZenGarden.
  *
  *  ZenGarden is free software: you can redistribute it and/or modify
@@ -14,7 +14,7 @@
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU Lesser General Public License for more details.
- *  
+ *
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with ZenGarden.  If not, see <http://www.gnu.org/licenses/>.
  *
@@ -33,7 +33,7 @@ DspVariableLine::DspVariableLine(PdMessage *initMessage, PdGraph *graph) : DspOb
   target = 0.0f;
   slope = 0.0f;
   lastOutputSample = 0.0f;
-  
+
   processFunction = &processSignal;
   processFunctionNoMessage = &processSignal;
 }
@@ -45,20 +45,20 @@ DspVariableLine::~DspVariableLine() {
 
 void DspVariableLine::processMessage(int inletIndex, PdMessage *message) {
   switch (inletIndex) {
-    case 0: { 
-      if (message->isFloat(0)) {
-        float target = message->getFloat(0);
-        float interval = message->isFloat(1) ? message->getFloat(1) : 0.0f;
-        float delay = message->isFloat(2) ? message->getFloat(2) : 0.0f;
-        
+    case 0: {
+      if (message->is_float(0)) {
+        float target = message->get_float(0);
+        float interval = message->is_float(1) ? message->get_float(1) : 0.0f;
+        float delay = message->is_float(2) ? message->get_float(2) : 0.0f;
+
         // clear all messages after the given start time, insert the new message into the list
         PdMessage *controlMessage = PD_MESSAGE_ON_STACK(2);
-        controlMessage->initWithTimestampAndNumElements(message->getTimestamp() + delay, 2);
-        controlMessage->setFloat(0, target);
-        controlMessage->setFloat(1, interval);
-        
-        clearAllMessagesAtOrAfter(controlMessage->getTimestamp());
-        
+        controlMessage->from_timestamp(message->get_timestamp() + delay, 2);
+        controlMessage->set_float(0, target);
+        controlMessage->set_float(1, interval);
+
+        clearAllMessagesAtOrAfter(controlMessage->get_timestamp());
+
         if (delay == 0.0f) {
           // if there is no delay on the message, act on it immediately
           updatePathWithMessage(controlMessage);
@@ -66,11 +66,11 @@ void DspVariableLine::processMessage(int inletIndex, PdMessage *message) {
           PdMessage *heapMessage = graph->scheduleMessage(this, 0, controlMessage);
           messageList.push_back(heapMessage);
         }
-        
-      } else if (message->isSymbol(0, "stop")) {
+
+      } else if (message->is_symbol_str(0, "stop")) {
         // clear all pending messages
         clearAllMessagesFrom(messageList.begin());
-        
+
         // freeze output at current value
         updatePathWithMessage(NULL);
       }
@@ -89,7 +89,7 @@ void DspVariableLine::processMessage(int inletIndex, PdMessage *message) {
 void DspVariableLine::clearAllMessagesAtOrAfter(double timestamp) {
   for (list<PdMessage *>::iterator it = messageList.begin(); it != messageList.end(); ++it) {
     PdMessage *message = *it;
-    if (timestamp < message->getTimestamp()) {
+    if (timestamp < message->get_timestamp()) {
       clearAllMessagesFrom(it);
       break;
     }
@@ -102,7 +102,7 @@ void DspVariableLine::clearAllMessagesFrom(list<PdMessage *>::iterator it) {
     PdMessage *message = *it++;
     graph->cancelMessage(this, 0, message);
   }
-  
+
   messageList.erase(itCopy, messageList.end());
 }
 
@@ -112,8 +112,8 @@ void DspVariableLine::updatePathWithMessage(PdMessage *message) {
     numSamplesToTarget = 0.0f;
     slope = 0.0f;
   } else {
-    target = message->getFloat(0);
-    numSamplesToTarget = utils::millisecondsToSamples(message->getFloat(1), graph->getSampleRate());
+    target = message->get_float(0);
+    numSamplesToTarget = utils::millisecondsToSamples(message->get_float(1), graph->getSampleRate());
     if (numSamplesToTarget == 0.0f) {
       lastOutputSample = target;
       slope = 0.0f;
@@ -134,7 +134,7 @@ void DspVariableLine::sendMessage(int outletIndex, PdMessage *message) {
 // NOTE(mhroth): this code could be improved to be sub-sample accurate with regards to calculating last sample output
 void DspVariableLine::processSignal(DspObject *dspObject, int fromIndex, int toIndex) {
   DspVariableLine *d = reinterpret_cast<DspVariableLine *>(dspObject);
-  
+
   if (d->numSamplesToTarget <= 0.0f) {
     ArrayArithmetic::fill(d->dspBufferAtOutlet[0], d->lastOutputSample, fromIndex, toIndex);
   } else {
@@ -145,9 +145,9 @@ void DspVariableLine::processSignal(DspObject *dspObject, int fromIndex, int toI
       #if __APPLE__
       vDSP_vramp(&(d->lastOutputSample), &(d->slope), d->dspBufferAtOutlet[0]+fromIndex, 1, n);
       #else
-            
+
       #endif
-      
+
       d->lastOutputSample = d->dspBufferAtOutlet[0][toIndex-1] + d->slope;
       d->numSamplesToTarget -= n;
     } else {
@@ -155,14 +155,14 @@ void DspVariableLine::processSignal(DspObject *dspObject, int fromIndex, int toI
       #if __APPLE__
       vDSP_vramp(&(d->lastOutputSample), &(d->slope), d->dspBufferAtOutlet[0]+fromIndex, 1, (int) d->numSamplesToTarget);
       #else
-            
+
       #endif
       // update the path
       d->slope = 0.0f;
       d->lastOutputSample = d->target;
       fromIndex += (int) ceilf(d->numSamplesToTarget);
       d->numSamplesToTarget = 0.0f;
-      
+
       // process the remainder of the buffer
      ArrayArithmetic::fill(d->dspBufferAtOutlet[0], d->lastOutputSample, fromIndex, toIndex);
     }

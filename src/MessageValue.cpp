@@ -28,8 +28,8 @@ MessageObject *MessageValue::newObject(PdMessage *initMessage, PdGraph *graph) {
 }
 
 MessageValue::MessageValue(PdMessage *initMessage, PdGraph *graph) : MessageObject(1, 1, graph) {
-  if (initMessage->isSymbol(0)) {
-    name = utils::copy_string(initMessage->getSymbol(0));
+  if (initMessage->is_symbol(0)) {
+    name = utils::copy_string(initMessage->get_symbol(0));
   } else {
     name = NULL;
     graph->printErr("Object \"value\" MUST be initialised with a name.");
@@ -41,14 +41,14 @@ MessageValue::~MessageValue() {
 }
 
 void MessageValue::processMessage(int inletIndex, PdMessage *message) {
-  switch (message->getType(0)) {
+  switch (message->get_type(0)) {
     case FLOAT: {
-      graph->setValueForName(name, message->getFloat(0));
+      graph->setValueForName(name, message->get_float(0));
       break;
     }
     case BANG: {
       PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(1);
-      outgoingMessage->initWithTimestampAndFloat(message->getTimestamp(), graph->getValueForName(name));
+      outgoingMessage->initWithTimestampAndFloat(message->get_timestamp(), graph->getValueForName(name));
       sendMessage(0, outgoingMessage);
       break;
     }

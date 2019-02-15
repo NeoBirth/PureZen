@@ -56,12 +56,12 @@ PdGraph::PdGraph(PdMessage *initMessage, PdGraph *parentGraph, PdContext *contex
       
   // initialise the graph arguments
   this->graphId = graphId;
-  int numInitElements = initMessage->getNumElements();
+  int numInitElements = initMessage->get_num_elements();
   graphArguments = PD_MESSAGE_ON_STACK(numInitElements+1);
-  graphArguments->initWithTimestampAndNumElements(0.0, numInitElements+1);
-  graphArguments->setFloat(0, (float) graphId); // $0
-  memcpy(graphArguments->getElement(1), initMessage->getElement(0), numInitElements * sizeof(MessageAtom));
-  graphArguments = graphArguments->copyToHeap();
+  graphArguments->from_timestamp(0.0, numInitElements+1);
+  graphArguments->set_float(0, (float) graphId); // $0
+  memcpy(graphArguments->get_element(1), initMessage->get_element(0), numInitElements * sizeof(MessageAtom));
+  graphArguments = graphArguments->clone_on_heap();
   name = graphName;
 }
 
@@ -735,7 +735,7 @@ void PdGraph::printStd(const char *msg, ...) {
 
 double PdGraph::getBlockIndex(PdMessage *message) {
   // sampleRate is in samples/second, but we need samples/millisecond
-  return (message->getTimestamp() - context->getBlockStartTimestamp()) * 0.001 * context->getSampleRate();
+  return (message->get_timestamp() - context->getBlockStartTimestamp()) * 0.001 * context->getSampleRate();
 }
 
 float PdGraph::getSampleRate() {

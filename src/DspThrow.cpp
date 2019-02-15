@@ -29,8 +29,8 @@ MessageObject *DspThrow::newObject(PdMessage *initMessage, PdGraph *graph) {
 }
 
 DspThrow::DspThrow(PdMessage *initMessage, PdGraph *graph) : DspObject(0, 1, 0, 0, graph) {
-  if (initMessage->isSymbol(0)) {
-    name = utils::copy_string(initMessage->getSymbol(0));
+  if (initMessage->is_symbol(0)) {
+    name = utils::copy_string(initMessage->get_symbol(0));
     buffer = ALLOC_ALIGNED_BUFFER(graph->getBlockSize() * sizeof(float));
   } else {
     name = NULL;
@@ -46,7 +46,7 @@ DspThrow::~DspThrow() {
 }
 
 void DspThrow::processMessage(int inletIndex, PdMessage *message) {
-  if (inletIndex == 0 && message->isSymbol(0, "set") && message->isSymbol(1)) {
+  if (inletIndex == 0 && message->is_symbol_str(0, "set") && message->is_symbol(1)) {
     graph->printErr("throw~ does not support the \"set\" message.");
   }
 }

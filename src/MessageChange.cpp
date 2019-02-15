@@ -27,7 +27,7 @@ MessageObject *MessageChange::newObject(PdMessage *initMessage, PdGraph *graph) 
 }
 
 MessageChange::MessageChange(PdMessage *initMessage, PdGraph *graph) : MessageObject(1, 1, graph) {
-   prevValue = initMessage->isFloat(0) ? initMessage->getFloat(0) : 0.0f;
+   prevValue = initMessage->is_float(0) ? initMessage->get_float(0) : 0.0f;
 }
 
 MessageChange::~MessageChange() {
@@ -35,13 +35,13 @@ MessageChange::~MessageChange() {
 }
 
 void MessageChange::processMessage(int inletIndex, PdMessage *message) {
-  switch (message->getType(0)) {
+  switch (message->get_type(0)) {
     case FLOAT: {
       // output only if input is different than what is already there
-      float messageValue = message->getFloat(0);
+      float messageValue = message->get_float(0);
       if (messageValue != prevValue) {
         PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(1);
-        outgoingMessage->initWithTimestampAndFloat(message->getTimestamp(), messageValue);
+        outgoingMessage->initWithTimestampAndFloat(message->get_timestamp(), messageValue);
         prevValue = messageValue;
         sendMessage(0, outgoingMessage);
       }
@@ -50,13 +50,13 @@ void MessageChange::processMessage(int inletIndex, PdMessage *message) {
     case BANG: {
       // force output
       PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(1);
-      outgoingMessage->initWithTimestampAndFloat(message->getTimestamp(), prevValue);
+      outgoingMessage->initWithTimestampAndFloat(message->get_timestamp(), prevValue);
       sendMessage(0, outgoingMessage);
       break;
     }
     case SYMBOL: {
-      if (message->isSymbol(0, "set") && message->isFloat(1)) {
-        prevValue = message->getFloat(1);
+      if (message->is_symbol_str(0, "set") && message->is_float(1)) {
+        prevValue = message->get_float(1);
       }
       break;
     }

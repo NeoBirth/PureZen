@@ -41,15 +41,15 @@ ConnectionType DspSnapshot::getConnectionType(int outletIndex) {
 }
 
 void DspSnapshot::processMessage(int inletIndex, PdMessage *message) {
-  switch (message->getType(0)) {
+  switch (message->get_type(0)) {
     case SYMBOL: {
-      graph->printErr("[snapshot~] does not support the \"%s\" message.", message->getSymbol(0));
+      graph->printErr("[snapshot~] does not support the \"%s\" message.", message->get_symbol(0));
       break;
     }
     case BANG: {
       PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(1);
       double blockIndex = graph->getBlockIndex(message);
-      outgoingMessage->initWithTimestampAndFloat(message->getTimestamp(), dspBufferAtInlet[0][(int) blockIndex]);
+      outgoingMessage->initWithTimestampAndFloat(message->get_timestamp(), dspBufferAtInlet[0][(int) blockIndex]);
       sendMessage(0, outgoingMessage);
       break;
     }

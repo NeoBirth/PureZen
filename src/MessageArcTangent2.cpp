@@ -27,7 +27,7 @@ MessageObject *MessageArcTangent2::newObject(PdMessage *initMessage, PdGraph *gr
 }
 
 MessageArcTangent2::MessageArcTangent2(PdMessage *initMessage, PdGraph *graph) : MessageObject(2, 1, graph) {
-  constant = initMessage->isFloat(0) ? initMessage->getFloat(0) : 0.0f;
+  constant = initMessage->is_float(0) ? initMessage->get_float(0) : 0.0f;
 }
 
 MessageArcTangent2::~MessageArcTangent2() {
@@ -37,16 +37,16 @@ MessageArcTangent2::~MessageArcTangent2() {
 void MessageArcTangent2::processMessage(int inletIndex, PdMessage *message) {
   switch (inletIndex) {
     case 0: {
-      if (message->isFloat(0)) {
+      if (message->is_float(0)) {
         PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(1);
-        outgoingMessage->initWithTimestampAndFloat(message->getTimestamp(), atan2f(message->getFloat(0), constant));
+        outgoingMessage->initWithTimestampAndFloat(message->get_timestamp(), atan2f(message->get_float(0), constant));
         sendMessage(0, outgoingMessage);
       }
       break;
     }
     case 1: {
-      if (message->isFloat(0)) {
-        constant = message->getFloat(0);
+      if (message->is_float(0)) {
+        constant = message->get_float(0);
       }
       break;
     }

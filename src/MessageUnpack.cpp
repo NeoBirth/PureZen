@@ -28,17 +28,17 @@ MessageObject *MessageUnpack::newObject(PdMessage *initMessage, PdGraph *graph) 
 }
 
 MessageUnpack::MessageUnpack(PdMessage *initMessage, PdGraph *graph) :
-    MessageObject(1, (initMessage->getNumElements() < 2) ? 2 : initMessage->getNumElements(), graph) {
-  if (initMessage->getNumElements() < 2) {
+    MessageObject(1, (initMessage->get_num_elements() < 2) ? 2 : initMessage->get_num_elements(), graph) {
+  if (initMessage->get_num_elements() < 2) {
     // if unpack is not initialised with anything, assume two "anything" outputs
     templateMessage = PD_MESSAGE_ON_STACK(2);
-    templateMessage->initWithTimestampAndNumElements(0.0, 2);
-    templateMessage->setAnything(0);
-    templateMessage->setAnything(1);
-    templateMessage = templateMessage->copyToHeap();
+    templateMessage->from_timestamp(0.0, 2);
+    templateMessage->set_anything(0);
+    templateMessage->set_anything(1);
+    templateMessage = templateMessage->clone_on_heap();
   } else {
-    templateMessage = initMessage->copyToHeap();
-    templateMessage->resolveSymbolsToType();
+    templateMessage = initMessage->clone_on_heap();
+    templateMessage->resolve_symbols_to_type();
   }
 }
 
@@ -48,8 +48,8 @@ MessageUnpack::~MessageUnpack() {
 
 string MessageUnpack::toString() {
   std::string out = MessageUnpack::getObjectLabel();
-  for (int i = 0; i < templateMessage->getNumElements(); i++) {
-    switch (templateMessage->getType(i)) {
+  for (int i = 0; i < templateMessage->get_num_elements(); i++) {
+    switch (templateMessage->get_type(i)) {
       case FLOAT: out += " f"; break;
       case SYMBOL: out += " s"; break;
       case BANG: out += " b"; break;
@@ -62,33 +62,33 @@ string MessageUnpack::toString() {
 }
 
 void MessageUnpack::processMessage(int inletIndex, PdMessage *message) {
-  int numElements = message->getNumElements();
-  if (templateMessage->getNumElements() < message->getNumElements()) {
-    numElements = templateMessage->getNumElements();
+  int numElements = message->get_num_elements();
+  if (templateMessage->get_num_elements() < message->get_num_elements()) {
+    numElements = templateMessage->get_num_elements();
   }
   PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(1);
   for (int i = numElements-1; i >= 0; i--) {
-    MessageElementType elementType = templateMessage->getType(i);
-    if (elementType == message->getType(i) || elementType == ANYTHING) {
+    elementType = templateMessage->get_type(i);
+    if (elementType == message->get_type(i) || elementType == ANYTHING) {
       switch (elementType) {
         case FLOAT: {
-          outgoingMessage->initWithTimestampAndFloat(message->getTimestamp(), message->getFloat(i));
+          outgoingMessage->initWithTimestampAndFloat(message->get_timestamp(), message->get_float(i));
           sendMessage(i, outgoingMessage);
           break;
         }
         case SYMBOL: {
-          outgoingMessage->initWithTimestampAndSymbol(message->getTimestamp(), message->getSymbol(i));
+          outgoingMessage->initWithTimestampAndSymbol(message->get_timestamp(), message->get_symbol(i));
           sendMessage(i, outgoingMessage);
           break;
         }
         case ANYTHING: {
-          switch (message->getType(i)) {
+          switch (message->get_type(i)) {
             case FLOAT: {
-              outgoingMessage->initWithTimestampAndFloat(message->getTimestamp(), message->getFloat(i));
+              outgoingMessage->initWithTimestampAndFloat(message->get_timestamp(), message->get_float(i));
               break;
             }
             case SYMBOL: {
-              outgoingMessage->initWithTimestampAndSymbol(message->getTimestamp(), message->getSymbol(i));
+              outgoingMessage->initWithTimestampAndSymbol(message->get_timestamp(), message->get_symbol(i));
               break;
             }
             default: {
@@ -104,7 +104,7 @@ void MessageUnpack::processMessage(int inletIndex, PdMessage *message) {
     } else {
       graph->printErr("unpack: type mismatch: %s expected but got %s.",
           utils::message_element_type_to_string(elementType),
-          utils::message_element_type_to_string(message->getType(i)));
+          utils::message_element_type_to_string(message->get_type(i)));
     }
   }
 }

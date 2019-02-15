@@ -36,7 +36,7 @@ MessageSwitch::~MessageSwitch() {
 }
 
 void MessageSwitch::processMessage(int inletIndex, PdMessage *message) {
-  if (message->isFloat(0)) {
-    graph->setSwitch(message->getFloat(0) != 0.0f);
+  if (message->is_float(0)) {
+    graph->setSwitch(message->get_float(0) != 0.0f);
   }
 }

@@ -28,7 +28,7 @@ MessageObject *DspPrint::newObject(PdMessage *initMessage, PdGraph *graph) {
 }
 
 DspPrint::DspPrint(PdMessage *initMessage, PdGraph *graph) : DspObject(1, 1, 0, 0, graph) {
-  name = utils::copy_string(initMessage->isSymbol(0) ? initMessage->getSymbol(0) : (char *) "print~");
+  name = utils::copy_string(initMessage->is_symbol(0) ? initMessage->get_symbol(0) : (char *) "print~");
 }
 
 DspPrint::~DspPrint() {
@@ -36,7 +36,7 @@ DspPrint::~DspPrint() {
 }
 
 void DspPrint::processMessage(int inletIndex, PdMessage *message) {
-  if (message->isBang(0)) {
+  if (message->is_bang(0)) {
     int bufferMaxIndex = blockSizeInt - 1;
     int totalLength = snprintf(NULL, 0, "%s:\n", name);
     float *inputBuffer = dspBufferAtInlet[0];

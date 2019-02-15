@@ -23,7 +23,7 @@
 #include "MessageListPrepend.h"
 
 MessageListPrepend::MessageListPrepend(PdMessage *initMessage, PdGraph *graph) : MessageObject(2, 1, graph) {
-  prependMessage = initMessage->copyToHeap();
+  prependMessage = initMessage->clone_on_heap();
 }
 
 MessageListPrepend::~MessageListPrepend() {
@@ -33,13 +33,13 @@ MessageListPrepend::~MessageListPrepend() {
 void MessageListPrepend::processMessage(int inletIndex, PdMessage *message) {
   switch (inletIndex) {
     case 0: {
-      int numPrependElements = prependMessage->getNumElements();
-      int numMessageElements = message->getNumElements();
+      int numPrependElements = prependMessage->get_num_elements();
+      int numMessageElements = message->get_num_elements();
       int numElements = numPrependElements + numMessageElements;
       PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(numElements);
-      outgoingMessage->initWithTimestampAndNumElements(message->getTimestamp(), numElements);
-      memcpy(outgoingMessage->getElement(0), prependMessage->getElement(0), numPrependElements * sizeof(MessageAtom));
-      memcpy(outgoingMessage->getElement(numPrependElements), message->getElement(0), numMessageElements * sizeof(MessageAtom));
+      outgoingMessage->from_timestamp(message->get_timestamp(), numElements);
+      memcpy(outgoingMessage->get_element(0), prependMessage->get_element(0), numPrependElements * sizeof(MessageAtom));
+      memcpy(outgoingMessage->get_element(numPrependElements), message->get_element(0), numMessageElements * sizeof(MessageAtom));
       sendMessage(0, outgoingMessage);
       break;
     }
@@ -47,7 +47,7 @@ void MessageListPrepend::processMessage(int inletIndex, PdMessage *message) {
       // NOTE(mhroth): would be faster to copy in place rather than destroying and creating memory
       // can change if it becomes a problem
       prependMessage->freeMessage();
-      prependMessage = message->copyToHeap();
+      prependMessage = message->clone_on_heap();
       break;
     }
     default: {

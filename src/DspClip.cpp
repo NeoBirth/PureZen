@@ -30,8 +30,8 @@ MessageObject *DspClip::newObject(PdMessage *initMessage, PdGraph *graph) {
 }
 
 DspClip::DspClip(PdMessage *initMessage, PdGraph *graph) : DspObject(3, 1, 0, 1, graph) {
-  lowerBound = initMessage->isFloat(0) ? initMessage->getFloat(0) : -1.0f;
-  upperBound = initMessage->isFloat(1) ? initMessage->getFloat(1) : 1.0f;
+  lowerBound = initMessage->is_float(0) ? initMessage->get_float(0) : -1.0f;
+  upperBound = initMessage->is_float(1) ? initMessage->get_float(1) : 1.0f;
   processFunction = &processScalar;
   processFunctionNoMessage = &processScalar;
 }
@@ -48,8 +48,8 @@ std::string DspClip::toString() {
 
 void DspClip::processMessage(int inletIndex, PdMessage *message) {
   switch (inletIndex) {
-    case 1: if (message->isFloat(0)) lowerBound = message->getFloat(0); break; // set the lower bound
-    case 2: if (message->isFloat(0)) upperBound = message->getFloat(0); break; // set the upper bound
+    case 1: if (message->is_float(0)) lowerBound = message->get_float(0); break; // set the lower bound
+    case 2: if (message->is_float(0)) upperBound = message->get_float(0); break; // set the upper bound
     default: break;
   }
 }

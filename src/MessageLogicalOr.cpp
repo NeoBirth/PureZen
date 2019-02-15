@@ -38,14 +38,14 @@ MessageLogicalOr::~MessageLogicalOr() {
 void MessageLogicalOr::processMessage(int inletIndex, PdMessage *message) {
   switch (inletIndex) {
     case 0: {
-      switch (message->getType(0)) {
+      switch (message->get_type(0)) {
         case FLOAT: {
-          left = message->getFloat(0);
+          left = message->get_float(0);
           // allow fallthrough
         }
         case BANG: {
           PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(1);
-          outgoingMessage->initWithTimestampAndFloat(message->getTimestamp(),
+          outgoingMessage->initWithTimestampAndFloat(message->get_timestamp(),
               (left == 0.0f && right == 0.0f) ? 0.0f : 1.0f);
           sendMessage(0, outgoingMessage);
           break;
@@ -57,8 +57,8 @@ void MessageLogicalOr::processMessage(int inletIndex, PdMessage *message) {
       break;
     }
     case 1: {
-      if (message->isFloat(0)) {
-        right = message->getFloat(0);
+      if (message->is_float(0)) {
+        right = message->get_float(0);
       }
       break;
     }

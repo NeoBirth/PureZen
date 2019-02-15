@@ -30,7 +30,7 @@ MessageObject *DspMultiply::newObject(PdMessage *initMessage, PdGraph *graph) {
 }
 
 DspMultiply::DspMultiply(PdMessage *initMessage, PdGraph *graph) : DspObject(2, 2, 0, 1, graph) {
-  constant = initMessage->isFloat(0) ? initMessage->getFloat(0) : 0.0f;
+  constant = initMessage->is_float(0) ? initMessage->get_float(0) : 0.0f;
   inputConstant = 0.0f;
   processFunctionNoMessage = &processScalar;
 }
@@ -58,8 +58,8 @@ void DspMultiply::onInletConnectionUpdate(unsigned int inletIndex) {
 
 void DspMultiply::processMessage(int inletIndex, PdMessage *message) {
   switch (inletIndex) {
-    case 0: if (message->isFloat(0)) inputConstant = message->getFloat(0); break;
-    case 1: if (message->isFloat(0)) constant = message->getFloat(0); break;
+    case 0: if (message->is_float(0)) inputConstant = message->get_float(0); break;
+    case 1: if (message->is_float(0)) constant = message->get_float(0); break;
     default: break;
   }
 }

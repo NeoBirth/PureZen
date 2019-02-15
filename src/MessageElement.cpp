@@ -2,7 +2,7 @@
  *  Copyright 2009,2010 Reality Jockey, Ltd.
  *                 info@rjdj.me
  *                 http://rjdj.me/
- * 
+ *
  *  This file is part of ZenGarden.
  *
  *  ZenGarden is free software: you can redistribute it and/or modify
@@ -14,7 +14,7 @@
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU Lesser General Public License for more details.
- *  
+ *
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with ZenGarden.  If not, see <http://www.gnu.org/licenses/>.
  *
@@ -28,18 +28,18 @@
 MessageElement::MessageElement() {
   constant = 0.0f;
   memset(symbol, 0, SYMBOL_BUFFER_LENGTH);
-  setBang();
+  set_bang();
 }
 
 MessageElement::MessageElement(float constant) {
   memset(symbol, 0, SYMBOL_BUFFER_LENGTH);
-  setFloat(constant);
+  set_float(constant);
 }
 
 MessageElement::MessageElement(char *newSymbol) {
   constant = 0.0f;
   memset(symbol, 0, SYMBOL_BUFFER_LENGTH);
-  setSymbol(newSymbol);
+  set_symbol(newSymbol);
 }
 
 
@@ -47,52 +47,52 @@ MessageElement::~MessageElement() {
   // nothing to do
 }
 
-MessageElementType MessageElement::getType() {
+message::element::Type MessageElement::get_type() {
   return currentType;
 }
 
-bool MessageElement::isFloat() {
+bool MessageElement::is_float() {
   return (currentType == FLOAT);
 }
 
-bool MessageElement::isSymbol() {
+bool MessageElement::is_symbol() {
   return (currentType == SYMBOL);
 }
 
-bool MessageElement::isSymbolAnythingOrA() {
+bool MessageElement::is_symbol_anything_or_a() {
   return (currentType == SYMBOL && (strcmp(symbol, "anything") == 0 || strcmp(symbol, "a") == 0));
 }
 
-bool MessageElement::isSymbolBangOrB() {
+bool MessageElement::is_symbol_bang_or_b() {
   return (currentType == SYMBOL && (strcmp(symbol, "bang") == 0 || strcmp(symbol, "b") == 0));
 }
 
-bool MessageElement::isSymbolFloatOrF() {
+bool MessageElement::is_symbol_float_or_f() {
   return (currentType == SYMBOL && (strcmp(symbol, "float") == 0 || strcmp(symbol, "f") == 0));
 }
 
-bool MessageElement::isSymbolListOrL() {
+bool MessageElement::is_symbol_list_or_l() {
   return (currentType == SYMBOL && (strcmp(symbol, "list") == 0 || strcmp(symbol, "l") == 0));
 }
 
-bool MessageElement::isSymbolSymbolOrS() {
+bool MessageElement::is_symbol_symbol_or_s() {
   return (currentType == SYMBOL && (strcmp(symbol, "symbol") == 0 || strcmp(symbol, "s") == 0));
 }
 
-bool MessageElement::isBang() {
+bool MessageElement::is_bang() {
   return (currentType == BANG);
 }
 
-void MessageElement::setFloat(float newConstant) {
+void MessageElement::set_float(float newConstant) {
   constant = newConstant;
   currentType = FLOAT;
 }
 
-float MessageElement::getFloat() {
+float MessageElement::get_float() {
   return constant;
 }
 
-void MessageElement::setSymbol(char *newSymbol) {
+void MessageElement::set_symbol(char *newSymbol) {
   if (strlen(newSymbol) < SYMBOL_BUFFER_LENGTH-1) {
     strcpy(symbol, newSymbol);
   } else {
@@ -103,15 +103,15 @@ void MessageElement::setSymbol(char *newSymbol) {
   currentType = SYMBOL;
 }
 
-char *MessageElement::getSymbol() {
+char *MessageElement::get_symbol() {
   return symbol;
 }
 
-void MessageElement::setBang() {
+void MessageElement::set_bang() {
   currentType = BANG;
 }
 
-void MessageElement::setAnything() {
+void MessageElement::set_anything() {
   currentType = ANYTHING;
 }
 
@@ -137,13 +137,13 @@ MessageElement *MessageElement::copy() {
 }
 
 bool MessageElement::equals(MessageElement *messageElement) {
-  if (messageElement->getType() == currentType) {
+  if (messageElement->get_type() == currentType) {
     switch (currentType) {
       case FLOAT: {
-        return (constant == messageElement->getFloat());
+        return (constant == messageElement->get_float());
       }
       case SYMBOL: {
-        return (strcmp(symbol, messageElement->getSymbol()) == 0);
+        return (strcmp(symbol, messageElement->get_symbol()) == 0);
       }
       case BANG: {
         return true;

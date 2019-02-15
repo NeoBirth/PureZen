@@ -28,13 +28,13 @@ MessageObject *MessagePack::newObject(PdMessage *initMessage, PdGraph *graph) {
 }
 
 MessagePack::MessagePack(PdMessage *initMessage, PdGraph *graph) :
-    MessageObject(initMessage->getNumElements(), 1, graph) {
-  int numElements = initMessage->getNumElements();
+    MessageObject(initMessage->get_num_elements(), 1, graph) {
+  int numElements = initMessage->get_num_elements();
   PdMessage *message = PD_MESSAGE_ON_STACK(numElements);
-  message->initWithTimestampAndNumElements(0.0, numElements);
-  memcpy(message->getElement(0), initMessage->getElement(0), numElements*sizeof(MessageAtom));
-  message->resolveSymbolsToType();
-  outgoingMessage = message->copyToHeap();
+  message->from_timestamp(0.0, numElements);
+  memcpy(message->get_element(0), initMessage->get_element(0), numElements*sizeof(MessageAtom));
+  message->resolve_symbols_to_type();
+  outgoingMessage = message->clone_on_heap();
 }
 
 MessagePack::~MessagePack() {
@@ -43,8 +43,8 @@ MessagePack::~MessagePack() {
 
 string MessagePack::toString() {
   std::string out = MessagePack::getObjectLabel();
-  for (int i = 0; i < outgoingMessage->getNumElements(); i++) {
-    switch (outgoingMessage->getType(i)) {
+  for (int i = 0; i < outgoingMessage->get_num_elements(); i++) {
+    switch (outgoingMessage->get_type(i)) {
       case FLOAT: out += " f"; break;
       case SYMBOL: out += " s"; break;
       case BANG: out += " b"; break;
@@ -57,39 +57,39 @@ string MessagePack::toString() {
 }
 
 void MessagePack::processMessage(int inletIndex, PdMessage *message) {
-  switch (message->getType(0)) {
+  switch (message->get_type(0)) {
     case FLOAT: {
-      if (outgoingMessage->isFloat(inletIndex)) {
-        outgoingMessage->setFloat(inletIndex, message->getFloat(0));
-        onBangAtInlet(inletIndex, message->getTimestamp());
+      if (outgoingMessage->is_float(inletIndex)) {
+        outgoingMessage->set_float(inletIndex, message->get_float(0));
+        onBangAtInlet(inletIndex, message->get_timestamp());
       } else {
         graph->printErr("pack: type mismatch: %s expected but got %s at inlet %i.\n",
-            utils::message_element_type_to_string(outgoingMessage->getType(inletIndex)),
-            utils::message_element_type_to_string(message->getType(0)),
+            utils::message_element_type_to_string(outgoingMessage->get_type(inletIndex)),
+            utils::message_element_type_to_string(message->get_type(0)),
             inletIndex + 1);
         return;
       }
       break;
     }
     case SYMBOL: {
-      if (outgoingMessage->isSymbol(inletIndex)) {
+      if (outgoingMessage->is_symbol(inletIndex)) {
         // NOTE(mhroth): this approach can lead to a lot of fragemented memory if symbols are
         // replaced often
-        free(outgoingMessage->getSymbol(inletIndex)); // free the preexisting symbol on the heap
+        free(outgoingMessage->get_symbol(inletIndex)); // free the preexisting symbol on the heap
         // create a new symbol on the heap and store it in the outgoing message
-        outgoingMessage->setSymbol(inletIndex, utils::copy_string(message->getSymbol(0)));
-        onBangAtInlet(inletIndex, message->getTimestamp());
+        outgoingMessage->set_symbol(inletIndex, utils::copy_string(message->get_symbol(0)));
+        onBangAtInlet(inletIndex, message->get_timestamp());
       } else {
         graph->printErr("pack: type mismatch: %s expected but got %s at inlet %i.\n",
-            utils::message_element_type_to_string(outgoingMessage->getType(inletIndex)),
-            utils::message_element_type_to_string(message->getType(0)),
+            utils::message_element_type_to_string(outgoingMessage->get_type(inletIndex)),
+            utils::message_element_type_to_string(message->get_type(0)),
             inletIndex + 1);
         return;
       }
       break;
     }
     case BANG: {
-      onBangAtInlet(inletIndex, message->getTimestamp());
+      onBangAtInlet(inletIndex, message->get_timestamp());
       break;
     }
     default: {
@@ -101,7 +101,7 @@ void MessagePack::processMessage(int inletIndex, PdMessage *message) {
 void MessagePack::onBangAtInlet(int inletIndex, double timestamp) {
   if (inletIndex == 0) {
     // send the outgoing message
-    outgoingMessage->setTimestamp(timestamp);
+    outgoingMessage->set_timestamp(timestamp);
     sendMessage(0, outgoingMessage);
   }
 }

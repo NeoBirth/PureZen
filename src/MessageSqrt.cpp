@@ -35,10 +35,10 @@ MessageSqrt::~MessageSqrt() {
 }
 
 void MessageSqrt::processMessage(int inletIndex, PdMessage *message) {
-  if (message->isFloat(0)) {
+  if (message->is_float(0)) {
     PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(1);
-    float value = message->getFloat(0);
-    outgoingMessage->initWithTimestampAndFloat(message->getTimestamp(), (value < 0.0f) ? 0.0f : sqrtf(value));
+    float value = message->get_float(0);
+    outgoingMessage->initWithTimestampAndFloat(message->get_timestamp(), (value < 0.0f) ? 0.0f : sqrtf(value));
     sendMessage(0, outgoingMessage);
   }
 }

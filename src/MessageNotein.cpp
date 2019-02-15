@@ -29,10 +29,10 @@ MessageObject *MessageNotein::newObject(PdMessage *initMessage, PdGraph *graph) 
 
 MessageNotein::MessageNotein(PdMessage *initMessage, PdGraph *graph) :
     RemoteMessageReceiver(0, 3, graph) {
-  if (initMessage->isFloat(0) &&
-      (initMessage->getFloat(0) >= 1.0f && initMessage->getFloat(0) <= 16.0f)) {
+  if (initMessage->is_float(0) &&
+      (initMessage->get_float(0) >= 1.0f && initMessage->get_float(0) <= 16.0f)) {
     // channel provided (Pd channels are indexed from 1, while ZG channels are indexed from 0)
-    channel = (int) (initMessage->getFloat(0)-1.0f);
+    channel = (int) (initMessage->get_float(0)-1.0f);
     name = (char *) calloc(13, sizeof(char));
     sprintf(name, "zg_notein_%i", channel);
   } else {
@@ -59,15 +59,15 @@ void MessageNotein::processMessage(int inletIndex, PdMessage *message) {
   
   if (isOmni()) {
     // send channel
-    outgoingMessage->initWithTimestampAndFloat(message->getTimestamp(), message->getFloat(2));
+    outgoingMessage->initWithTimestampAndFloat(message->get_timestamp(), message->get_float(2));
     sendMessage(2, outgoingMessage);
   }
   
   // send velocity
-  outgoingMessage->initWithTimestampAndFloat(message->getTimestamp(), message->getFloat(1));
+  outgoingMessage->initWithTimestampAndFloat(message->get_timestamp(), message->get_float(1));
   sendMessage(1, outgoingMessage);
   
   // send note
-  outgoingMessage->initWithTimestampAndFloat(message->getTimestamp(), message->getFloat(0));
+  outgoingMessage->initWithTimestampAndFloat(message->get_timestamp(), message->get_float(0));
   sendMessage(0, outgoingMessage);
 }

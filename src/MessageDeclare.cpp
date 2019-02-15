@@ -27,8 +27,8 @@ MessageObject *MessageDeclare::newObject(PdMessage *initMessage, PdGraph *graph)
 }
 
 MessageDeclare::MessageDeclare(PdMessage *initMessage, PdGraph *graph) : MessageObject(0, 0, graph) {
-  target = initMessage->isSymbol(0) ? utils::copy_string(initMessage->getSymbol(0)) : NULL;
-  argument = initMessage->isSymbol(1) ? utils::copy_string(initMessage->getSymbol(1)) : NULL;
+  target = initMessage->is_symbol(0) ? utils::copy_string(initMessage->get_symbol(0)) : NULL;
+  argument = initMessage->is_symbol(1) ? utils::copy_string(initMessage->get_symbol(1)) : NULL;
 }
 
 MessageDeclare::~MessageDeclare() {

@@ -27,7 +27,7 @@ MessageObject *MessageMoses::newObject(PdMessage *initMessage, PdGraph *graph) {
 }
 
 MessageMoses::MessageMoses(PdMessage *initMessage, PdGraph *graph) : MessageObject(2, 2, graph) {
-  constant = initMessage->isFloat(0) ? initMessage->getFloat(0) : 0.0f;
+  constant = initMessage->is_float(0) ? initMessage->get_float(0) : 0.0f;
 }
 
 MessageMoses::~MessageMoses() {
@@ -37,14 +37,14 @@ MessageMoses::~MessageMoses() {
 void MessageMoses::processMessage(int inletIndex, PdMessage *message) {
   switch (inletIndex) {
     case 0: {
-      if (message->isFloat(0)) {
-        sendMessage((message->getFloat(0) < constant) ? 0 : 1, message);
+      if (message->is_float(0)) {
+        sendMessage((message->get_float(0) < constant) ? 0 : 1, message);
       }
       break;
     }
     case 1: {
-      if (message->isFloat(0)) {
-        constant = message->getFloat(0);
+      if (message->is_float(0)) {
+        constant = message->get_float(0);
       }
       break;
     }

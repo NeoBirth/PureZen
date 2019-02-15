@@ -2,7 +2,7 @@
  *  Copyright 2010,2011,2012 Reality Jockey, Ltd.
  *                 info@rjdj.me
  *                 http://rjdj.me/
- * 
+ *
  *  This file is part of ZenGarden.
  *
  *  ZenGarden is free software: you can redistribute it and/or modify
@@ -14,7 +14,7 @@
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU Lesser General Public License for more details.
- *  
+ *
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with ZenGarden.  If not, see <http://www.gnu.org/licenses/>.
  *
@@ -33,7 +33,7 @@
 PdFileParser::PdFileParser(string directory, string filename) {
   rootPath = string(directory);
   fileName = string(filename);
-  
+
   FILE *fp = fopen((directory+filename).c_str(), "rb"); // open the file in binary mode
   pos = 0; // initialise position in stringDesc
   if (fp == NULL) {
@@ -52,7 +52,7 @@ PdFileParser::PdFileParser(string directory, string filename) {
     fclose(fp); // close the file
     str[numChars] = '\0';
     stringDesc = string(str);
-    
+
     nextLine(); // read the first line
     isDone = false;
   }
@@ -61,7 +61,7 @@ PdFileParser::PdFileParser(string directory, string filename) {
 PdFileParser::PdFileParser(string aString) {
   // if we're just loading a string, the default root path is "/"
   rootPath = string("/");
-  
+
   if (aString.empty()) {
     isDone = true;
   } else {
@@ -80,7 +80,7 @@ string PdFileParser::nextMessage() {
   if (!isDone) {
     message = line;
     while (!nextLine().empty() &&
-        !(line.compare(0, 2, "#X") == 0 || line.compare(0, 2, "#N") == 0 || 
+        !(line.compare(0, 2, "#X") == 0 || line.compare(0, 2, "#N") == 0 ||
         line.compare(0, 2, "#A") == 0)) {
       message += " " + line; // there is an implied space between lines
     }
@@ -123,7 +123,7 @@ PdGraph *PdFileParser::execute(PdMessage *initMsg, PdGraph *graph, PdContext *co
 #define RESOLUTION_BUFFER_LENGTH 512
 #define INIT_MESSAGE_MAX_ELEMENTS 32
   PdMessage *initMessage = PD_MESSAGE_ON_STACK(INIT_MESSAGE_MAX_ELEMENTS);
-  
+
   string message;
   MessageTable *lastArrayCreated = NULL;  // used to know on which table the #A line values have to be set
   int lastArrayCreatedIndex = 0;
@@ -131,7 +131,7 @@ PdGraph *PdFileParser::execute(PdMessage *initMsg, PdGraph *graph, PdContext *co
     // create a non-const copy of message such that strtok can modify it
     char line[message.size()+1];
     strncpy(line, message.c_str(), sizeof(line));
-    
+
     char *hashType = strtok(line, " ");
 
     if (!strcmp(hashType, "#N")) {
@@ -148,7 +148,7 @@ PdGraph *PdFileParser::execute(PdMessage *initMsg, PdGraph *graph, PdContext *co
         // NOTE(mhroth): pixel location is not recorded
         PdGraph *newGraph = NULL;
         if (graph == NULL) { // if no parent graph exists
-          initMessage->initWithTimestampAndNumElements(0.0, 0); // make a dummy initMessage
+          initMessage->from_timestamp(0.0, 0); // make a dummy initMessage
           newGraph = new PdGraph(initMessage, NULL, context, context->getNextGraphId(), "zg_root");
           if (!rootPath.empty()) {
             // inform the root graph of where it is in the file system, if this information exists.
@@ -166,7 +166,7 @@ PdGraph *PdFileParser::execute(PdMessage *initMsg, PdGraph *graph, PdContext *co
           }
           graph->addObject(0, 0, newGraph); // add the new graph to the current one as an object
         }
-        
+
         // the new graph is pushed onto the stack
         graph = newGraph;
     } else {
@@ -178,21 +178,21 @@ PdGraph *PdFileParser::execute(PdMessage *initMsg, PdGraph *graph, PdContext *co
         // read the canvas coordinates (Pd defines them to be integers, ZG represents them as floats internally)
         float canvasX = (float) atoi(strtok(NULL, " "));
         float canvasY = (float) atoi(strtok(NULL, " "));
-        
+
         // resolve $ variables in the object label (such as objects that are simply labeled "$1")
         char *objectLabel = strtok(NULL, " ;\r"); // delimit with " " or ";"
-        
+
         char resBufferLabel[OBJECT_LABEL_RESOLUTION_BUFFER_LENGTH];
         PdMessage::resolve_string(objectLabel, graph->getArguments(), 0,
           resBufferLabel, OBJECT_LABEL_RESOLUTION_BUFFER_LENGTH); // object labels are always strings
                                                                   // even if they are numbers, e.g. "1"
-        
+
         // resolve $ variables in the object arguments
         char *objectInitString = strtok(NULL, ";\r"); // get the object initialisation string
         char resBuffer[RESOLUTION_BUFFER_LENGTH];
-        initMessage->initWithSARb(INIT_MESSAGE_MAX_ELEMENTS, objectInitString, graph->getArguments(),
+        initMessage->from_string_and_args(INIT_MESSAGE_MAX_ELEMENTS, objectInitString, graph->getArguments(),
             resBuffer, RESOLUTION_BUFFER_LENGTH);
-        
+
         // create the object
         MessageObject *messageObject = context->newObject(resBufferLabel, initMessage, graph);
         if (messageObject == NULL) { // object could not be created based on any known object factory functions
@@ -269,25 +269,25 @@ PdGraph *PdFileParser::execute(PdMessage *initMsg, PdGraph *graph, PdContext *co
       } else if (!strcmp(objectType, "declare")) {
         // set environment for loading patch
         char *objectInitString = strtok(NULL, ";"); // get the arguments to declare
-        initMessage->initWithString(0.0, 2, objectInitString); // parse them
-        if (initMessage->isSymbol(0, "-path")) {
-          if (initMessage->isSymbol(1)) {
+        initMessage->from_string(0.0, 2, objectInitString); // parse them
+        if (initMessage->is_symbol_str(0, "-path")) {
+          if (initMessage->is_symbol(1)) {
             // add symbol to declare directories
-            graph->addDeclarePath(initMessage->getSymbol(1));
+            graph->addDeclarePath(initMessage->get_symbol(1));
           }
         } else {
-          context->printErr("declare \"%s\" flag is not supported.", initMessage->getSymbol(0));
+          context->printErr("declare \"%s\" flag is not supported.", initMessage->get_symbol(0));
         }
       } else if (!strcmp(objectType, "array")) {
         // creates a new table
         // objectInitString should contain both name and buffer length
         char *objectInitString = strtok(NULL, ";"); // get the object initialisation string
         char resBuffer[RESOLUTION_BUFFER_LENGTH];
-        initMessage->initWithSARb(4, objectInitString, graph->getArguments(), resBuffer, RESOLUTION_BUFFER_LENGTH);
+        initMessage->from_string_and_args(4, objectInitString, graph->getArguments(), resBuffer, RESOLUTION_BUFFER_LENGTH);
         lastArrayCreated = reinterpret_cast<MessageTable *>(context->newObject("table", initMessage, graph));
         lastArrayCreatedIndex = 0;
         graph->addObject(0, 0, lastArrayCreated);
-        context->printStd("PdFileParser: Replacer array with table, name: '%s'", initMessage->getSymbol(0));
+        context->printStd("PdFileParser: Replacer array with table, name: '%s'", initMessage->get_symbol(0));
       } else if (!strcmp(objectType, "coords")) {
         continue;
       } else {
@@ -300,7 +300,7 @@ PdGraph *PdFileParser::execute(PdMessage *initMsg, PdGraph *graph, PdContext *co
         int bufferLength = 0;
         float *buffer = lastArrayCreated->getBuffer(&bufferLength);
         char *token = NULL;
-        
+
         int index = atoi(strtok(NULL, " ;"));
         while ((token = strtok(NULL, " ;")) != NULL) {
           if (index >= bufferLength) {
@@ -320,6 +320,6 @@ PdGraph *PdFileParser::execute(PdMessage *initMsg, PdGraph *graph, PdContext *co
       context->printErr("Unrecognised hash type: \"%s\"", message.c_str());
     }
   }
-  
+
   return graph;
 }

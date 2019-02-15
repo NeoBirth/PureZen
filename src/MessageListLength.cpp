@@ -33,7 +33,7 @@ MessageListLength::~MessageListLength() {
 void MessageListLength::processMessage(int inletIndex, PdMessage *message) {
   PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(1);
   // bangs are not considered to add length to lists
-  outgoingMessage->initWithTimestampAndFloat(message->getTimestamp(),
-      message->isBang(0) ? 0.0f : (float) message->getNumElements());
+  outgoingMessage->initWithTimestampAndFloat(message->get_timestamp(),
+      message->is_bang(0) ? 0.0f : (float) message->get_num_elements());
   sendMessage(0, outgoingMessage);
 }

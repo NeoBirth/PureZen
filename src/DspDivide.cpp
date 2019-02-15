@@ -29,7 +29,7 @@ MessageObject *DspDivide::newObject(PdMessage *initMessage, PdGraph *graph) {
 }
 
 DspDivide::DspDivide(PdMessage *initMessage, PdGraph *graph) : DspObject(2, 2, 0, 1, graph) {
-  constant = initMessage->isFloat(0) ? initMessage->getFloat(0) : 0.0f;
+  constant = initMessage->is_float(0) ? initMessage->get_float(0) : 0.0f;
   processFunction = &processScalar;
   processFunctionNoMessage = &processScalar;
 }
@@ -52,12 +52,12 @@ string DspDivide::toString() {
 
 void DspDivide::processMessage(int inletIndex, PdMessage *message) {
   if (inletIndex == 1) {
-    if (message->isFloat(0)) {
-      if (message->getFloat(0) == 0.0f) {
+    if (message->is_float(0)) {
+      if (message->get_float(0) == 0.0f) {
         constant = 1.0f;
         graph->printErr("%s received message which set divisor to zero. Divisor set to 1.0f.", getObjectLabel());
       } else {
-        constant = message->getFloat(0);
+        constant = message->get_float(0);
       }
     }
   }

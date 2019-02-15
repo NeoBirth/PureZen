@@ -33,8 +33,8 @@ MessageObject *DspCatch::newObject(PdMessage *initMessage, PdGraph *graph) {
 }
 
 DspCatch::DspCatch(PdMessage *initMessage, PdGraph *graph) : DspObject(0, 0, 0, 1, graph) {
-  if (initMessage->isSymbol(0)) {
-    name = utils::copy_string(initMessage->getSymbol(0));
+  if (initMessage->is_symbol(0)) {
+    name = utils::copy_string(initMessage->get_symbol(0));
   } else {
     name = NULL;
     graph->printErr("catch~ must be initialised with a name.");

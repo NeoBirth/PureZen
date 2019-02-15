@@ -27,8 +27,8 @@ MessageObject *MessageSymbol::newObject(PdMessage *initMessage, PdGraph *graph) 
 }
 
 MessageSymbol::MessageSymbol(PdMessage *initMessage, PdGraph *graph) : MessageObject(2, 1, graph) {
-  if (initMessage->isSymbol(0)) {
-    copy_string(initMessage->getSymbol(0));
+  if (initMessage->is_symbol(0)) {
+    copy_string(initMessage->get_symbol(0));
   } else {
     memset(symbol, 0, SYMBOL_BUFFER_LENGTH * sizeof(char));
   }
@@ -50,14 +50,14 @@ bool MessageSymbol::copy_string(const char *s) {
 void MessageSymbol::processMessage(int inletIndex, PdMessage *message) {
   switch (inletIndex) {
     case 0: {
-      switch (message->getType(0)) {
+      switch (message->get_type(0)) {
         case SYMBOL: {
-          copy_string(message->getSymbol(0));
+          copy_string(message->get_symbol(0));
           // allow fallthrough
         }
         case BANG: {
           PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(1);
-          outgoingMessage->initWithTimestampAndSymbol(message->getTimestamp(), symbol);
+          outgoingMessage->initWithTimestampAndSymbol(message->get_timestamp(), symbol);
           sendMessage(0, outgoingMessage);
           break;
         }
@@ -66,8 +66,8 @@ void MessageSymbol::processMessage(int inletIndex, PdMessage *message) {
       break;
     }
     case 1: {
-      if (message->isSymbol(0)) {
-        copy_string(message->getSymbol(0));
+      if (message->is_symbol(0)) {
+        copy_string(message->get_symbol(0));
       }
       break;
     }

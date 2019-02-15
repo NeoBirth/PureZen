@@ -27,7 +27,7 @@ MessageObject *MessageRandom::newObject(PdMessage *initMessage, PdGraph *graph) 
 }
 
 MessageRandom::MessageRandom(PdMessage *initMessage, PdGraph *graph) : MessageObject(2, 1, graph) {
-  max_inc = initMessage->isFloat(0) ? ((int) initMessage->getFloat(0))-1 : 1;
+  max_inc = initMessage->is_float(0) ? ((int) initMessage->get_float(0))-1 : 1;
   twister = new MTRand();
 }
 
@@ -38,16 +38,16 @@ MessageRandom::~MessageRandom() {
 void MessageRandom::processMessage(int inletIndex, PdMessage *message) {
   switch (inletIndex) {
     case 0: {
-      switch (message->getType(0)) {
+      switch (message->get_type(0)) {
         case SYMBOL: {
-          if (message->isSymbol(0, "seed") && message->isFloat(1)) {
-            twister->seed((int) message->getFloat(1)); // reset the seed
+          if (message->is_symbol_str(0, "seed") && message->is_float(1)) {
+            twister->seed((int) message->get_float(1)); // reset the seed
           }
           break;
         }
         case BANG: {
           PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(1);
-          outgoingMessage->initWithTimestampAndFloat(message->getTimestamp(), (float) twister->randInt(max_inc));
+          outgoingMessage->initWithTimestampAndFloat(message->get_timestamp(), (float) twister->randInt(max_inc));
           sendMessage(0, outgoingMessage);
           break;
         }
@@ -56,8 +56,8 @@ void MessageRandom::processMessage(int inletIndex, PdMessage *message) {
       break;
     }
     case 1: {
-      if (message->isFloat(0)) {
-        max_inc = static_cast<int>(fmaxf(message->getFloat(0) - 1.0f, 0.0f));
+      if (message->is_float(0)) {
+        max_inc = static_cast<int>(fmaxf(message->get_float(0) - 1.0f, 0.0f));
       }
       break;
     }

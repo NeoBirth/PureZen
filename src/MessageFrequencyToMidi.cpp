@@ -35,11 +35,11 @@ MessageFrequencyToMidi::~MessageFrequencyToMidi() {
 }
 
 void MessageFrequencyToMidi::processMessage(int inletIndex, PdMessage *message) {
-  if (message->isFloat(0)) {
+  if (message->is_float(0)) {
     PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(1);
-    float f = message->getFloat(0);
+    float f = message->get_float(0);
     float value = (f <= 0.0f) ? -1500.0f : (12.0f * (logf(f / 440.0f) / M_LN2)) + 69.0f;
-    outgoingMessage->initWithTimestampAndFloat(message->getTimestamp(), value);
+    outgoingMessage->initWithTimestampAndFloat(message->get_timestamp(), value);
     sendMessage(0, outgoingMessage); // send a message from outlet 0
   }
 }

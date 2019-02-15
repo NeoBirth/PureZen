@@ -1,13 +1,3 @@
-//! **PureZen**: runtime for the [Pure Data] (Pd) audio programming language,
-//! implemented as an extensible audio library allowing full control over
-//! signal processing, message passing, and graph manipulation.
-//!
-//! Adapted from [ZenGarden] (originally written in C++) with intent to target
-//! embedded (i.e. `no_std`) platforms.
-//!
-//! [Pure Data]: https://puredata.info/
-//! [ZenGarden]: https://github.com/mhroth/ZenGarden
-
 //
 // Copyright © 2019 NeoBirth Developers
 //
@@ -27,6 +17,16 @@
 // along with PureZen.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+//! **PureZen**: runtime for the [Pure Data] (Pd) audio programming language,
+//! implemented as an extensible audio library allowing full control over
+//! signal processing, message passing, and graph manipulation.
+//!
+//! Adapted from [ZenGarden] (originally written in C++) with intent to target
+//! embedded (i.e. `no_std`) platforms.
+//!
+//! [Pure Data]: https://puredata.info/
+//! [ZenGarden]: https://github.com/mhroth/ZenGarden
+
 #![no_std]
 #![cfg_attr(all(feature = "nightly", not(feature = "std")), feature(alloc))]
 #![deny(
@@ -41,11 +41,18 @@
 #![forbid(unsafe_code)]
 #![doc(html_root_url = "https://docs.rs/purezen/0.0.0")]
 
-#[cfg(feature = "std")]
+#[cfg(any(feature = "std", test))]
 extern crate std;
 
+#[macro_use]
+extern crate failure_derive;
+
 // TODO: remove `pub` on modules which are not part of the public API
+mod error;
+pub mod message;
+pub mod pd;
 #[cfg(feature = "alloc")]
 mod prelude;
-#[cfg(feature = "std")]
 pub mod utils;
+
+pub use error::*;

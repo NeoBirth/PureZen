@@ -2,7 +2,7 @@
  *  Copyright 2009,2010 Reality Jockey, Ltd.
  *                 info@rjdj.me
  *                 http://rjdj.me/
- * 
+ *
  *  This file is part of ZenGarden.
  *
  *  ZenGarden is free software: you can redistribute it and/or modify
@@ -14,7 +14,7 @@
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU Lesser General Public License for more details.
- *  
+ *
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with ZenGarden.  If not, see <http://www.gnu.org/licenses/>.
  *
@@ -29,7 +29,7 @@ MessageObject *DspTableRead4::newObject(PdMessage *initMessage, PdGraph *graph) 
 }
 
 DspTableRead4::DspTableRead4(PdMessage *initMessage, PdGraph *graph) : DspObject(2, 1, 0, 1, graph) {
-  name = initMessage->isSymbol(0) ? utils::copy_string(initMessage->getSymbol(0)) : NULL;
+  name = initMessage->is_symbol(0) ? utils::copy_string(initMessage->get_symbol(0)) : NULL;
   table = NULL;
   offset = 0.0f;
 }
@@ -45,17 +45,17 @@ void DspTableRead4::setTable(MessageTable *aTable) {
 void DspTableRead4::processMessage(int inletIndex, PdMessage *message) {
   switch (inletIndex) {
     case 0: {
-      if (message->isSymbol(0, "set") && message->isSymbol(1)) {
+      if (message->is_symbol_str(0, "set") && message->is_symbol(1)) {
         // change the table from which this object reads
         free(name);
-        name = utils::copy_string(message->getSymbol(1));
+        name = utils::copy_string(message->get_symbol(1));
         table = graph->getTable(name);
       }
       break;
     }
     case 1: {
-      if (message->isFloat(0)) {
-        offset = message->getFloat(0); // set onset into table
+      if (message->is_float(0)) {
+        offset = message->get_float(0); // set onset into table
       }
       break;
     }

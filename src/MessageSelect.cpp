@@ -28,9 +28,9 @@ MessageObject *MessageSelect::newObject(PdMessage *initMessage, PdGraph *graph) 
 }
 
 MessageSelect::MessageSelect(PdMessage *initMessage, PdGraph *graph) : 
-    MessageObject((initMessage->getNumElements() < 2) ? 2 : 1, 
-                  (initMessage->getNumElements() < 2) ? 2 : initMessage->getNumElements()+1, graph) {
-  selectorMessage = initMessage->copyToHeap();
+    MessageObject((initMessage->get_num_elements() < 2) ? 2 : 1, 
+                  (initMessage->get_num_elements() < 2) ? 2 : initMessage->get_num_elements()+1, graph) {
+  selectorMessage = initMessage->clone_on_heap();
 }
 
 MessageSelect::~MessageSelect() {
@@ -40,13 +40,13 @@ MessageSelect::~MessageSelect() {
 void MessageSelect::processMessage(int inletIndex, PdMessage *message) {
   switch (inletIndex) {
     case 0: {
-      MessageAtom *messageElement = message->getElement(0);
-      int numSelectors = selectorMessage->getNumElements();
+      MessageAtom *messageElement = message->get_element(0);
+      int numSelectors = selectorMessage->get_num_elements();
       for (int i = 0; i < numSelectors; i++) {
-        if (selectorMessage->atomIsEqualTo(i, messageElement)) {
+        if (selectorMessage->atom_is_equal_to(i, messageElement)) {
           // send bang from matching outlet
           PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(1);
-          outgoingMessage->initWithTimestampAndBang(message->getTimestamp());
+          outgoingMessage->initWithTimestampAndBang(message->get_timestamp());
           sendMessage(i, outgoingMessage);
           return;
         }

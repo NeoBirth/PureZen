@@ -27,7 +27,7 @@ MessageObject *MessageRemainder::newObject(PdMessage *initMessage, PdGraph *grap
 }
 
 MessageRemainder::MessageRemainder(PdMessage *initMessage, PdGraph *graph) : MessageObject(2, 1, graph) {
-  constant = initMessage->isFloat(0) ? (int) initMessage->getFloat(0) : 0;
+  constant = initMessage->is_float(0) ? (int) initMessage->get_float(0) : 0;
 }
 
 MessageRemainder::~MessageRemainder() {
@@ -37,17 +37,17 @@ MessageRemainder::~MessageRemainder() {
 void MessageRemainder::processMessage(int inletIndex, PdMessage *message) {
   switch (inletIndex) {
     case 0: {
-      if (message->isFloat(0)) {
+      if (message->is_float(0)) {
         PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(1);
-        float remainder = (constant == 0.0f) ? 0.0f : (float) ((int) message->getFloat(0) % constant);
-        outgoingMessage->initWithTimestampAndFloat(message->getTimestamp(), remainder);
+        float remainder = (constant == 0.0f) ? 0.0f : (float) ((int) message->get_float(0) % constant);
+        outgoingMessage->initWithTimestampAndFloat(message->get_timestamp(), remainder);
         sendMessage(0, outgoingMessage);
       }
       break;
     }
     case 1: {
-      if (message->isFloat(0)) {
-        constant = (int) message->getFloat(0);
+      if (message->is_float(0)) {
+        constant = (int) message->get_float(0);
       }
       break;
     }

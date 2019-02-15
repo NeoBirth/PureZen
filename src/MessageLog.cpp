@@ -35,11 +35,11 @@ MessageLog::~MessageLog() {
 }
 
 void MessageLog::processMessage(int inletIndex, PdMessage *message) {
-  if (message->isFloat(0)) {
+  if (message->is_float(0)) {
     PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(1);
-    float value = message->getFloat(0);
+    float value = message->get_float(0);
     value = (value <= 0.0f) ? -1000.0f : logf(value);
-    outgoingMessage->initWithTimestampAndFloat(message->getTimestamp(), value);
+    outgoingMessage->initWithTimestampAndFloat(message->get_timestamp(), value);
     sendMessage(0, outgoingMessage);    
   }
 }

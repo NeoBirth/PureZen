@@ -37,9 +37,9 @@ MessageUntil::~MessageUntil() {
 void MessageUntil::processMessage(int inletIndex, PdMessage *message) {
   switch (inletIndex) {
     case 0: {
-      switch (message->getType(0)) {
+      switch (message->get_type(0)) {
         case FLOAT: {
-          maxIterations = (unsigned int) message->getFloat(0);
+          maxIterations = (unsigned int) message->get_float(0);
           break;
         }
         case BANG: {
@@ -52,7 +52,7 @@ void MessageUntil::processMessage(int inletIndex, PdMessage *message) {
       }
       
       PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(1);
-      outgoingMessage->initWithTimestampAndBang(message->getTimestamp());
+      outgoingMessage->initWithTimestampAndBang(message->get_timestamp());
       for (unsigned int i = 0; i < maxIterations; i++) {
         sendMessage(0, outgoingMessage);
       }
@@ -60,7 +60,7 @@ void MessageUntil::processMessage(int inletIndex, PdMessage *message) {
       break;
     }
     case 1: {
-      if (message->isBang(0)) {
+      if (message->is_bang(0)) {
         maxIterations = 0; // stops the for loop
       }
       break;

@@ -2,7 +2,7 @@
  *  Copyright 2010 Reality Jockey, Ltd.
  *                 info@rjdj.me
  *                 http://rjdj.me/
- * 
+ *
  *  This file is part of ZenGarden.
  *
  *  ZenGarden is free software: you can redistribute it and/or modify
@@ -14,7 +14,7 @@
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU Lesser General Public License for more details.
- *  
+ *
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with ZenGarden.  If not, see <http://www.gnu.org/licenses/>.
  *
@@ -29,7 +29,7 @@ MessageObject *DspTableRead::newObject(PdMessage *initMessage, PdGraph *graph) {
 }
 
 DspTableRead::DspTableRead(PdMessage *initMessage, PdGraph *graph) : DspObject(2, 1, 0, 1, graph) {
-  name = initMessage->isSymbol(0) ? utils::copy_string(initMessage->getSymbol(0)) : NULL;
+  name = initMessage->is_symbol(0) ? utils::copy_string(initMessage->get_symbol(0)) : NULL;
   table = NULL;
   offset = 0.0f;
 }
@@ -45,17 +45,17 @@ void DspTableRead::setTable(MessageTable *aTable) {
 void DspTableRead::processMessage(int inletIndex, PdMessage *message) {
   switch (inletIndex) {
     case 0: {
-      if (message->isSymbol(0, "set") && message->isSymbol(1)) {
+      if (message->is_symbol_str(0, "set") && message->is_symbol(1)) {
         // change the table from which this object reads
         free(name);
-        name = utils::copy_string(message->getSymbol(1));
+        name = utils::copy_string(message->get_symbol(1));
         table = graph->getTable(name);
       }
       break;
     }
     case 1: {
-      if (message->isFloat(0)) {
-        offset = message->getFloat(0); // set onset into table
+      if (message->is_float(0)) {
+        offset = message->get_float(0); // set onset into table
       }
       break;
     }
@@ -72,17 +72,17 @@ void DspTableRead::processDspWithIndex(int fromIndex, int toIndex) {
     #if __APPLE__
     int duration = toIndex - fromIndex;
     float *outBuff = dspBufferAtOutlet[0]+fromIndex;
-    
+
     // add the offset
     vDSP_vsadd(dspBufferAtInlet[0]+fromIndex, 1, &offset, outBuff, 1, duration);
-    
+
     // clip to the bounds of the table
     // NOTE(mhroth): is this necessary? Or does vDSP_vindex clip automatically? What is the
     // clipping behaviour of vDSP_vindex?
     float min = 0;
     float max = (float) (bufferLength-1);
     vDSP_vclip(outBuff, 1, &min, &max, outBuff, 1, duration);
-    
+
     // select the indicies
     vDSP_vindex(buffer, outBuff, 1, outBuff, 1, duration);
     #else

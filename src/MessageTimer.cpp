@@ -37,16 +37,16 @@ MessageTimer::~MessageTimer() {
 void MessageTimer::processMessage(int inletIndex, PdMessage *message) {
   switch (inletIndex) {
     case 0: {
-      if (message->isBang(0)) {
-        timestampStart = message->getTimestamp();
+      if (message->is_bang(0)) {
+        timestampStart = message->get_timestamp();
       }
       break;
     }
     case 1: {
-      if (message->isBang(0)) {
+      if (message->is_bang(0)) {
         PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(1);
-        outgoingMessage->initWithTimestampAndFloat(message->getTimestamp(),
-            (float) (message->getTimestamp() - timestampStart));
+        outgoingMessage->initWithTimestampAndFloat(message->get_timestamp(),
+            (float) (message->get_timestamp() - timestampStart));
         sendMessage(0, outgoingMessage);
       }
       break;

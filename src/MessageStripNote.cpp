@@ -36,12 +36,12 @@ MessageStripNote::~MessageStripNote() {
 
 void MessageStripNote::processMessage(int inletIndex, PdMessage *message) {
   if (inletIndex == 0) {
-    if (message->isFloat(0) && message->isFloat(1) && message->getFloat(1) > 0.0f) {
+    if (message->is_float(0) && message->is_float(1) && message->get_float(1) > 0.0f) {
       PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(1);
-      outgoingMessage->initWithTimestampAndFloat(message->getTimestamp(), message->getFloat(1));
+      outgoingMessage->initWithTimestampAndFloat(message->get_timestamp(), message->get_float(1));
       sendMessage(1, outgoingMessage);
 
-      outgoingMessage->initWithTimestampAndFloat(message->getTimestamp(), message->getFloat(0));
+      outgoingMessage->initWithTimestampAndFloat(message->get_timestamp(), message->get_float(0));
       sendMessage(0, outgoingMessage);
     }
   }
