@@ -22,11 +22,21 @@ into `Result` types).
 - Redundant prefixes (e.g. `Message*`) are mapped onto Rust modules
 - Function names are eagerly translated to `snake_case`
 
-### `MessageElement.cpp` + `MessageElementType.cpp` => `message/element.rs`
+### `MessageElement.cpp` + `MessageElementType.cpp` -> `message/element.rs`
 
+- `MessageElement` renamed to `message::Element`. Seems to overlap greatly with
+  `message::Atom` and the two types should probably be consolidated.
 - `MessageElementType` renamed to `message::element::Type`
 
-### `PdMessage.cpp` => `pd/message/mod.rs`
+### `MessageObject.cpp` -> `message/object.rs`
+
+- `MessageObject` renamed to `message::Object`
+
+### `PdContext.cpp` -> `pd/context.rs`
+
+- `PdContext` renamed to `pd::Context`
+
+### `PdMessage.cpp` -> `pd/message/mod.rs`
 
 - `MessageAtom` (from `PdMessage.h`) renamed to `message::Atom`
 - `PdMessage` renamed to `pd::Message`
