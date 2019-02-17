@@ -40,7 +40,7 @@ MessageSelect::~MessageSelect() {
 void MessageSelect::processMessage(int inletIndex, PdMessage *message) {
   switch (inletIndex) {
     case 0: {
-      MessageAtom *messageElement = message->get_element(0);
+      pd::message::Atom *messageElement = message->get_element(0);
       int numSelectors = selectorMessage->get_num_elements();
       for (int i = 0; i < numSelectors; i++) {
         if (selectorMessage->atom_is_equal_to(i, messageElement)) {

@@ -19,9 +19,13 @@
 
 //! Pure Data messages
 
+mod atom;
+
+pub use self::atom::Atom;
+
 use crate::{
     error::{Error, ErrorKind},
-    message::{element, Atom, Timestamp},
+    message::{element, Timestamp},
 };
 use core::{
     fmt::{self, Display, Write},
@@ -415,11 +419,8 @@ where
 
 #[cfg(test)]
 mod tests {
-    use super::Message;
-    use crate::{
-        error::ErrorKind,
-        message::{Atom, Timestamp},
-    };
+    use super::{Atom, Message};
+    use crate::{error::ErrorKind, message::Timestamp};
     use std::string::ToString;
     use typenum::{U1, U4};
 

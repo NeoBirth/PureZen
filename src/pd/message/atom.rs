@@ -17,10 +17,14 @@
 // along with PureZen.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-use super::element;
+use crate::message::element;
 use core::fmt::{self, Display};
 
-/// Message atoms (a.k.a. elements)
+/// `pd::Message` atoms, a.k.a. elements of a message.
+///
+/// This type represents a sort of "intermediate representation" from a
+/// Pure Data program, before conversion into `message::Element`
+// TODO: potentially consolidate this with `message::Element`?
 #[derive(Copy, Clone, Debug, PartialEq, PartialOrd)]
 pub enum Atom<'pd> {
     /// Any value (placeholder for uninitialized values)

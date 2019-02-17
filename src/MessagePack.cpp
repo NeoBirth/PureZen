@@ -32,7 +32,7 @@ MessagePack::MessagePack(PdMessage *initMessage, PdGraph *graph) :
   int numElements = initMessage->get_num_elements();
   PdMessage *message = PD_MESSAGE_ON_STACK(numElements);
   message->from_timestamp(0.0, numElements);
-  memcpy(message->get_element(0), initMessage->get_element(0), numElements*sizeof(MessageAtom));
+  memcpy(message->get_element(0), initMessage->get_element(0), numElements*sizeof(pd::message::Atom));
   message->resolve_symbols_to_type();
   outgoingMessage = message->clone_on_heap();
 }
