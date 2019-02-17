@@ -1,29 +1,43 @@
-/*
- *  Copyright 2009,2010 Reality Jockey, Ltd.
- *                 info@rjdj.me
- *                 http://rjdj.me/
- *
- *  This file is part of ZenGarden.
- *
- *  ZenGarden is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  ZenGarden is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser General Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser General Public License
- *  along with ZenGarden.  If not, see <http://www.gnu.org/licenses/>.
- *
- */
+//
+// Copyright © 2009-2019 NeoBirth Developers, Reality Jockey, Ltd.
+//
+// This file is part of PureZen (a fork of ZenGarden)
+//
+// PureZen is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// PureZen is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public License
+// along with PureZen.  If not, see <http://www.gnu.org/licenses/>.
+//
 
-#include <stdio.h>
-#include <stdlib.h>
-#include "MessageElement.h"
-#include "utils.h"
+//! Message Elements: Components of a Pure Data message
+
+/// Types of message elements
+#[derive(Copy, Clone, Debug, Eq, PartialEq)]
+pub enum Type {
+  /// Any value (placeholder for uninitialized values)
+  // TODO: eliminate this state by always initializing all message elements
+  ANYTHING,
+
+  /// `bang`: Typically used to trigger an object to perform an action.
+  BANG,
+
+  /// `float`: Single-precision floating point value
+  FLOAT,
+
+  /// `list`: Lists of other atoms
+  LIST,
+
+  /// `symbol`: Symbol messages (i.e. keywords)
+  SYMBOL,
+}
 
 MessageElement::MessageElement() {
   constant = 0.0f;
