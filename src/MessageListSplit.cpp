@@ -42,12 +42,12 @@ void MessageListSplit::processMessage(int inletIndex, PdMessage *message) {
         int numElems = numElements-splitIndex;
         PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(numElems);
         outgoingMessage->from_timestamp(message->get_timestamp(), numElems);
-        memcpy(outgoingMessage->get_element(0), message->get_element(splitIndex), numElems * sizeof(MessageAtom));
+        memcpy(outgoingMessage->get_element(0), message->get_element(splitIndex), numElems * sizeof(pd::message::Atom));
         sendMessage(1, outgoingMessage);
         
         outgoingMessage = PD_MESSAGE_ON_STACK(splitIndex);
         outgoingMessage->from_timestamp(message->get_timestamp(), splitIndex);
-        memcpy(outgoingMessage->get_element(0), message->get_element(0), splitIndex * sizeof(MessageAtom));
+        memcpy(outgoingMessage->get_element(0), message->get_element(0), splitIndex * sizeof(pd::message::Atom));
         sendMessage(0, outgoingMessage);
       }
       break;

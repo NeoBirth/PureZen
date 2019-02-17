@@ -79,7 +79,7 @@ void MessagePipe::processMessage(int inletIndex, PdMessage *message) {
           int numElements = message->get_num_elements();
           PdMessage *scheduledMessage = PD_MESSAGE_ON_STACK(numElements);
           scheduledMessage->from_timestamp(message->get_timestamp() + delayMs, numElements);
-          memcpy(scheduledMessage->get_element(0), message->get_element(0), numElements * sizeof(MessageAtom));
+          memcpy(scheduledMessage->get_element(0), message->get_element(0), numElements * sizeof(pd::message::Atom));
           scheduledMessagesList.push_back(graph->scheduleMessage(this, 0, scheduledMessage));
           break;
         }

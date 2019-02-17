@@ -19,8 +19,8 @@
 
 //! Message types
 
-mod atom;
 pub mod element;
+mod symbol;
 mod timestamp;
 
-pub use self::{atom::Atom, timestamp::Timestamp};
+pub use self::{element::Element, symbol::Symbol, timestamp::Timestamp};

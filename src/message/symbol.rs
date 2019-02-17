@@ -1,74 +1,78 @@
-/*
- *  Copyright 2009,2010 Reality Jockey, Ltd.
- *                 info@rjdj.me
- *                 http://rjdj.me/
- *
- *  This file is part of ZenGarden.
- *
- *  ZenGarden is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  ZenGarden is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser General Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser General Public License
- *  along with ZenGarden.  If not, see <http://www.gnu.org/licenses/>.
- *
- */
+//
+// Copyright © 2009-2019 NeoBirth Developers, Reality Jockey, Ltd.
+//
+// This file is part of PureZen (a fork of ZenGarden)
+//
+// PureZen is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// PureZen is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public License
+// along with PureZen.  If not, see <http://www.gnu.org/licenses/>.
+//
 
-#ifndef _PD_MESSAGE_ELEMENT_H_
-#define _PD_MESSAGE_ELEMENT_H_
+use core::ops::Deref;
+use heapless;
+use typenum::U56;
 
-#include <string.h>
-#include "MessageElementType.h"
+/// Maximum length of a `Symbol` in bytes.
+//
+// Value originally selected by ZenGarden to ensure that its `MessageElement`
+// type had a size of 64-bytes. See:
+//
+// <https://github.com/mhroth/ZenGarden/commit/66e787d944c789d6d5ef77eb0e2871c6c51af9ca>
+//
+// TODO(tarcieri): find a better solution for these than fixed-sized buffers
+//
+// Some options:
+// - enum
+// - borrow symbols from the original program
+// - arena allocator
+// - "intern" symbols as integers
+#[allow(non_camel_case_types)]
+type SYMBOL_BUFFER_LENGTH = U56;
 
-#define SYMBOL_BUFFER_LENGTH 56
+/// Symbols are Pure Data keywords or command names
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct Symbol(heapless::String<SYMBOL_BUFFER_LENGTH>);
 
-/** Implements a Pd message element. */
-class MessageElement {
+impl Symbol {
+    /// Create a new symbol from the given string
+    pub fn new<T>(string: T) -> Self
+    where
+        T: AsRef<str>,
+    {
+        Symbol(heapless::String::from(string.as_ref()))
+    }
 
-  public:
-    MessageElement();
-    MessageElement(float newConstant);
-    MessageElement(char *newSymbol);
-    ~MessageElement();
+    /// Borrow the inner string contents of this `Symbol`
+    pub fn as_str(&self) -> &str {
+        self.0.as_str()
+    }
+}
 
-    message::element::Type getType();
-    bool is_float();
-    bool is_smbol();
-    bool is_bang();
-    bool is_symbol_anything_or_a();
-    bool is_symbol_bang_or_b();
-    bool is_symbol_float_or_f();
-    bool is_symbol_list_or_l();
-    bool isSymbolSymbolOrS();
+impl AsRef<str> for Symbol {
+    fn as_ref(&self) -> &str {
+        self.as_str()
+    }
+}
 
-    void set_float(float constant);
-    float get_float();
+impl Deref for Symbol {
+    type Target = str;
 
-    void set_symbol(char *symbol);
-    char *get_symbol();
+    fn deref(&self) -> &str {
+        self.as_str()
+    }
+}
 
-    void set_bang();
-
-    /** Sets the type of this element to ANYTHING. What that means is otherwise undefined. */
-    void set_anything();
-
-    /** Sets the type of this element to LIST. What that means is otherwise undefined. */
-    void set_list();
-
-    MessageElement *copy();
-
-    bool equals(MessageElement *messageElement);
-
-  private:
-    message::element::Type currentType;
-    float constant;
-    char symbol[SYMBOL_BUFFER_LENGTH];
-};
-
-#endif // _PD_MESSAGE_ELEMENT_H_
+impl<'a> From<&'a str> for Symbol {
+    fn from(s: &str) -> Symbol {
+        Symbol::new(s)
+    }
+}

@@ -19,154 +19,170 @@
 
 //! Message Elements: Components of a Pure Data message
 
+use super::Symbol;
+use crate::pd;
+
 /// Types of message elements
 #[derive(Copy, Clone, Debug, Eq, PartialEq)]
 pub enum Type {
-  /// Any value (placeholder for uninitialized values)
-  // TODO: eliminate this state by always initializing all message elements
-  ANYTHING,
+    /// Any value (placeholder for uninitialized values)
+    // TODO: eliminate this state by always initializing all message elements
+    ANYTHING,
 
-  /// `bang`: Typically used to trigger an object to perform an action.
-  BANG,
+    /// `bang`: Typically used to trigger an object to perform an action.
+    BANG,
 
-  /// `float`: Single-precision floating point value
-  FLOAT,
+    /// `float`: Single-precision floating point value
+    FLOAT,
 
-  /// `list`: Lists of other atoms
-  LIST,
+    /// `list`: Lists of other elements
+    LIST,
 
-  /// `symbol`: Symbol messages (i.e. keywords)
-  SYMBOL,
+    /// `symbol`: Symbol messages (i.e. keywords)
+    SYMBOL,
 }
 
-MessageElement::MessageElement() {
-  constant = 0.0f;
-  memset(symbol, 0, SYMBOL_BUFFER_LENGTH);
-  set_bang();
+/// Message Elements: Components of a Pure Data message
+#[derive(Clone, Debug, PartialEq)]
+pub enum Element {
+    /// Any value (placeholder for uninitialized values)
+    // TODO: eliminate this and always initialize element vectors (if possible?)
+    Anything,
+
+    /// `bang`: Typically used to trigger an object to perform an action.
+    Bang,
+
+    /// `float`: Single-precision floating point value
+    Float(f32),
+
+    /// `list`: Lists of other elements
+    // TODO: list support
+    List(),
+
+    /// `symbol`: Symbols i.e. Pure Data keywords (e.g. `float`, `list`, `symbol`)
+    Symbol(Symbol),
 }
 
-MessageElement::MessageElement(float constant) {
-  memset(symbol, 0, SYMBOL_BUFFER_LENGTH);
-  set_float(constant);
-}
-
-MessageElement::MessageElement(char *newSymbol) {
-  constant = 0.0f;
-  memset(symbol, 0, SYMBOL_BUFFER_LENGTH);
-  set_symbol(newSymbol);
-}
-
-
-MessageElement::~MessageElement() {
-  // nothing to do
-}
-
-message::element::Type MessageElement::get_type() {
-  return currentType;
-}
-
-bool MessageElement::is_float() {
-  return (currentType == FLOAT);
-}
-
-bool MessageElement::is_symbol() {
-  return (currentType == SYMBOL);
-}
-
-bool MessageElement::is_symbol_anything_or_a() {
-  return (currentType == SYMBOL && (strcmp(symbol, "anything") == 0 || strcmp(symbol, "a") == 0));
-}
-
-bool MessageElement::is_symbol_bang_or_b() {
-  return (currentType == SYMBOL && (strcmp(symbol, "bang") == 0 || strcmp(symbol, "b") == 0));
-}
-
-bool MessageElement::is_symbol_float_or_f() {
-  return (currentType == SYMBOL && (strcmp(symbol, "float") == 0 || strcmp(symbol, "f") == 0));
-}
-
-bool MessageElement::is_symbol_list_or_l() {
-  return (currentType == SYMBOL && (strcmp(symbol, "list") == 0 || strcmp(symbol, "l") == 0));
-}
-
-bool MessageElement::is_symbol_symbol_or_s() {
-  return (currentType == SYMBOL && (strcmp(symbol, "symbol") == 0 || strcmp(symbol, "s") == 0));
-}
-
-bool MessageElement::is_bang() {
-  return (currentType == BANG);
-}
-
-void MessageElement::set_float(float newConstant) {
-  constant = newConstant;
-  currentType = FLOAT;
-}
-
-float MessageElement::get_float() {
-  return constant;
-}
-
-void MessageElement::set_symbol(char *newSymbol) {
-  if (strlen(newSymbol) < SYMBOL_BUFFER_LENGTH-1) {
-    strcpy(symbol, newSymbol);
-  } else {
-    // This should never ever ever happen.
-    printf("A symbol added to a message exceeds the symbol buffer length: strlen(%s) > %i",
-        newSymbol, SYMBOL_BUFFER_LENGTH-1);
-  }
-  currentType = SYMBOL;
-}
-
-char *MessageElement::get_symbol() {
-  return symbol;
-}
-
-void MessageElement::set_bang() {
-  currentType = BANG;
-}
-
-void MessageElement::set_anything() {
-  currentType = ANYTHING;
-}
-
-void MessageElement::setList() {
-  currentType = LIST;
-}
-
-MessageElement *MessageElement::copy() {
-  switch (currentType) {
-    case FLOAT: {
-      return new MessageElement(constant);
+impl Element {
+    /// Get the element type for this element
+    pub fn get_type(&self) -> Type {
+        match self {
+            Element::Anything => Type::ANYTHING,
+            Element::Bang => Type::BANG,
+            Element::Float(_) => Type::FLOAT,
+            Element::List() => Type::LIST,
+            Element::Symbol(_) => Type::SYMBOL,
+        }
     }
-    case SYMBOL: {
-      return new MessageElement(symbol);
+
+    /// Obtain the numeric constant value for this element
+    pub fn get_float(&self) -> Option<f32> {
+        match self {
+            Element::Float(n) => Some(*n),
+            _ => None,
+        }
     }
-    case BANG: {
-      return new MessageElement();
+
+    /// Get the slice containing an inner list of elements
+    pub fn get_list(&self) -> Option<&[Element]> {
+        panic!("unimplemented!")
     }
-    default: {
-      return NULL;
+
+    /// Obtain the symbol value for this element
+    pub fn get_symbol(&self) -> Option<&str> {
+        match self {
+            Element::Symbol(s) => Some(s),
+            _ => None,
+        }
     }
-  }
+
+    /// Is this element an anything placeholder value?
+    pub fn is_anything(&self) -> bool {
+        self.get_type() == Type::ANYTHING
+    }
+
+    /// Is this element a `bang`?
+    pub fn is_bang(&self) -> bool {
+        self.get_type() == Type::BANG
+    }
+
+    /// Is this element a `float`?
+    pub fn is_float(&self) -> bool {
+        self.get_float().is_some()
+    }
+
+    /// Is this element a `list`?
+    pub fn is_list(&self) -> bool {
+        self.get_list().is_some()
+    }
+
+    /// Is this element a `symbol`?
+    pub fn is_symbol(&self) -> bool {
+        self.get_symbol().is_some()
+    }
+
+    /// Is this element a `symbol` which matches the given string?
+    pub fn is_symbol_str(&self, test: &str) -> bool {
+        self.get_symbol() == Some(test)
+    }
+
+    /// Set the anything value on this element
+    // TODO: eliminate these methods by setting values directly
+    pub fn set_anything(&mut self) {
+        panic!("unimplemented");
+    }
+
+    /// Set the bang value on this element
+    // TODO: eliminate these methods by setting values directly
+    pub fn set_bang(&mut self) {
+        panic!("unimplemented");
+    }
+
+    /// Set the floating point value of this element
+    // TODO: eliminate these methods by setting values directly
+    pub fn set_float(&mut self, new_value: f32) {
+        match self {
+            Element::Float(ref mut value) => *value = new_value,
+            _ => panic!("can't set_float on {:?}!", self),
+        }
+    }
+
+    /// Set this value to a list
+    // TODO: eliminate these methods by setting values directly
+    pub fn set_list(&mut self) {
+        panic!("unimplemented");
+    }
+
+    /// Set the floating point value of this element
+    // TODO: eliminate these methods by setting values directly
+    pub fn set_symbol(&mut self, new_symbol: &str) {
+        match self {
+            Element::Symbol(ref mut symbol) => *symbol = Symbol::new(new_symbol),
+            _ => panic!("cann't set_symbol on {:?}!", self),
+        }
+    }
 }
 
-bool MessageElement::equals(MessageElement *messageElement) {
-  if (messageElement->get_type() == currentType) {
-    switch (currentType) {
-      case FLOAT: {
-        return (constant == messageElement->get_float());
-      }
-      case SYMBOL: {
-        return (strcmp(symbol, messageElement->get_symbol()) == 0);
-      }
-      case BANG: {
-        return true;
-      }
-      default: {
-        return false;
-      }
+impl From<f32> for Element {
+    fn from(value: f32) -> Element {
+        Element::Float(value)
     }
-  } else {
-    return false;
-  }
+}
+
+impl<'a> From<&'a str> for Element {
+    fn from(s: &str) -> Element {
+        Element::Symbol(Symbol::new(s))
+    }
+}
+
+impl<'a> From<pd::message::Atom<'a>> for Element {
+    fn from(atom: pd::message::Atom) -> Element {
+        match atom {
+            pd::message::Atom::Anything => Element::Anything,
+            pd::message::Atom::Bang => Element::Bang,
+            pd::message::Atom::Float(f) => Element::Float(f),
+            pd::message::Atom::List(_) => Element::List(),
+            pd::message::Atom::Symbol(s) => Element::Symbol(Symbol::from(s)),
+        }
+    }
 }

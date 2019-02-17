@@ -60,7 +60,7 @@ PdGraph::PdGraph(PdMessage *initMessage, PdGraph *parentGraph, PdContext *contex
   graphArguments = PD_MESSAGE_ON_STACK(numInitElements+1);
   graphArguments->from_timestamp(0.0, numInitElements+1);
   graphArguments->set_float(0, (float) graphId); // $0
-  memcpy(graphArguments->get_element(1), initMessage->get_element(0), numInitElements * sizeof(MessageAtom));
+  memcpy(graphArguments->get_element(1), initMessage->get_element(0), numInitElements * sizeof(pd::message::Atom));
   graphArguments = graphArguments->clone_on_heap();
   name = graphName;
 }

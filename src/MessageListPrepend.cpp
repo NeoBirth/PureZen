@@ -38,8 +38,8 @@ void MessageListPrepend::processMessage(int inletIndex, PdMessage *message) {
       int numElements = numPrependElements + numMessageElements;
       PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(numElements);
       outgoingMessage->from_timestamp(message->get_timestamp(), numElements);
-      memcpy(outgoingMessage->get_element(0), prependMessage->get_element(0), numPrependElements * sizeof(MessageAtom));
-      memcpy(outgoingMessage->get_element(numPrependElements), message->get_element(0), numMessageElements * sizeof(MessageAtom));
+      memcpy(outgoingMessage->get_element(0), prependMessage->get_element(0), numPrependElements * sizeof(pd::message::Atom));
+      memcpy(outgoingMessage->get_element(numPrependElements), message->get_element(0), numMessageElements * sizeof(pd::message::Atom));
       sendMessage(0, outgoingMessage);
       break;
     }

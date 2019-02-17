@@ -39,7 +39,7 @@ void MessageRoute::processMessage(int inletIndex, PdMessage *message) {
   int numRouteChecks = routeMessage->get_num_elements();
   int outletIndex = numRouteChecks; // by default, send the message out of the right outlet
   // find which indicator that message matches
-  MessageAtom *messageAtom = message->get_element(0);
+  pd::message::Atom *messageAtom = message->get_element(0);
   for (int i = 0; i < numRouteChecks; i++) {
     if (routeMessage->atom_is_equal_to(i, messageAtom)) {
       outletIndex = i;
@@ -55,7 +55,7 @@ void MessageRoute::processMessage(int inletIndex, PdMessage *message) {
     int numElements = message->get_num_elements() - 1;
     PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(numElements);
     outgoingMessage->from_timestamp(message->get_timestamp(), numElements);
-    memcpy(outgoingMessage->get_element(0), message->get_element(1), numElements*sizeof(MessageAtom));
+    memcpy(outgoingMessage->get_element(0), message->get_element(1), numElements*sizeof(pd::message::Atom));
     sendMessage(outletIndex, outgoingMessage);
   }
 }

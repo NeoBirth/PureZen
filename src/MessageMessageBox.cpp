@@ -107,7 +107,7 @@ void MessageMessageBox::processMessage(int inletIndex, PdMessage *message) {
     PdMessage *messageTemplate = localMessageList.at(i);
     int numElements = messageTemplate->get_num_elements();
     outgoingMessage->from_timestamp(message->get_timestamp(), numElements);
-    memcpy(outgoingMessage->get_element(0), messageTemplate->get_element(0), numElements*sizeof(MessageAtom));
+    memcpy(outgoingMessage->get_element(0), messageTemplate->get_element(0), numElements*sizeof(pd::message::Atom));
     for (int i = 0; i < numElements; i++) {
       if (messageTemplate->is_symbol(i)) {
         char *buffer = (char *) alloca(RES_BUFFER_LENGTH * sizeof(char));
@@ -128,7 +128,7 @@ void MessageMessageBox::processMessage(int inletIndex, PdMessage *message) {
     PdMessage *messageTemplate = namedDestination.second;
     int numElements = messageTemplate->get_num_elements();
     outgoingMessage->from_timestamp(message->get_timestamp(), numElements);
-    memcpy(outgoingMessage->get_element(0), messageTemplate->get_element(0), numElements*sizeof(MessageAtom));
+    memcpy(outgoingMessage->get_element(0), messageTemplate->get_element(0), numElements*sizeof(pd::message::Atom));
     for (int i = 0; i < numElements; i++) {
       if (messageTemplate->is_symbol(i)) {
         char *buffer = (char *) alloca(RES_BUFFER_LENGTH * sizeof(char));

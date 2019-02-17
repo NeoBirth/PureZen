@@ -19,6 +19,6 @@
 
 //! Pure Data (Pd)-related types
 
-mod message;
+pub(crate) mod message;
 
 pub use self::message::Message;

@@ -35,7 +35,7 @@ MessageObject *MessageListAppend::newObject(PdMessage *initMessage, PdGraph *gra
       int numElements = initMessage->get_num_elements()-1;
       PdMessage *message = PD_MESSAGE_ON_STACK(numElements);
       message->from_timestamp(0.0, numElements);
-      memcpy(message->get_element(0), initMessage->get_element(1), numElements*sizeof(MessageAtom));
+      memcpy(message->get_element(0), initMessage->get_element(1), numElements*sizeof(pd::message::Atom));
       MessageObject *messageObject = NULL;
       if (initMessage->is_symbol_str(0, "append")) {
         messageObject = new MessageListAppend(message, graph);
@@ -80,8 +80,8 @@ void MessageListAppend::processMessage(int inletIndex, PdMessage *message) {
       if (numTotalElements > 0) {
         PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(numTotalElements);
         outgoingMessage->from_timestamp(message->get_timestamp(), numTotalElements);
-        memcpy(outgoingMessage->get_element(0), message->get_element(0), numMessageElements*sizeof(MessageAtom));
-        memcpy(outgoingMessage->get_element(numMessageElements), appendMessage->get_element(0), numAppendElements*sizeof(MessageAtom));
+        memcpy(outgoingMessage->get_element(0), message->get_element(0), numMessageElements*sizeof(pd::message::Atom));
+        memcpy(outgoingMessage->get_element(numMessageElements), appendMessage->get_element(0), numAppendElements*sizeof(pd::message::Atom));
         sendMessage(0, outgoingMessage);
       } else {
         PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(1);
