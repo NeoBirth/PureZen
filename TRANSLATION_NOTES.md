@@ -22,7 +22,11 @@ into `Result` types).
 - Redundant prefixes (e.g. `Message*`) are mapped onto Rust modules
 - Function names are eagerly translated to `snake_case`
 
-### `MessageElementType.cpp` => `message/element.rs`
+### `MessageElement.cpp` => `message/element/mod.rs`
+
+- Translation TBD
+
+### `MessageElementType.cpp` => `message/element/type.rs`
 
 - `MessageElementType` renamed to `message::element::Type`
 
