@@ -19,13 +19,9 @@
 
 //! Message types
 
-mod coordinates;
 pub mod element;
 pub mod object;
 mod symbol;
 mod timestamp;
 
-pub use self::{
-    coordinates::Coordinates, element::Element, object::Object, symbol::Symbol,
-    timestamp::Timestamp,
-};
+pub use self::{element::Element, object::Object, symbol::Symbol, timestamp::Timestamp};

@@ -17,8 +17,6 @@
 // along with PureZen.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-// TODO(tarcieri): move this to `message/object/coordinates.rs`
-
 /// Position of an object on a graphical canvas.
 ///
 /// Coordinates may be positive or negative.

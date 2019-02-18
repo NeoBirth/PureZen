@@ -19,12 +19,16 @@
 
 //! Message objects
 
-use super::Coordinates;
+pub mod connection;
+mod coordinates;
+mod types;
+
+pub use self::{connection::Connection, coordinates::Coordinates, types::Type};
+
 use crate::{
     allocator::{self, Allocated, Allocator},
-    connection::{self, Connection},
     error::Error,
-    object, pd,
+    pd,
 };
 use heapless::{self, ArrayLength};
 
@@ -292,8 +296,8 @@ impl Object {
     }
 
     /// Get the type of this object
-    pub fn get_object_type() -> object::Type {
-        object::Type::UNKNOWN
+    pub fn get_object_type() -> Type {
+        Type::UNKNOWN
     }
 
     // TODO: return a `pd::graph::ID` here?

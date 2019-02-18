@@ -49,10 +49,8 @@ extern crate failure_derive;
 
 // TODO: remove `pub` on modules which are not part of the public API
 pub mod allocator;
-pub mod connection;
 mod error;
 pub mod message;
-pub mod object;
 pub mod pd;
 #[cfg(feature = "alloc")]
 mod prelude;
