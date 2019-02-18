@@ -22,12 +22,12 @@
 
 #include "MessageAdd.h"
 
-MessageObject *MessageAdd::newObject(PdMessage *initMessage, PdGraph *graph) {
-  return new MessageAdd(initMessage, graph);
+message::Object *MessageAdd::new_object(pd::Message *init_message, PdGraph *graph) {
+  return new MessageAdd(init_message, graph);
 }
 
-MessageAdd::MessageAdd(PdMessage *initMessage, PdGraph *graph) : MessageObject(2, 1, graph) {
-  constant = initMessage->is_float(0) ? initMessage->get_float(0) : 0.0f;
+MessageAdd::MessageAdd(pd::Message *init_message, PdGraph *graph) : message::Object(2, 1, graph) {
+  constant = init_message->is_float(0) ? init_message->get_float(0) : 0.0f;
   last = 0.0f;
 }
 
@@ -41,8 +41,8 @@ string MessageAdd::toString() {
   return string(str);
 }
 
-void MessageAdd::processMessage(int inletIndex, PdMessage *message) {
-  switch (inletIndex) {
+void MessageAdd::process_message(int inlet_index, pd::Message *message) {
+  switch (inlet_index) {
     case 0: {
       switch (message->get_type(0)) {
         case FLOAT: {
@@ -50,9 +50,9 @@ void MessageAdd::processMessage(int inletIndex, PdMessage *message) {
           // allow fallthrough
         }
         case BANG: {
-          PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(1);
-          outgoingMessage->initWithTimestampAndFloat(message->get_timestamp(), last);
-          sendMessage(0, outgoingMessage);
+          pd::Message *outgoing_message = PD_MESSAGE_ON_STACK(1);
+          outgoing_message->from_timestamp_and_float(message->get_timestamp(), last);
+          send_message(0, outgoing_message);
           break;
         }
         default: return;

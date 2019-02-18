@@ -29,21 +29,21 @@
 class DspVCF : public DspObject {
   
   public:
-    static MessageObject *newObject(PdMessage *initMessage, PdGraph *graph);
-    DspVCF(PdMessage *initMessage, PdGraph *graph);
+    static MessageObject *new_object(PdMessage *init_message, PdGraph *graph);
+    DspVCF(PdMessage *init_message, PdGraph *graph);
     ~DspVCF();
   
     static const char *getObjectLabel();
     std::string toString();
     
   private:
-    void processMessage(int inletIndex, PdMessage *message);
+    void process_message(int inlet_index, PdMessage *message);
     void processDspWithIndex(int fromIndex, int toIndex);
   
     void calculateFilterCoefficients(float f, float q);
     float sigbp_qcos(float f); // not entirely sure what this is doing. From Pd.
     
-    float sampleRate;
+    float sample_rate;
     float centerFrequency;
     float q;
     float coef1;

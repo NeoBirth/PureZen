@@ -23,12 +23,12 @@
 #include "MessageTableRead.h"
 #include "PdGraph.h"
 
-MessageObject *MessageTableRead::newObject(PdMessage *initMessage, PdGraph *graph) {
-  return new MessageTableRead(initMessage, graph);
+message::Object *MessageTableRead::new_object(pd::Message *init_message, PdGraph *graph) {
+  return new MessageTableRead(init_message, graph);
 }
 
-MessageTableRead::MessageTableRead(PdMessage *initMessage, PdGraph *graph) : MessageObject(1, 1, graph) {
-  name = initMessage->is_symbol(0) ? utils::copy_string(initMessage->get_symbol(0)) : NULL;
+MessageTableRead::MessageTableRead(pd::Message *init_message, PdGraph *graph) : message::Object(1, 1, graph) {
+  name = init_message->is_symbol(0) ? utils::copy_string(init_message->get_symbol(0)) : NULL;
   table = NULL; // registration process will set the correct pointer
 }
 
@@ -44,7 +44,7 @@ void MessageTableRead::setTable(MessageTable *aTable) {
   table = aTable;
 }
 
-void MessageTableRead::processMessage(int inletIndex, PdMessage *message) {
+void MessageTableRead::process_message(int inlet_index, pd::Message *message) {
   switch (message->get_type(0)) {
     case FLOAT: {
       if (table != NULL) {
@@ -52,9 +52,9 @@ void MessageTableRead::processMessage(int inletIndex, PdMessage *message) {
         float *buffer = table->getBuffer(&bufferLength);
         int index = (int) message->get_float(0);
         if (index >= 0 && index < bufferLength) {
-          PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(1);
-          outgoingMessage->initWithTimestampAndFloat(message->get_timestamp(), buffer[index]);
-          sendMessage(0, outgoingMessage);
+          pd::Message *outgoing_message = PD_MESSAGE_ON_STACK(1);
+          outgoing_message->from_timestamp_and_float(message->get_timestamp(), buffer[index]);
+          send_message(0, outgoing_message);
         }
       }
       break;

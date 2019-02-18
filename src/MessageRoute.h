@@ -29,15 +29,15 @@
 class MessageRoute : public MessageObject {
     
   public:
-    static MessageObject *newObject(PdMessage *initMessage, PdGraph *graph);
-    MessageRoute(PdMessage *initMessage, PdGraph *graph);
+    static MessageObject *new_object(PdMessage *init_message, PdGraph *graph);
+    MessageRoute(PdMessage *init_message, PdGraph *graph);
     ~MessageRoute();
   
     static const char *getObjectLabel();
     std::string toString();
     
   private:
-    void processMessage(int inletIndex, PdMessage *message);
+    void process_message(int inlet_index, PdMessage *message);
   
     PdMessage *routeMessage;
 };

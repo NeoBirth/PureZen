@@ -28,22 +28,22 @@
 float *DspCosine::cos_table = NULL;
 int DspCosine::refCount = 0;
 
-MessageObject *DspCosine::newObject(PdMessage *initMessage, PdGraph *graph) {
-  return new DspCosine(initMessage, graph);
+message::Object *DspCosine::new_object(pd::Message *init_message, PdGraph *graph) {
+  return new DspCosine(init_message, graph);
 }
 
-DspCosine::DspCosine(PdMessage *initMessage, PdGraph *graph) : DspObject(0, 1, 0, 1, graph) {
-  this->sampleRate = graph->getSampleRate();
+DspCosine::DspCosine(pd::Message *init_message, PdGraph *graph) : DspObject(0, 1, 0, 1, graph) {
+  this->sample_rate = graph->getSampleRate();
   processFunction = &procesSignal;
   #if !__APPLE__ // only create the lookup table if it is really needed
   refCount++;
   if (cos_table == NULL) {
-    int sampleRateInt = (int) sampleRate;
-    cos_table = (float *) malloc((sampleRateInt + 1) * sizeof(float));
-    for (int i = 0; i < sampleRateInt; i++) {
-      cos_table[i] = cosf(2.0f * M_PI * ((float) i) / sampleRate);
+    int sample_rateInt = (int) sample_rate;
+    cos_table = (float *) malloc((sample_rateInt + 1) * sizeof(float));
+    for (int i = 0; i < sample_rateInt; i++) {
+      cos_table[i] = cosf(2.0f * M_PI * ((float) i) / sample_rate);
     }
-    cos_table[sampleRateInt] = cos_table[0];
+    cos_table[sample_rateInt] = cos_table[0];
   }
   #endif
 }
@@ -71,7 +71,7 @@ void DspCosine::procesSignal(DspObject *dspObject, int fromIndex, int toIndex) {
     // works because cosine is symmetric about zero
     float f = fabsf(d->dspBufferAtInlet[0][i]);
     f -= floorf(f);
-    d->dspBufferAtOutlet[0][i] = cos_table[(int) (f * d->sampleRate)];
+    d->dspBufferAtOutlet[0][i] = cos_table[(int) (f * d->sample_rate)];
   }
   #endif
 }

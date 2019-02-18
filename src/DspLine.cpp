@@ -24,11 +24,11 @@
 #include "DspLine.h"
 #include "PdGraph.h"
 
-MessageObject *DspLine::newObject(PdMessage *initMessage, PdGraph *graph) {
-  return new DspLine(initMessage, graph);
+message::Object *DspLine::new_object(pd::Message *init_message, PdGraph *graph) {
+  return new DspLine(init_message, graph);
 }
 
-DspLine::DspLine(PdMessage *initMessage, PdGraph *graph) : DspObject(2, 0, 0, 1, graph) {
+DspLine::DspLine(pd::Message *init_message, PdGraph *graph) : DspObject(2, 0, 0, 1, graph) {
   target = 0.0f;
   slope = 0.0f;
   numSamplesToTarget = 0.0f;
@@ -39,8 +39,8 @@ DspLine::~DspLine() {
   // nothing to do
 }
 
-void DspLine::processMessage(int inletIndex, PdMessage *message) {
-  if (inletIndex == 0) { // not sure what the right inlet is for
+void DspLine::process_message(int inlet_index, pd::Message *message) {
+  if (inlet_index == 0) { // not sure what the right inlet is for
     switch (message->get_num_elements()) {
       case 0: {
         break; // nothing to do

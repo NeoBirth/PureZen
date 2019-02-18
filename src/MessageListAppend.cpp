@@ -27,66 +27,66 @@
 #include "MessageListTrim.h"
 
 // MessageListAppend is the default factor for all list objects
-MessageObject *MessageListAppend::newObject(PdMessage *initMessage, PdGraph *graph) {
-  if (initMessage->is_symbol(0)) {
-    if (initMessage->is_symbol_str(0, "append") ||
-        initMessage->is_symbol_str(0, "prepend") ||
-        initMessage->is_symbol_str(0, "split")) {
-      int numElements = initMessage->get_num_elements()-1;
-      PdMessage *message = PD_MESSAGE_ON_STACK(numElements);
+message::Object *MessageListAppend::new_object(pd::Message *init_message, PdGraph *graph) {
+  if (init_message->is_symbol(0)) {
+    if (init_message->is_symbol_str(0, "append") ||
+        init_message->is_symbol_str(0, "prepend") ||
+        init_message->is_symbol_str(0, "split")) {
+      int numElements = init_message->get_num_elements()-1;
+      pd::Message *message = PD_MESSAGE_ON_STACK(numElements);
       message->from_timestamp(0.0, numElements);
-      memcpy(message->get_element(0), initMessage->get_element(1), numElements*sizeof(pd::message::Atom));
-      MessageObject *messageObject = NULL;
-      if (initMessage->is_symbol_str(0, "append")) {
-        messageObject = new MessageListAppend(message, graph);
-      } else if (initMessage->is_symbol_str(0, "prepend")) {
-        messageObject = new MessageListPrepend(message, graph);
-      } else if (initMessage->is_symbol_str(0, "split")) {
-        messageObject = new MessageListSplit(message, graph);
+      memcpy(message->get_element(0), init_message->get_element(1), numElements*sizeof(pd::message::Atom));
+      message::Object *message_obj = NULL;
+      if (init_message->is_symbol_str(0, "append")) {
+        message_obj = new MessageListAppend(message, graph);
+      } else if (init_message->is_symbol_str(0, "prepend")) {
+        message_obj = new MessageListPrepend(message, graph);
+      } else if (init_message->is_symbol_str(0, "split")) {
+        message_obj = new MessageListSplit(message, graph);
       }
-      return messageObject;
-    } else if (initMessage->is_symbol_str(0, "trim")) {
-      // trim and length do not act on the initMessage
-      return new MessageListTrim(initMessage, graph);
-    } else if (initMessage->is_symbol_str(0, "length")) {
-      return new MessageListLength(initMessage, graph);
+      return message_obj;
+    } else if (init_message->is_symbol_str(0, "trim")) {
+      // trim and length do not act on the init_message
+      return new MessageListTrim(init_message, graph);
+    } else if (init_message->is_symbol_str(0, "length")) {
+      return new MessageListLength(init_message, graph);
     } else {
-      return new MessageListAppend(initMessage, graph);
+      return new MessageListAppend(init_message, graph);
     }
   } else {
-    return new MessageListAppend(initMessage, graph);
+    return new MessageListAppend(init_message, graph);
   }
 }
 
-MessageListAppend::MessageListAppend(PdMessage *initMessage, PdGraph *graph) : MessageObject(2, 1, graph) {
-  appendMessage = initMessage->clone_on_heap();
+MessageListAppend::MessageListAppend(pd::Message *init_message, PdGraph *graph) : message::Object(2, 1, graph) {
+  appendMessage = init_message->clone_on_heap();
 }
 
 MessageListAppend::~MessageListAppend() {
   appendMessage->freeMessage();
 }
 
-bool MessageListAppend::shouldDistributeMessageToInlets() {
+bool MessageListAppend::should_distribute_message_to_inlets() {
   return false;
 }
 
-void MessageListAppend::processMessage(int inletIndex, PdMessage *message) {
-  switch (inletIndex) {
+void MessageListAppend::process_message(int inlet_index, pd::Message *message) {
+  switch (inlet_index) {
     case 0: {
       // if the incoming message is a bang, then it is considered to be a list of length zero
       int numMessageElements = (!message->is_bang(0)) ? message->get_num_elements() : 0;
       int numAppendElements = appendMessage->get_num_elements();
       int numTotalElements = numMessageElements + numAppendElements;
       if (numTotalElements > 0) {
-        PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(numTotalElements);
-        outgoingMessage->from_timestamp(message->get_timestamp(), numTotalElements);
-        memcpy(outgoingMessage->get_element(0), message->get_element(0), numMessageElements*sizeof(pd::message::Atom));
-        memcpy(outgoingMessage->get_element(numMessageElements), appendMessage->get_element(0), numAppendElements*sizeof(pd::message::Atom));
-        sendMessage(0, outgoingMessage);
+        pd::Message *outgoing_message = PD_MESSAGE_ON_STACK(numTotalElements);
+        outgoing_message->from_timestamp(message->get_timestamp(), numTotalElements);
+        memcpy(outgoing_message->get_element(0), message->get_element(0), numMessageElements*sizeof(pd::message::Atom));
+        memcpy(outgoing_message->get_element(numMessageElements), appendMessage->get_element(0), numAppendElements*sizeof(pd::message::Atom));
+        send_message(0, outgoing_message);
       } else {
-        PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(1);
-        outgoingMessage->initWithTimestampAndBang(message->get_timestamp());
-        sendMessage(0, outgoingMessage);
+        pd::Message *outgoing_message = PD_MESSAGE_ON_STACK(1);
+        outgoing_message->from_timestamp_and_bang(message->get_timestamp());
+        send_message(0, outgoing_message);
       }
       break;
     }
@@ -94,7 +94,7 @@ void MessageListAppend::processMessage(int inletIndex, PdMessage *message) {
       if (message->is_bang(0)) {
         // bangs are considered a list of size zero
         appendMessage->freeMessage();
-        PdMessage *message = PD_MESSAGE_ON_STACK(0);
+        pd::Message *message = PD_MESSAGE_ON_STACK(0);
         message->from_timestamp(0.0, 0);
         appendMessage = message->clone_on_heap();
       } else {

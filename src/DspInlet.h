@@ -35,13 +35,13 @@ class PdGraph;
  */
 class DspInlet : public DspObject {
   public:
-    static MessageObject *newObject(PdMessage *initMessage, PdGraph *graph);
+    static MessageObject *new_object(PdMessage *init_message, PdGraph *graph);
     DspInlet(PdGraph *graph);
     ~DspInlet();
   
     static const char *getObjectLabel();
     std::string toString();
-    ObjectType getObjectType();
+    object::Type get_object_type();
   
     list<DspObject *> getProcessOrder();
     list<DspObject *> getProcessOrderFromInlet();
@@ -49,12 +49,12 @@ class DspInlet : public DspObject {
     // [inlet~] does nothing with audio
     bool doesProcessAudio();
   
-    void setDspBufferAtInlet(float *buffer, unsigned int inletIndex);
-    bool canSetBufferAtOutlet(unsigned int outletIndex);
-    float *getDspBufferAtOutlet(int outletIndex);
+    void setDspBufferAtInlet(float *buffer, unsigned int inlet_index);
+    bool canSetBufferAtOutlet(unsigned int outlet_index);
+    float *getDspBufferAtOutlet(int outlet_index);
 };
 
-inline bool DspInlet::canSetBufferAtOutlet(unsigned int outletIndex) {
+inline bool DspInlet::canSetBufferAtOutlet(unsigned int outlet_index) {
   return false;
 }
 
@@ -70,7 +70,7 @@ inline const char *DspInlet::getObjectLabel() {
   return "inlet~";
 }
 
-inline ObjectType DspInlet::getObjectType() {
+inline object::Type DspInlet::get_object_type() {
   return DSP_INLET;
 }
 

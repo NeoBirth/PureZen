@@ -23,13 +23,13 @@
 #include "DspBandpassFilter.h"
 #include "PdGraph.h"
 
-MessageObject *DspBandpassFilter::newObject(PdMessage *initMessage, PdGraph *graph) {
-  return new DspBandpassFilter(initMessage, graph);
+message::Object *DspBandpassFilter::new_object(pd::Message *init_message, PdGraph *graph) {
+  return new DspBandpassFilter(init_message, graph);
 }
 
-DspBandpassFilter::DspBandpassFilter(PdMessage *initMessage, PdGraph *graph) : DspFilter(3, graph) {
-  fc = initMessage->is_float(0) ? initMessage->get_float(0) : graph->getSampleRate()/2.0f;
-  q = initMessage->is_float(1) ? initMessage->get_float(1) : 1.0f;
+DspBandpassFilter::DspBandpassFilter(pd::Message *init_message, PdGraph *graph) : DspFilter(3, graph) {
+  fc = init_message->is_float(0) ? init_message->get_float(0) : graph->getSampleRate()/2.0f;
+  q = init_message->is_float(1) ? init_message->get_float(1) : 1.0f;
   calcFiltCoeff(fc, q);
 }
 
@@ -53,8 +53,8 @@ void DspBandpassFilter::calcFiltCoeff(float fc, float q) {
   b[4] = (1.0f-alpha)/(1.0f+alpha);
 }
 
-void DspBandpassFilter::processMessage(int inletIndex, PdMessage *message) {
-  switch (inletIndex) {
+void DspBandpassFilter::process_message(int inlet_index, pd::Message *message) {
+  switch (inlet_index) {
     case 0: {
       if (message->is_symbol_str(0, "clear")) {
         x1 = x2 = dspBufferAtOutlet[0][0] = dspBufferAtOutlet[0][1] = 0.0f;

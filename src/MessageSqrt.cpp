@@ -22,11 +22,11 @@
 
 #include "MessageSqrt.h"
 
-MessageObject *MessageSqrt::newObject(PdMessage *initMessage, PdGraph *graph) {
-  return new MessageSqrt(initMessage, graph);
+message::Object *MessageSqrt::new_object(pd::Message *init_message, PdGraph *graph) {
+  return new MessageSqrt(init_message, graph);
 }
 
-MessageSqrt::MessageSqrt(PdMessage *initMessage, PdGraph *graph) : MessageObject(1, 1, graph) {
+MessageSqrt::MessageSqrt(pd::Message *init_message, PdGraph *graph) : message::Object(1, 1, graph) {
   // nothing to do
 }
 
@@ -34,11 +34,11 @@ MessageSqrt::~MessageSqrt() {
   // nothing to do
 }
 
-void MessageSqrt::processMessage(int inletIndex, PdMessage *message) {
+void MessageSqrt::process_message(int inlet_index, pd::Message *message) {
   if (message->is_float(0)) {
-    PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(1);
+    pd::Message *outgoing_message = PD_MESSAGE_ON_STACK(1);
     float value = message->get_float(0);
-    outgoingMessage->initWithTimestampAndFloat(message->get_timestamp(), (value < 0.0f) ? 0.0f : sqrtf(value));
-    sendMessage(0, outgoingMessage);
+    outgoing_message->from_timestamp_and_float(message->get_timestamp(), (value < 0.0f) ? 0.0f : sqrtf(value));
+    send_message(0, outgoing_message);
   }
 }

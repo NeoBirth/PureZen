@@ -21,16 +21,16 @@
  */
 
 #include "DspThrow.h"
-#include "PdContext.h"
+#include "pd::Context.h"
 #include "PdGraph.h"
 
-MessageObject *DspThrow::newObject(PdMessage *initMessage, PdGraph *graph) {
-  return new DspThrow(initMessage, graph);
+message::Object *DspThrow::new_object(pd::Message *init_message, PdGraph *graph) {
+  return new DspThrow(init_message, graph);
 }
 
-DspThrow::DspThrow(PdMessage *initMessage, PdGraph *graph) : DspObject(0, 1, 0, 0, graph) {
-  if (initMessage->is_symbol(0)) {
-    name = utils::copy_string(initMessage->get_symbol(0));
+DspThrow::DspThrow(pd::Message *init_message, PdGraph *graph) : DspObject(0, 1, 0, 0, graph) {
+  if (init_message->is_symbol(0)) {
+    name = utils::copy_string(init_message->get_symbol(0));
     buffer = ALLOC_ALIGNED_BUFFER(graph->getBlockSize() * sizeof(float));
   } else {
     name = NULL;
@@ -45,8 +45,8 @@ DspThrow::~DspThrow() {
   free(name);
 }
 
-void DspThrow::processMessage(int inletIndex, PdMessage *message) {
-  if (inletIndex == 0 && message->is_symbol_str(0, "set") && message->is_symbol(1)) {
+void DspThrow::process_message(int inlet_index, pd::Message *message) {
+  if (inlet_index == 0 && message->is_symbol_str(0, "set") && message->is_symbol(1)) {
     graph->printErr("throw~ does not support the \"set\" message.");
   }
 }
@@ -56,6 +56,6 @@ void DspThrow::processSignal(DspObject *dspObject, int fromIndex, int toIndex) {
   memcpy(d->buffer, d->dspBufferAtInlet[0], toIndex*sizeof(float));
 }
 
-bool DspThrow::isLeafNode() {
+bool DspThrow::is_leaf_node() {
   return graph->getContext()->getDspCatch(name) == NULL;
 }

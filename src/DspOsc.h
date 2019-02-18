@@ -29,18 +29,18 @@
 class DspOsc : public DspObject {
   
   public:
-    static MessageObject *newObject(PdMessage *initMessage, PdGraph *graph);
-    DspOsc(PdMessage *initMessage, PdGraph *graph); // and oscillator of default zero frequency
+    static MessageObject *new_object(PdMessage *init_message, PdGraph *graph);
+    DspOsc(PdMessage *init_message, PdGraph *graph); // and oscillator of default zero frequency
     ~DspOsc();
   
     static const char *getObjectLabel();
     std::string toString();
   
-    void onInletConnectionUpdate(unsigned int inletIndex);
+    void onInletConnectionUpdate(unsigned int inlet_index);
   
   private:
     static void processScalar(DspObject *dspObject, int fromIndex, int toIndex);
-    void processMessage(int inletIndex, PdMessage *message);
+    void process_message(int inlet_index, PdMessage *message);
   
     float frequency; // frequency and phase are stored as integers because they are used
     float sampleStep;

@@ -29,19 +29,19 @@
 class DspReceive : public DspObject {
   
   public:
-    static MessageObject *newObject(PdMessage *initMessage, PdGraph *graph);
-    DspReceive(PdMessage *initMessage, PdGraph *graph);
+    static MessageObject *new_object(PdMessage *init_message, PdGraph *graph);
+    DspReceive(PdMessage *init_message, PdGraph *graph);
     ~DspReceive();
     
     const char *getName();
     static const char *getObjectLabel();
     std::string toString();
   
-    ObjectType getObjectType();
+    object::Type get_object_type();
   
-    void processMessage(int inletIndex, PdMessage *message);
+    void process_message(int inlet_index, PdMessage *message);
   
-    bool canSetBufferAtOutlet(unsigned int outletIndex);
+    bool canSetBufferAtOutlet(unsigned int outlet_index);
   
   private:
     static void processSignal(DspObject *dspObject, int fromIndex, int toIndex);
@@ -57,11 +57,11 @@ inline const char *DspReceive::getObjectLabel() {
   return "receive~";
 }
   
-inline ObjectType DspReceive::getObjectType() {
+inline object::Type DspReceive::get_object_type() {
   return DSP_RECEIVE;
 }
   
-inline bool DspReceive::canSetBufferAtOutlet(unsigned int outletIndex) {
+inline bool DspReceive::canSetBufferAtOutlet(unsigned int outlet_index) {
   return false;
 }
 

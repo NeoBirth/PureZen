@@ -22,11 +22,11 @@
 
 #include "MessageToggle.h"
 
-MessageObject *MessageToggle::newObject(PdMessage *initMessage, PdGraph *graph) {
-  return new MessageToggle(initMessage, graph);
+message::Object *MessageToggle::new_object(pd::Message *init_message, PdGraph *graph) {
+  return new MessageToggle(init_message, graph);
 }
 
-MessageToggle::MessageToggle(PdMessage *initString, PdGraph *graph) : MessageObject(1, 1, graph) {
+MessageToggle::MessageToggle(pd::Message *initString, PdGraph *graph) : message::Object(1, 1, graph) {
   isOn = false;
   onOutput = 1.0f;
 }
@@ -39,21 +39,21 @@ const char *MessageToggle::getObjectLabel() {
   return "toggle";
 }
 
-void MessageToggle::processMessage(int inletIndex, PdMessage *message) {
+void MessageToggle::process_message(int inlet_index, pd::Message *message) {
   switch (message->get_type(0)) {
     case FLOAT: {
       isOn = (message->get_float(0) != 0.0f);
       if (isOn) onOutput = message->get_float(0);
-      PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(1);
-      outgoingMessage->initWithTimestampAndFloat(message->get_timestamp(), isOn ? onOutput : 0.0f);
-      sendMessage(0, outgoingMessage);
+      pd::Message *outgoing_message = PD_MESSAGE_ON_STACK(1);
+      outgoing_message->from_timestamp_and_float(message->get_timestamp(), isOn ? onOutput : 0.0f);
+      send_message(0, outgoing_message);
       break;
     }
     case BANG: {
       isOn = !isOn;
-      PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(1);
-      outgoingMessage->initWithTimestampAndFloat(message->get_timestamp(), isOn ? onOutput : 0.0f);
-      sendMessage(0, outgoingMessage);
+      pd::Message *outgoing_message = PD_MESSAGE_ON_STACK(1);
+      outgoing_message->from_timestamp_and_float(message->get_timestamp(), isOn ? onOutput : 0.0f);
+      send_message(0, outgoing_message);
       break;
     }
     case SYMBOL: {

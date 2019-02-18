@@ -23,12 +23,12 @@
 #include "MessageDelay.h"
 #include "PdGraph.h"
 
-MessageObject *MessageDelay::newObject(PdMessage *initMessage, PdGraph *graph) {
-  return new MessageDelay(initMessage, graph);
+message::Object *MessageDelay::new_object(pd::Message *init_message, PdGraph *graph) {
+  return new MessageDelay(init_message, graph);
 }
 
-MessageDelay::MessageDelay(PdMessage *initMessage, PdGraph *graph) : MessageObject(2, 1, graph) {
-  delayMs = initMessage->is_float(0) ? (double) initMessage->get_float(0) : 0.0;
+MessageDelay::MessageDelay(pd::Message *init_message, PdGraph *graph) : message::Object(2, 1, graph) {
+  delayMs = init_message->is_float(0) ? (double) init_message->get_float(0) : 0.0;
   scheduledMessage = NULL;
 }
 
@@ -43,8 +43,8 @@ void MessageDelay::cancelScheduledMessageIfExists() {
   }
 }
 
-void MessageDelay::processMessage(int inletIndex, PdMessage *message) {
-  switch (inletIndex) {
+void MessageDelay::process_message(int inlet_index, pd::Message *message) {
+  switch (inlet_index) {
     case 0: {
       switch (message->get_type(0)) {
         case SYMBOL: {
@@ -58,8 +58,8 @@ void MessageDelay::processMessage(int inletIndex, PdMessage *message) {
         case BANG: {
           cancelScheduledMessageIfExists();
           scheduledMessage = PD_MESSAGE_ON_STACK(1);
-          scheduledMessage->initWithTimestampAndBang(message->get_timestamp() + delayMs);
-          scheduledMessage = graph->scheduleMessage(this, 0, scheduledMessage);
+          scheduledMessage->from_timestamp_and_bang(message->get_timestamp() + delayMs);
+          scheduledMessage = graph->schedule_message(this, 0, scheduledMessage);
           break;
         }
         default: {
@@ -82,10 +82,10 @@ void MessageDelay::processMessage(int inletIndex, PdMessage *message) {
   }
 }
 
-void MessageDelay::sendMessage(int outletIndex, PdMessage *message) {
+void MessageDelay::send_message(int outlet_index, pd::Message *message) {
   if (message == scheduledMessage) {
     // now that we know that this message is being sent, we don't have to worry about it anymore
     scheduledMessage = NULL;
   }
-  MessageObject::sendMessage(outletIndex, message);
+  message::Object::send_message(outlet_index, message);
 }

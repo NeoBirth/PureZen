@@ -23,12 +23,12 @@
 #include "DspLowpassFilter.h"
 #include "PdGraph.h"
 
-MessageObject *DspLowpassFilter::newObject(PdMessage *initMessage, PdGraph *graph) {
-  return new DspLowpassFilter(initMessage, graph);
+message::Object *DspLowpassFilter::new_object(pd::Message *init_message, PdGraph *graph) {
+  return new DspLowpassFilter(init_message, graph);
 }
 
-DspLowpassFilter::DspLowpassFilter(PdMessage *initMessage, PdGraph *graph) : DspFilter(2, graph) {
-  calcFiltCoeff(initMessage->is_float(0) ? initMessage->get_float(0) : graph->getSampleRate()/2.0f);
+DspLowpassFilter::DspLowpassFilter(pd::Message *init_message, PdGraph *graph) : DspFilter(2, graph) {
+  calcFiltCoeff(init_message->is_float(0) ? init_message->get_float(0) : graph->getSampleRate()/2.0f);
 }
 
 DspLowpassFilter::~DspLowpassFilter() {
@@ -49,8 +49,8 @@ void DspLowpassFilter::calcFiltCoeff(float fc) {
   b[4] = 0.0f;
 }
 
-void DspLowpassFilter::processMessage(int inletIndex, PdMessage *message) {
-  switch (inletIndex) {
+void DspLowpassFilter::process_message(int inlet_index, pd::Message *message) {
+  switch (inlet_index) {
     case 0: {
       switch (message->get_type(0)) {
         case FLOAT: {

@@ -36,7 +36,7 @@ DspFilter::~DspFilter() {
   // nothing to do
 }
 
-void DspFilter::onInletConnectionUpdate(unsigned int inletIndex) {
+void DspFilter::onInletConnectionUpdate(unsigned int inlet_index) {
   // TODO(mhroth)
 }
 

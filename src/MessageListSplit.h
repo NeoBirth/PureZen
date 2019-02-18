@@ -29,14 +29,14 @@
 class MessageListSplit : public MessageObject {
   
   public:
-    MessageListSplit(PdMessage *initMessage, PdGraph *graph);
+    MessageListSplit(PdMessage *init_message, PdGraph *graph);
     ~MessageListSplit();
 
   static const char *getObjectLabel();
   std::string toString();
 
   private:
-    void processMessage(int inletIndex, PdMessage *message);
+    void process_message(int inlet_index, PdMessage *message);
   
     int splitIndex;
 };

@@ -34,8 +34,8 @@ class DspCatch;
 class DspThrow : public DspObject {
   
   public:
-    static MessageObject *newObject(PdMessage *initMessage, PdGraph *graph);
-    DspThrow(PdMessage *initMessage, PdGraph *graph);
+    static MessageObject *new_object(PdMessage *init_message, PdGraph *graph);
+    DspThrow(PdMessage *init_message, PdGraph *graph);
     ~DspThrow();
     
     float *getBuffer() { return buffer; }
@@ -43,9 +43,9 @@ class DspThrow : public DspObject {
     const char *getName() { return name; }
     static const char *getObjectLabel() { return "throw~"; }
     string toString() { return string(getObjectLabel()) + " " + string(name); }
-    ObjectType getObjectType() { return DSP_THROW; }
+    object::Type get_object_type() { return DSP_THROW; }
 
-    void processMessage(int inletIndex, PdMessage *message);
+    void process_message(int inlet_index, PdMessage *message);
   
     bool isLeafNode();
     

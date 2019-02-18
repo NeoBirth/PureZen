@@ -34,19 +34,19 @@ class DspDelayWrite;
 class DspVariableDelay : public DelayReceiver {
   
   public:
-    static MessageObject *newObject(PdMessage *initMessage, PdGraph *graph);
-    DspVariableDelay(PdMessage *initMessage, PdGraph *graph);
+    static MessageObject *new_object(PdMessage *init_message, PdGraph *graph);
+    DspVariableDelay(PdMessage *init_message, PdGraph *graph);
     ~DspVariableDelay();
   
     static const char *getObjectLabel();
     std::string toString();
   
-    ObjectType getObjectType();
+    object::Type get_object_type();
     
   private:
     void processDspWithIndex(int fromIndex, int toIndex);
   
-    float sampleRate;
+    float sample_rate;
 };
 
 inline std::string DspVariableDelay::toString() {
@@ -57,7 +57,7 @@ inline const char *DspVariableDelay::getObjectLabel() {
   return "vd~";
 }
   
-inline ObjectType DspVariableDelay::getObjectType() {
+inline object::Type DspVariableDelay::get_object_type() {
   return DSP_VARIABLE_DELAY;
 }
 

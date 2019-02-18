@@ -22,11 +22,11 @@
 
 #include "MessageTimer.h"
 
-MessageObject *MessageTimer::newObject(PdMessage *initMessage, PdGraph *graph) {
-  return new MessageTimer(initMessage, graph);
+message::Object *MessageTimer::new_object(pd::Message *init_message, PdGraph *graph) {
+  return new MessageTimer(init_message, graph);
 }
 
-MessageTimer::MessageTimer(PdMessage *initMessage, PdGraph *grap) : MessageObject(2, 1, graph) {
+MessageTimer::MessageTimer(pd::Message *init_message, PdGraph *grap) : message::Object(2, 1, graph) {
   timestampStart = 0.0;
 }
 
@@ -34,8 +34,8 @@ MessageTimer::~MessageTimer() {
   // nothing to do
 }
 
-void MessageTimer::processMessage(int inletIndex, PdMessage *message) {
-  switch (inletIndex) {
+void MessageTimer::process_message(int inlet_index, pd::Message *message) {
+  switch (inlet_index) {
     case 0: {
       if (message->is_bang(0)) {
         timestampStart = message->get_timestamp();
@@ -44,10 +44,10 @@ void MessageTimer::processMessage(int inletIndex, PdMessage *message) {
     }
     case 1: {
       if (message->is_bang(0)) {
-        PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(1);
-        outgoingMessage->initWithTimestampAndFloat(message->get_timestamp(),
+        pd::Message *outgoing_message = PD_MESSAGE_ON_STACK(1);
+        outgoing_message->from_timestamp_and_float(message->get_timestamp(),
             (float) (message->get_timestamp() - timestampStart));
-        sendMessage(0, outgoingMessage);
+        send_message(0, outgoing_message);
       }
       break;
     }

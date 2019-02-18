@@ -29,8 +29,8 @@
 class DspReciprocalSqrt : public DspObject {
   
   public:
-    static MessageObject *newObject(PdMessage *initMessage, PdGraph *graph);
-    DspReciprocalSqrt(PdMessage *initMessage, PdGraph *graph);
+    static MessageObject *new_object(PdMessage *init_message, PdGraph *graph);
+    DspReciprocalSqrt(PdMessage *init_message, PdGraph *graph);
     ~DspReciprocalSqrt();
     
     static const char *getObjectLabel();

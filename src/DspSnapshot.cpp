@@ -23,11 +23,11 @@
 #include "DspSnapshot.h"
 #include "PdGraph.h"
 
-MessageObject *DspSnapshot::newObject(PdMessage *initMessage, PdGraph *graph) {
-  return new DspSnapshot(initMessage, graph);
+message::Object *DspSnapshot::new_object(pd::Message *init_message, PdGraph *graph) {
+  return new DspSnapshot(init_message, graph);
 }
 
-DspSnapshot::DspSnapshot(PdMessage *initMessage, PdGraph *graph) : DspObject(1, 1, 1, 0, graph) {
+DspSnapshot::DspSnapshot(pd::Message *init_message, PdGraph *graph) : DspObject(1, 1, 1, 0, graph) {
   processFunction = &processNull;
   processFunctionNoMessage = &processNull;
 }
@@ -36,21 +36,21 @@ DspSnapshot::~DspSnapshot() {
   // nothing to do
 }
 
-ConnectionType DspSnapshot::getConnectionType(int outletIndex) {
+connection::Type DspSnapshot::get_connection_type(int outlet_index) {
   return MESSAGE;
 }
 
-void DspSnapshot::processMessage(int inletIndex, PdMessage *message) {
+void DspSnapshot::process_message(int inlet_index, pd::Message *message) {
   switch (message->get_type(0)) {
     case SYMBOL: {
       graph->printErr("[snapshot~] does not support the \"%s\" message.", message->get_symbol(0));
       break;
     }
     case BANG: {
-      PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(1);
+      pd::Message *outgoing_message = PD_MESSAGE_ON_STACK(1);
       double blockIndex = graph->getBlockIndex(message);
-      outgoingMessage->initWithTimestampAndFloat(message->get_timestamp(), dspBufferAtInlet[0][(int) blockIndex]);
-      sendMessage(0, outgoingMessage);
+      outgoing_message->from_timestamp_and_float(message->get_timestamp(), dspBufferAtInlet[0][(int) blockIndex]);
+      send_message(0, outgoing_message);
       break;
     }
     default: break;

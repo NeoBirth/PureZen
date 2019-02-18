@@ -22,23 +22,23 @@
 
 #include "MessageMoses.h"
 
-MessageObject *MessageMoses::newObject(PdMessage *initMessage, PdGraph *graph) {
-  return new MessageMoses(initMessage, graph);
+message::Object *MessageMoses::new_object(pd::Message *init_message, PdGraph *graph) {
+  return new MessageMoses(init_message, graph);
 }
 
-MessageMoses::MessageMoses(PdMessage *initMessage, PdGraph *graph) : MessageObject(2, 2, graph) {
-  constant = initMessage->is_float(0) ? initMessage->get_float(0) : 0.0f;
+MessageMoses::MessageMoses(pd::Message *init_message, PdGraph *graph) : message::Object(2, 2, graph) {
+  constant = init_message->is_float(0) ? init_message->get_float(0) : 0.0f;
 }
 
 MessageMoses::~MessageMoses() {
   // nothing to do
 }
 
-void MessageMoses::processMessage(int inletIndex, PdMessage *message) {
-  switch (inletIndex) {
+void MessageMoses::process_message(int inlet_index, pd::Message *message) {
+  switch (inlet_index) {
     case 0: {
       if (message->is_float(0)) {
-        sendMessage((message->get_float(0) < constant) ? 0 : 1, message);
+        send_message((message->get_float(0) < constant) ? 0 : 1, message);
       }
       break;
     }

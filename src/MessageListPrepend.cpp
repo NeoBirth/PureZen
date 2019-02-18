@@ -22,25 +22,25 @@
 
 #include "MessageListPrepend.h"
 
-MessageListPrepend::MessageListPrepend(PdMessage *initMessage, PdGraph *graph) : MessageObject(2, 1, graph) {
-  prependMessage = initMessage->clone_on_heap();
+MessageListPrepend::MessageListPrepend(pd::Message *init_message, PdGraph *graph) : message::Object(2, 1, graph) {
+  prependMessage = init_message->clone_on_heap();
 }
 
 MessageListPrepend::~MessageListPrepend() {
   prependMessage->freeMessage();
 }
 
-void MessageListPrepend::processMessage(int inletIndex, PdMessage *message) {
-  switch (inletIndex) {
+void MessageListPrepend::process_message(int inlet_index, pd::Message *message) {
+  switch (inlet_index) {
     case 0: {
       int numPrependElements = prependMessage->get_num_elements();
       int numMessageElements = message->get_num_elements();
       int numElements = numPrependElements + numMessageElements;
-      PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(numElements);
-      outgoingMessage->from_timestamp(message->get_timestamp(), numElements);
-      memcpy(outgoingMessage->get_element(0), prependMessage->get_element(0), numPrependElements * sizeof(pd::message::Atom));
-      memcpy(outgoingMessage->get_element(numPrependElements), message->get_element(0), numMessageElements * sizeof(pd::message::Atom));
-      sendMessage(0, outgoingMessage);
+      pd::Message *outgoing_message = PD_MESSAGE_ON_STACK(numElements);
+      outgoing_message->from_timestamp(message->get_timestamp(), numElements);
+      memcpy(outgoing_message->get_element(0), prependMessage->get_element(0), numPrependElements * sizeof(pd::message::Atom));
+      memcpy(outgoing_message->get_element(numPrependElements), message->get_element(0), numMessageElements * sizeof(pd::message::Atom));
+      send_message(0, outgoing_message);
       break;
     }
     case 1: {

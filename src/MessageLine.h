@@ -31,18 +31,18 @@ class PdGraph;
 class MessageLine : public MessageObject {
   
   public:
-    static MessageObject *newObject(PdMessage *initMessage, PdGraph *graph);
-    MessageLine(PdMessage *initMessage, PdGraph *graph);
+    static MessageObject *new_object(PdMessage *init_message, PdGraph *graph);
+    MessageLine(PdMessage *init_message, PdGraph *graph);
     ~MessageLine();
   
     bool shouldDistributeMessageToInlets();
-    void sendMessage(int outletIndex, PdMessage *message);
+    void sendMessage(int outlet_index, PdMessage *message);
   
     static const char *getObjectLabel();
     std::string toString();
 
   private:
-    void processMessage(int inletIndex, PdMessage *message);
+    void process_message(int inlet_index, PdMessage *message);
   
     /** Cancels the pending message, if one exists. */
     void cancelPendingMessage();

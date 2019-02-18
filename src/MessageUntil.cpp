@@ -22,11 +22,11 @@
 
 #include "MessageUntil.h"
 
-MessageObject *MessageUntil::newObject(PdMessage *initMessage, PdGraph *graph) {
-  return new MessageUntil(initMessage, graph);
+message::Object *MessageUntil::new_object(pd::Message *init_message, PdGraph *graph) {
+  return new MessageUntil(init_message, graph);
 }
 
-MessageUntil::MessageUntil(PdMessage *initMessage, PdGraph *graph) : MessageObject(2, 1, graph) {
+MessageUntil::MessageUntil(pd::Message *init_message, PdGraph *graph) : message::Object(2, 1, graph) {
   // nothing to do
 }
 
@@ -34,8 +34,8 @@ MessageUntil::~MessageUntil() {
   // nothing to do
 }
 
-void MessageUntil::processMessage(int inletIndex, PdMessage *message) {
-  switch (inletIndex) {
+void MessageUntil::process_message(int inlet_index, pd::Message *message) {
+  switch (inlet_index) {
     case 0: {
       switch (message->get_type(0)) {
         case FLOAT: {
@@ -51,10 +51,10 @@ void MessageUntil::processMessage(int inletIndex, PdMessage *message) {
         }
       }
       
-      PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(1);
-      outgoingMessage->initWithTimestampAndBang(message->get_timestamp());
+      pd::Message *outgoing_message = PD_MESSAGE_ON_STACK(1);
+      outgoing_message->from_timestamp_and_bang(message->get_timestamp());
       for (unsigned int i = 0; i < maxIterations; i++) {
-        sendMessage(0, outgoingMessage);
+        send_message(0, outgoing_message);
       }
       
       break;

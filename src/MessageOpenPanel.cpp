@@ -23,11 +23,11 @@
 #include "MessageOpenPanel.h"
 #include "PdGraph.h"
 
-MessageObject *MessageOpenPanel::newObject(PdMessage *initMessage, PdGraph *graph) {
-  return new MessageOpenPanel(initMessage, graph);
+message::Object *MessageOpenPanel::new_object(pd::Message *init_message, PdGraph *graph) {
+  return new MessageOpenPanel(init_message, graph);
 }
 
-MessageOpenPanel::MessageOpenPanel(PdMessage *initMessage, PdGraph *graph) : MessageObject(1, 1, graph) {
+MessageOpenPanel::MessageOpenPanel(pd::Message *init_message, PdGraph *graph) : message::Object(1, 1, graph) {
   // nothing to do
 }
 
@@ -35,7 +35,7 @@ MessageOpenPanel::~MessageOpenPanel() {
   // nothing to do
 }
 
-void MessageOpenPanel::processMessage(int inletIndex, PdMessage *message) {
+void MessageOpenPanel::process_message(int inlet_index, pd::Message *message) {
   graph->printErr("Object \"openpanel\" has not yet been implemented. It does nothing.");
   switch (message->get_type(0)) {
     case BANG: {

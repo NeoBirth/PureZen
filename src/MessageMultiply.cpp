@@ -22,12 +22,12 @@
 
 #include "MessageMultiply.h"
 
-MessageObject *MessageMultiply::newObject(PdMessage *initMessage, PdGraph *graph) {
-  return new MessageMultiply(initMessage, graph);
+message::Object *MessageMultiply::new_object(pd::Message *init_message, PdGraph *graph) {
+  return new MessageMultiply(init_message, graph);
 }
 
-MessageMultiply::MessageMultiply(PdMessage *initMessage, PdGraph *graph) : MessageObject(2, 1, graph) {
-  constant = initMessage->is_float(0) ? initMessage->get_float(0) : 0.0f;
+MessageMultiply::MessageMultiply(pd::Message *init_message, PdGraph *graph) : message::Object(2, 1, graph) {
+  constant = init_message->is_float(0) ? init_message->get_float(0) : 0.0f;
   last = 0.0f;
 }
 
@@ -41,8 +41,8 @@ std::string MessageMultiply::toString() {
   return string(str);
 }
 
-void MessageMultiply::processMessage(int inletIndex, PdMessage *message) {
-  switch (inletIndex) {
+void MessageMultiply::process_message(int inlet_index, pd::Message *message) {
+  switch (inlet_index) {
     case 0: {
       switch (message->get_type(0)) {
         case FLOAT: {
@@ -50,9 +50,9 @@ void MessageMultiply::processMessage(int inletIndex, PdMessage *message) {
           // allow fallthrough
         }
         case BANG: {
-          PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(1);
-          outgoingMessage->initWithTimestampAndFloat(message->get_timestamp(), last);
-          sendMessage(0, outgoingMessage);
+          pd::Message *outgoing_message = PD_MESSAGE_ON_STACK(1);
+          outgoing_message->from_timestamp_and_float(message->get_timestamp(), last);
+          send_message(0, outgoing_message);
           break;
         }
         default: return;

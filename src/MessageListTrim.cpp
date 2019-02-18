@@ -22,7 +22,7 @@
 
 #include "MessageListTrim.h"
 
-MessageListTrim::MessageListTrim(PdMessage *initMessage, PdGraph *graph) : MessageObject(1, 1, graph) {
+MessageListTrim::MessageListTrim(pd::Message *init_message, PdGraph *graph) : message::Object(1, 1, graph) {
   // nothing to do
 }
 
@@ -30,6 +30,6 @@ MessageListTrim::~MessageListTrim() {
   // nothing to do
 }
 
-void MessageListTrim::processMessage(int inletIndex, PdMessage *message) {
-  sendMessage(0, message);
+void MessageListTrim::process_message(int inlet_index, pd::Message *message) {
+  send_message(0, message);
 }

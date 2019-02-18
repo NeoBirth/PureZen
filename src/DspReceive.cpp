@@ -24,13 +24,13 @@
 #include "DspReceive.h"
 #include "PdGraph.h"
 
-MessageObject *DspReceive::newObject(PdMessage *initMessage, PdGraph *graph) {
-  return new DspReceive(initMessage, graph);
+message::Object *DspReceive::new_object(pd::Message *init_message, PdGraph *graph) {
+  return new DspReceive(init_message, graph);
 }
 
-DspReceive::DspReceive(PdMessage *initMessage, PdGraph *graph) : DspObject(1, 0, 0, 1, graph) {
-  if (initMessage->is_symbol(0)) {
-    name = utils::copy_string(initMessage->get_symbol(0));
+DspReceive::DspReceive(pd::Message *init_message, PdGraph *graph) : DspObject(1, 0, 0, 1, graph) {
+  if (init_message->is_symbol(0)) {
+    name = utils::copy_string(init_message->get_symbol(0));
     dspBufferAtOutlet[0] = ALLOC_ALIGNED_BUFFER(graph->getBlockSize() * sizeof(float));
   } else {
     name = NULL;
@@ -48,7 +48,7 @@ DspReceive::~DspReceive() {
   FREE_ALIGNED_BUFFER(dspBufferAtOutlet[0]);
 }
 
-void DspReceive::processMessage(int inletIndex, PdMessage *message) {
+void DspReceive::process_message(int inlet_index, pd::Message *message) {
   if (message->has_format("ss") && message->is_symbol_str(0, "set")) {
     graph->printErr("[receive~ %s]: message \"set %s\" is not supported.", name, message->get_symbol(1));
   }

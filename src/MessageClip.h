@@ -29,8 +29,8 @@
 class MessageClip : public MessageObject {
 
   public:
-    static MessageObject *newObject(PdMessage *initMessage, PdGraph *graph);
-    MessageClip(PdMessage *initMessage, PdGraph *graph);
+    static MessageObject *new_object(PdMessage *init_message, PdGraph *graph);
+    MessageClip(PdMessage *init_message, PdGraph *graph);
     ~MessageClip();
 
     static const char *getObjectLabel();
@@ -38,7 +38,7 @@ class MessageClip : public MessageObject {
 
   private:
     void init(float lowerBound, float upperBound);
-    void processMessage(int inletIndex, PdMessage *message);
+    void process_message(int inlet_index, PdMessage *message);
 
     float lowerBound;
     float upperBound;

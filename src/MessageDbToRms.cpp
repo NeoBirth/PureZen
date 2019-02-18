@@ -22,11 +22,11 @@
 
 #include "MessageDbToRms.h"
 
-MessageObject *MessageDbToRms::newObject(PdMessage *initMessage, PdGraph *graph) {
+message::Object *MessageDbToRms::new_object(pd::Message *init_message, PdGraph *graph) {
   return new MessageDbToRms(graph);
 }
 
-MessageDbToRms::MessageDbToRms(PdGraph *graph) : MessageObject(1, 1, graph) {
+MessageDbToRms::MessageDbToRms(PdGraph *graph) : message::Object(1, 1, graph) {
   // nothing to do
 }
 
@@ -34,12 +34,12 @@ MessageDbToRms::~MessageDbToRms() {
   // nothing to do
 }
 
-void MessageDbToRms::processMessage(int inletIndex, PdMessage *message) {
+void MessageDbToRms::process_message(int inlet_index, pd::Message *message) {
   if (message->is_float(0)) {
     float dbToRms = (message->get_float(0) <= 0.0f) ? 0.0f :
         0.00001f * powf(10.0f, message->get_float(0) / 20.0f);
-    PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(1);
-    outgoingMessage->initWithTimestampAndFloat(message->get_timestamp(), dbToRms);
-    sendMessage(0, outgoingMessage);
+    pd::Message *outgoing_message = PD_MESSAGE_ON_STACK(1);
+    outgoing_message->from_timestamp_and_float(message->get_timestamp(), dbToRms);
+    send_message(0, outgoing_message);
   }
 }

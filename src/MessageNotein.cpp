@@ -23,16 +23,16 @@
 #include <stdio.h>
 #include "MessageNotein.h"
 
-MessageObject *MessageNotein::newObject(PdMessage *initMessage, PdGraph *graph) {
-  return new MessageNotein(initMessage, graph);
+message::Object *MessageNotein::new_object(pd::Message *init_message, PdGraph *graph) {
+  return new MessageNotein(init_message, graph);
 }
 
-MessageNotein::MessageNotein(PdMessage *initMessage, PdGraph *graph) :
+MessageNotein::MessageNotein(pd::Message *init_message, PdGraph *graph) :
     RemoteMessageReceiver(0, 3, graph) {
-  if (initMessage->is_float(0) &&
-      (initMessage->get_float(0) >= 1.0f && initMessage->get_float(0) <= 16.0f)) {
+  if (init_message->is_float(0) &&
+      (init_message->get_float(0) >= 1.0f && init_message->get_float(0) <= 16.0f)) {
     // channel provided (Pd channels are indexed from 1, while ZG channels are indexed from 0)
-    channel = (int) (initMessage->get_float(0)-1.0f);
+    channel = (int) (init_message->get_float(0)-1.0f);
     name = (char *) calloc(13, sizeof(char));
     sprintf(name, "zg_notein_%i", channel);
   } else {
@@ -54,20 +54,20 @@ bool MessageNotein::isOmni() {
   return (channel == -1);
 }
 
-void MessageNotein::processMessage(int inletIndex, PdMessage *message) {
-  PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(1);
+void MessageNotein::process_message(int inlet_index, pd::Message *message) {
+  pd::Message *outgoing_message = PD_MESSAGE_ON_STACK(1);
   
   if (isOmni()) {
     // send channel
-    outgoingMessage->initWithTimestampAndFloat(message->get_timestamp(), message->get_float(2));
-    sendMessage(2, outgoingMessage);
+    outgoing_message->from_timestamp_and_float(message->get_timestamp(), message->get_float(2));
+    send_message(2, outgoing_message);
   }
   
   // send velocity
-  outgoingMessage->initWithTimestampAndFloat(message->get_timestamp(), message->get_float(1));
-  sendMessage(1, outgoingMessage);
+  outgoing_message->from_timestamp_and_float(message->get_timestamp(), message->get_float(1));
+  send_message(1, outgoing_message);
   
   // send note
-  outgoingMessage->initWithTimestampAndFloat(message->get_timestamp(), message->get_float(0));
-  sendMessage(0, outgoingMessage);
+  outgoing_message->from_timestamp_and_float(message->get_timestamp(), message->get_float(0));
+  send_message(0, outgoing_message);
 }

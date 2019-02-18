@@ -46,15 +46,15 @@ class ObjectFactoryMap;
 class PdAbstractionDataBase;
 
 /**
- * The <code>PdContext</code> is a container for a set of <code>PdGraph</code>s operating in
- * a common environment. The <code>PdContext</code> tracks all relevent global variables.
+ * The <code>pd::Context</code> is a container for a set of <code>PdGraph</code>s operating in
+ * a common environment. The <code>pd::Context</code> tracks all relevent global variables.
  */
-class PdContext {
+class pd::Context {
   
   public:
-    PdContext(int numInputChannels, int numOutputChannels, int blockSize, float sampleRate,
+    pd::Context(int num_input_channels, int num_output_channels, int block_size, float sample_rate,
         void *(*function)(ZGCallbackFunction, void *, void *), void *userData);
-    ~PdContext();
+    ~pd::Context();
   
     int getNumInputChannels();
     int getNumOutputChannels();
@@ -70,8 +70,8 @@ class PdContext {
     
     void process(float *inputBuffers, float *outputBuffers);
   
-    void lock() { pthread_mutex_lock(&contextLock); }
-    void unlock() { pthread_mutex_unlock(&contextLock); }
+    void lock() { pthread_mutex_lock(&context_lock); }
+    void unlock() { pthread_mutex_unlock(&context_lock); }
   
     /** Globally register a remote message receiver (e.g. [send] or [notein]). */
     void registerRemoteMessageReceiver(RemoteMessageReceiver *receiver);
@@ -148,26 +148,26 @@ class PdContext {
   
     /**
      * Schedules a <code>PdMessage</code> to be sent by the <code>MessageObject</code> from the
-     * <code>outletIndex</code> at the specified <code>time</code>. The message will be copied
+     * <code>outlet_index</code> at the specified <code>time</code>. The message will be copied
      * to the heap and the context will thereafter take over ownership and be responsible for
      * freeing it. The pointer to the heap-message is returned.
      */
-    PdMessage *scheduleMessage(MessageObject *messageObject, unsigned int outletIndex, PdMessage *message);
+    PdMessage *schedule_message(MessageObject *messageObject, unsigned int outlet_index, PdMessage *message);
   
     /**
      * Cancel a scheduled <code>PdMessage</code> according to its id. The message memory will
      * be freed.
      */
-    void cancelMessage(MessageObject *messageObject, int outletIndex, PdMessage *message);
+    void cancelMessage(MessageObject *messageObject, int outlet_index, PdMessage *message);
   
     /** Receives and processes messages sent to the Pd system by sending to "pd". */
     void receiveSystemMessage(PdMessage *message);
   
     /** Returns the global dsp buffer at the given inlet. Exclusively used by <code>DspAdc</code>. */
-    float *getGlobalDspBufferAtInlet(int inletIndex);
+    float *getGlobalDspBufferAtInlet(int inlet_index);
     
     /** Returns the global dsp buffer at the given outlet. Exclusively used by <code>DspDac</code>. */
-    float *getGlobalDspBufferAtOutlet(int outletIndex);
+    float *getGlobalDspBufferAtOutlet(int outlet_index);
   
     /** Returns the timestamp of the beginning of the current block. */
     double getBlockStartTimestamp();
@@ -191,7 +191,7 @@ class PdContext {
     float getValueForName(const char *name);
   
     /** Create a new object in a graph. */
-    MessageObject *newObject(const char *objectLabel, PdMessage *initMessage, PdGraph *graph);
+    MessageObject *new_object(const char *objectLabel, PdMessage *init_message, PdGraph *graph);
   
     void registerExternalReceiver(const char *receiverName);
     void unregisterExternalReceiver(const char *receiverName);
@@ -204,7 +204,7 @@ class PdContext {
   
     /** Register an object label and its associated factory method. */
     void registerExternalObject(const char *objectLabel,
-        MessageObject *(*newObject)(PdMessage *, PdGraph *));
+        MessageObject *(*new_object)(PdMessage *, PdGraph *));
   
     /** Unregister an object label. */
     void unregisterExternalObject(const char *objectLabel);
@@ -219,19 +219,19 @@ class PdContext {
   
     void initObjectInitMap();
 
-    int numInputChannels;
-    int numOutputChannels;
-    int blockSize;
-    float sampleRate;
+    int num_input_channels;
+    int num_output_channels;
+    int block_size;
+    float sample_rate;
   
     /** Keeps track of the current global graph id. */
-    unsigned int globalGraphId;
+    unsigned int global_graph_id;
   
     /** A list of all top-level graphs in this context. */
-    vector<PdGraph *> graphList;
+    vector<PdGraph *> graph_list;
   
     /** A thread lock used to access critical sections of this context. */
-    pthread_mutex_t contextLock;
+    pthread_mutex_t context_lock;
     
     int numBytesInInputBuffers;
     int numBytesInOutputBuffers;

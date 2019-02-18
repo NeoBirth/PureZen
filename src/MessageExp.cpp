@@ -22,11 +22,11 @@
 
 #include "MessageExp.h"
 
-MessageObject *MessageExp::newObject(PdMessage *initMessage, PdGraph *graph) {
-  return new MessageExp(initMessage, graph);
+message::Object *MessageExp::new_object(pd::Message *init_message, PdGraph *graph) {
+  return new MessageExp(init_message, graph);
 }
 
-MessageExp::MessageExp(PdMessage *initMessage, PdGraph *graph) : MessageObject(1, 1, graph) {
+MessageExp::MessageExp(pd::Message *init_message, PdGraph *graph) : message::Object(1, 1, graph) {
   // nothing to do
 }
 
@@ -34,10 +34,10 @@ MessageExp::~MessageExp() {
   // nothing to do
 }
 
-void MessageExp::processMessage(int inletIndex, PdMessage *message) {
+void MessageExp::process_message(int inlet_index, pd::Message *message) {
   if (message->is_float(0)) {
-    PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(1);
-    outgoingMessage->initWithTimestampAndFloat(message->get_timestamp(), expf(message->get_float(0)));
-    sendMessage(0, outgoingMessage);    
+    pd::Message *outgoing_message = PD_MESSAGE_ON_STACK(1);
+    outgoing_message->from_timestamp_and_float(message->get_timestamp(), expf(message->get_float(0)));
+    send_message(0, outgoing_message);    
   }
 }

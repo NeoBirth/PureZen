@@ -22,27 +22,27 @@
 
 #include "MessageMakefilename.h"
 
-MessageObject *MessageMakefilename::newObject(PdMessage *initMessage, PdGraph *graph) {
-  return new MessageMakefilename(initMessage, graph);
+message::Object *MessageMakefilename::new_object(pd::Message *init_message, PdGraph *graph) {
+  return new MessageMakefilename(init_message, graph);
 }
 
-MessageMakefilename::MessageMakefilename(PdMessage *initMessage, PdGraph *graph) : MessageObject(1, 1, graph) {
-  format = utils::copy_string(initMessage->is_symbol(0) ? initMessage->get_symbol(0) : "");
+MessageMakefilename::MessageMakefilename(pd::Message *init_message, PdGraph *graph) : message::Object(1, 1, graph) {
+  format = utils::copy_string(init_message->is_symbol(0) ? init_message->get_symbol(0) : "");
 }
 
 MessageMakefilename::~MessageMakefilename() {
   free(format);
 }
 
-void MessageMakefilename::processMessage(int inletIndex, PdMessage *message) {
-  if (inletIndex == 0) {
+void MessageMakefilename::process_message(int inlet_index, pd::Message *message) {
+  if (inlet_index == 0) {
     switch (message->get_type(0)) {
       case FLOAT: {
         char str[snprintf(NULL, 0, format, (int) message->get_float(0))+1];
         snprintf(str, sizeof(str), format, (int) message->get_float(0));
-        PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(1);
-        outgoingMessage->initWithTimestampAndSymbol(message->get_timestamp(), str);
-        sendMessage(0, outgoingMessage);
+        pd::Message *outgoing_message = PD_MESSAGE_ON_STACK(1);
+        outgoing_message->from_timestamp_and_symbol(message->get_timestamp(), str);
+        send_message(0, outgoing_message);
         break;
       }
       case SYMBOL: {
@@ -52,9 +52,9 @@ void MessageMakefilename::processMessage(int inletIndex, PdMessage *message) {
         } else {
           char str[snprintf(NULL, 0, format, message->get_symbol(0))+1];
           snprintf(str, sizeof(str), format, message->get_symbol(0));
-          PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(1);
-          outgoingMessage->initWithTimestampAndSymbol(message->get_timestamp(), str);
-          sendMessage(0, outgoingMessage);
+          pd::Message *outgoing_message = PD_MESSAGE_ON_STACK(1);
+          outgoing_message->from_timestamp_and_symbol(message->get_timestamp(), str);
+          send_message(0, outgoing_message);
         }
         break;
       }

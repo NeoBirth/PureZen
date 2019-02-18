@@ -26,15 +26,15 @@
 
 #define DEFAULT_BUFFER_LENGTH 1024
 
-MessageObject *MessageTable::newObject(PdMessage *initMessage, PdGraph *graph) {
-  return new MessageTable(initMessage, graph);
+message::Object *MessageTable::new_object(pd::Message *init_message, PdGraph *graph) {
+  return new MessageTable(init_message, graph);
 }
 
-MessageTable::MessageTable(PdMessage *initMessage, PdGraph *graph) : RemoteMessageReceiver(0, 0, graph) {
-  if (initMessage->is_symbol(0)) {
-    name = utils::copy_string(initMessage->get_symbol(0));
+MessageTable::MessageTable(pd::Message *init_message, PdGraph *graph) : RemoteMessageReceiver(0, 0, graph) {
+  if (init_message->is_symbol(0)) {
+    name = utils::copy_string(init_message->get_symbol(0));
     // by default, the buffer length is 1024. The buffer should never be NULL.
-    bufferLength = initMessage->is_float(1) ? (int) initMessage->get_float(1) : DEFAULT_BUFFER_LENGTH;
+    bufferLength = init_message->is_float(1) ? (int) init_message->get_float(1) : DEFAULT_BUFFER_LENGTH;
     buffer = (float *) calloc(bufferLength, sizeof(float));
   } else {
     name = NULL;
@@ -70,7 +70,7 @@ float *MessageTable::resizeBuffer(int newBufferLength) {
   return buffer;
 }
 
-void MessageTable::processMessage(int inletIndex, PdMessage *message) {
+void MessageTable::process_message(int inlet_index, pd::Message *message) {
   // TODO(mhroth): process all of the commands which can be sent to tables
   if (message->is_symbol_str(0, "read")) {
     if (message->is_symbol_str(1))  {

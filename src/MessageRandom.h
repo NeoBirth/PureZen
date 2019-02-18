@@ -32,8 +32,8 @@ class PdGraph;
 class MessageRandom : public MessageObject {
 
   public:
-    static MessageObject *newObject(PdMessage *initMessage, PdGraph *graph);
-    MessageRandom(PdMessage *initMessage, PdGraph *graph);
+    static MessageObject *new_object(PdMessage *init_message, PdGraph *graph);
+    MessageRandom(PdMessage *init_message, PdGraph *graph);
     ~MessageRandom();
 
     static const char *getObjectLabel();
@@ -42,7 +42,7 @@ class MessageRandom : public MessageObject {
     bool shouldDistributeMessageToInlets() { return false; }
 
   protected:
-    void processMessage(int inletIndex, PdMessage *message);
+    void process_message(int inlet_index, PdMessage *message);
 
   private:
     int max_inc; // random output is in range [0, max_inc]

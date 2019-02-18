@@ -22,11 +22,11 @@
 
 #include "MessageSine.h"
 
-MessageObject *MessageSine::newObject(PdMessage *initMessage, PdGraph *graph) {
-  return new MessageSine(initMessage, graph);
+message::Object *MessageSine::new_object(pd::Message *init_message, PdGraph *graph) {
+  return new MessageSine(init_message, graph);
 }
 
-MessageSine::MessageSine(PdMessage *initMessage, PdGraph *graph) : MessageObject(1, 1, graph) {
+MessageSine::MessageSine(pd::Message *init_message, PdGraph *graph) : message::Object(1, 1, graph) {
   // nothing to do
 }
 
@@ -34,10 +34,10 @@ MessageSine::~MessageSine() {
   // nothing to do
 }
 
-void MessageSine::processMessage(int inletIndex, PdMessage *message) {
+void MessageSine::process_message(int inlet_index, pd::Message *message) {
   if (message->is_float(0)) {
-    PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(1);
-    outgoingMessage->initWithTimestampAndFloat(message->get_timestamp(), sinf(message->get_float(0)));
-    sendMessage(0, outgoingMessage);
+    pd::Message *outgoing_message = PD_MESSAGE_ON_STACK(1);
+    outgoing_message->from_timestamp_and_float(message->get_timestamp(), sinf(message->get_float(0)));
+    send_message(0, outgoing_message);
   }
 }

@@ -29,8 +29,8 @@
 class DspWrap : public DspObject {
 
   public:
-    static MessageObject *newObject(PdMessage *initMessage, PdGraph *graph);
-    DspWrap(PdMessage *initMessage, PdGraph *graph);
+    static MessageObject *new_object(PdMessage *init_message, PdGraph *graph);
+    DspWrap(PdMessage *init_message, PdGraph *graph);
     ~DspWrap();
 
     static const char *getObjectLabel();

@@ -24,7 +24,7 @@
 #include "DspDac.h"
 #include "PdGraph.h"
 
-MessageObject *DspDac::newObject(PdMessage *initMessage, PdGraph *graph) {
+message::Object *DspDac::new_object(pd::Message *init_message, PdGraph *graph) {
   return new DspDac(graph);
 }
 
@@ -51,7 +51,7 @@ void DspDac::processSignal(DspObject *dspObject, int fromIndex, int toIndex) {
       /* TODO(mhroth): fit this into the new buffer reference architecture
       for (int i = 2; i < numDspInlets; i++) {
         float *globalOutputBuffer = graph->getGlobalDspBufferAtOutlet(i);
-        ArrayArithmetic::add(globalOutputBuffer, localDspBufferAtInlet[i], globalOutputBuffer, 0, blockSizeInt);
+        ArrayArithmetic::add(globalOutputBuffer, localDspBufferAtInlet[i], globalOutputBuffer, 0, block_sizeInt);
       }
       */
       // allow fallthrough

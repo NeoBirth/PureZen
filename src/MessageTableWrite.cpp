@@ -23,12 +23,12 @@
 #include "MessageTableWrite.h"
 #include "PdGraph.h"
 
-MessageObject *MessageTableWrite::newObject(PdMessage *initMessage, PdGraph *graph) {
-  return new MessageTableWrite(initMessage, graph);
+message::Object *MessageTableWrite::new_object(pd::Message *init_message, PdGraph *graph) {
+  return new MessageTableWrite(init_message, graph);
 }
 
-MessageTableWrite::MessageTableWrite(PdMessage *initMessage, PdGraph *graph) : MessageObject(2, 0, graph) {
-  name = initMessage->is_symbol(0) ? utils::copy_string(initMessage->get_symbol(0)) : NULL;
+MessageTableWrite::MessageTableWrite(pd::Message *init_message, PdGraph *graph) : message::Object(2, 0, graph) {
+  name = init_message->is_symbol(0) ? utils::copy_string(init_message->get_symbol(0)) : NULL;
   table = NULL;
   index = 0;
 }
@@ -45,12 +45,12 @@ void MessageTableWrite::setTable(MessageTable *aTable) {
   table = aTable;
 }
 
-bool MessageTableWrite::shouldDistributeMessageToInlets() {
+bool MessageTableWrite::should_distribute_message_to_inlets() {
   return false;
 }
 
-void MessageTableWrite::processMessage(int inletIndex, PdMessage *message) {
-  switch (inletIndex) {
+void MessageTableWrite::process_message(int inlet_index, pd::Message *message) {
+  switch (inlet_index) {
     case 0: {
       switch (message->get_type(0)) {
         case FLOAT: {

@@ -32,15 +32,15 @@ class PdGraph;
 class MessageTrigger : public MessageObject {
   
   public:
-    static MessageObject *newObject(PdMessage *initMessage, PdGraph *graph);
-    MessageTrigger(PdMessage *initMessage, PdGraph *graph);
+    static MessageObject *new_object(PdMessage *init_message, PdGraph *graph);
+    MessageTrigger(PdMessage *init_message, PdGraph *graph);
     ~MessageTrigger();
   
     static const char *getObjectLabel();
     std::string toString();
 
   private:
-    void processMessage(int inletIndex, PdMessage *message);
+    void process_message(int inlet_index, PdMessage *message);
   
     /** The length of the <code>castArray</code>. */
     int numCasts;

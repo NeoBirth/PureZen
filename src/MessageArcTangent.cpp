@@ -22,11 +22,11 @@
 
 #include "MessageArcTangent.h"
 
-MessageObject *MessageArcTangent::newObject(PdMessage *initMessage, PdGraph *graph) {
-  return new MessageArcTangent(initMessage, graph);
+message::Object *MessageArcTangent::new_object(pd::Message *init_message, PdGraph *graph) {
+  return new MessageArcTangent(init_message, graph);
 }
 
-MessageArcTangent::MessageArcTangent(PdMessage *initMessage, PdGraph *graph) : MessageObject(1, 1, graph) {
+MessageArcTangent::MessageArcTangent(pd::Message *init_message, PdGraph *graph) : message::Object(1, 1, graph) {
   // nothing to do
 }
 
@@ -34,10 +34,10 @@ MessageArcTangent::~MessageArcTangent() {
   // nothing to do
 }
 
-void MessageArcTangent::processMessage(int inletIndex, PdMessage *message) {
+void MessageArcTangent::process_message(int inlet_index, pd::Message *message) {
   if (message->is_float(0)) {
-    PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(1);
-    outgoingMessage->initWithTimestampAndFloat(message->get_timestamp(), atanf(message->get_float(0)));
-    sendMessage(0, outgoingMessage);
+    pd::Message *outgoing_message = PD_MESSAGE_ON_STACK(1);
+    outgoing_message->from_timestamp_and_float(message->get_timestamp(), atanf(message->get_float(0)));
+    send_message(0, outgoing_message);
   }
 }

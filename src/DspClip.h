@@ -28,8 +28,8 @@
 /** [clip~ float float] */
 class DspClip : public DspObject {
   public:
-   static MessageObject *newObject(PdMessage *initMessage, PdGraph *graph);
-    DspClip(PdMessage *initMessage, PdGraph *graph);
+   static MessageObject *new_object(PdMessage *init_message, PdGraph *graph);
+    DspClip(PdMessage *init_message, PdGraph *graph);
     ~DspClip();
 
     static const char *getObjectLabel();
@@ -37,7 +37,7 @@ class DspClip : public DspObject {
 
   private:
    static void processScalar(DspObject *dspObject, int fromIndex, int toIndex);
-   void processMessage(int inletIndex, PdMessage *message);
+   void process_message(int inlet_index, PdMessage *message);
 
    float lowerBound;
    float upperBound;

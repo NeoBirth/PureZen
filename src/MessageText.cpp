@@ -22,12 +22,12 @@
 
 #include "MessageText.h"
 
-MessageObject *MessageText::newObject(PdMessage *initMessage, PdGraph *graph) {
-  return new MessageText(initMessage, graph);
+message::Object *MessageText::new_object(pd::Message *init_message, PdGraph *graph) {
+  return new MessageText(init_message, graph);
 }
 
-MessageText::MessageText(PdMessage *initMessage, PdGraph *graph) : MessageObject(0, 0, graph) {
-  comment = initMessage->is_symbol(0) ? utils::copy_string(initMessage->get_symbol(0)) : NULL;
+MessageText::MessageText(pd::Message *init_message, PdGraph *graph) : message::Object(0, 0, graph) {
+  comment = init_message->is_symbol(0) ? utils::copy_string(init_message->get_symbol(0)) : NULL;
 }
 
 MessageText::~MessageText() {

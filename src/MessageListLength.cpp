@@ -22,7 +22,7 @@
 
 #include "MessageListLength.h"
 
-MessageListLength::MessageListLength(PdMessage *initMessage, PdGraph *graph) : MessageObject(1, 1, graph) {
+MessageListLength::MessageListLength(pd::Message *init_message, PdGraph *graph) : message::Object(1, 1, graph) {
   // nothing to do
 }
 
@@ -30,10 +30,10 @@ MessageListLength::~MessageListLength() {
   // nothing to do
 }
 
-void MessageListLength::processMessage(int inletIndex, PdMessage *message) {
-  PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(1);
+void MessageListLength::process_message(int inlet_index, pd::Message *message) {
+  pd::Message *outgoing_message = PD_MESSAGE_ON_STACK(1);
   // bangs are not considered to add length to lists
-  outgoingMessage->initWithTimestampAndFloat(message->get_timestamp(),
+  outgoing_message->from_timestamp_and_float(message->get_timestamp(),
       message->is_bang(0) ? 0.0f : (float) message->get_num_elements());
-  sendMessage(0, outgoingMessage);
+  send_message(0, outgoing_message);
 }

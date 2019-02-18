@@ -22,26 +22,26 @@
 
 #include "MessageRemainder.h"
 
-MessageObject *MessageRemainder::newObject(PdMessage *initMessage, PdGraph *graph) {
-  return new MessageRemainder(initMessage, graph);
+message::Object *MessageRemainder::new_object(pd::Message *init_message, PdGraph *graph) {
+  return new MessageRemainder(init_message, graph);
 }
 
-MessageRemainder::MessageRemainder(PdMessage *initMessage, PdGraph *graph) : MessageObject(2, 1, graph) {
-  constant = initMessage->is_float(0) ? (int) initMessage->get_float(0) : 0;
+MessageRemainder::MessageRemainder(pd::Message *init_message, PdGraph *graph) : message::Object(2, 1, graph) {
+  constant = init_message->is_float(0) ? (int) init_message->get_float(0) : 0;
 }
 
 MessageRemainder::~MessageRemainder() {
   // nothing to do
 }
 
-void MessageRemainder::processMessage(int inletIndex, PdMessage *message) {
-  switch (inletIndex) {
+void MessageRemainder::process_message(int inlet_index, pd::Message *message) {
+  switch (inlet_index) {
     case 0: {
       if (message->is_float(0)) {
-        PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(1);
+        pd::Message *outgoing_message = PD_MESSAGE_ON_STACK(1);
         float remainder = (constant == 0.0f) ? 0.0f : (float) ((int) message->get_float(0) % constant);
-        outgoingMessage->initWithTimestampAndFloat(message->get_timestamp(), remainder);
-        sendMessage(0, outgoingMessage);
+        outgoing_message->from_timestamp_and_float(message->get_timestamp(), remainder);
+        send_message(0, outgoing_message);
       }
       break;
     }

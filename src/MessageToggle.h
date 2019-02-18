@@ -29,14 +29,14 @@
 class MessageToggle : public MessageObject {
   
   public:
-    static MessageObject *newObject(PdMessage *initMessage, PdGraph *graph);
+    static MessageObject *new_object(PdMessage *init_message, PdGraph *graph);
     MessageToggle(PdMessage *initString, PdGraph *graph);
     ~MessageToggle();
   
     static const char *getObjectLabel();
     
   private:
-    void processMessage(int inletIndex, PdMessage *message);
+    void process_message(int inlet_index, PdMessage *message);
   
     bool isOn;
     float onOutput;

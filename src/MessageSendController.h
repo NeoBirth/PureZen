@@ -28,7 +28,7 @@
 #include "MessageObject.h"
 #include "RemoteMessageReceiver.h"
 
-class PdContext;
+class pd::Context;
 
 /**
  * Because of features such as external message injection and implicit message sending from message
@@ -49,7 +49,7 @@ class PdContext;
 class MessageSendController : public MessageObject {
   
   public:
-    MessageSendController(PdContext *context);
+    MessageSendController(pd::Context *context);
     ~MessageSendController();
   
     static const char *getObjectLabel();
@@ -58,7 +58,7 @@ class MessageSendController : public MessageObject {
     /** Sends the message on to all receivers with the given name. */
     void receiveMessage(const char *name, PdMessage *message);
   
-    void sendMessage(int outletIndex, PdMessage *message);
+    void sendMessage(int outlet_index, PdMessage *message);
   
     /** Returns true if a receiver by that name is already registered. False otherwise. */
     bool receiverExists(const char *receiverName);
@@ -78,7 +78,7 @@ class MessageSendController : public MessageObject {
   
   private:
   
-    PdContext *context;
+    pd::Context *context;
   
     vector<std::pair<string, set<RemoteMessageReceiver *> > > sendStack;
   

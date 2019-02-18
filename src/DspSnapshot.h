@@ -27,20 +27,20 @@
 
 /** [snapshot~] */
 class DspSnapshot : public DspObject {
-  
+
   public:
-    static MessageObject *newObject(PdMessage *initMessage, PdGraph *graph);
-    DspSnapshot(PdMessage *initMessage, PdGraph *graph);
+    static MessageObject *new_object(PdMessage *init_message, PdGraph *graph);
+    DspSnapshot(PdMessage *init_message, PdGraph *graph);
     ~DspSnapshot();
-    
+
     static const char *getObjectLabel();
     std::string toString();
-    
-    ConnectionType getConnectionType(int outletIndex);
-    
+
+    connection::Type get_connection_type(int outlet_index);
+
   private:
     static void processNull(DspObject *dspObject, int fromIndex, int toIndex);
-    void processMessage(int inletIndex, PdMessage *message);
+    void process_message(int inlet_index, PdMessage *message);
 };
 
 inline std::string DspSnapshot::toString() {

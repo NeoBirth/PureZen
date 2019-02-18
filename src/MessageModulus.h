@@ -29,15 +29,15 @@
 class MessageModulus : public MessageObject {
 
   public:
-    static MessageObject *newObject(PdMessage *initMessage, PdGraph *graph);
-    MessageModulus(PdMessage *initMessage, PdGraph *graph);
+    static MessageObject *new_object(PdMessage *init_message, PdGraph *graph);
+    MessageModulus(PdMessage *init_message, PdGraph *graph);
     ~MessageModulus();
 
     static const char *getObjectLabel();
     std::string toString();
 
   private:
-    void processMessage(int inletIndex, PdMessage *message);
+    void process_message(int inlet_index, PdMessage *message);
 
     float constant;
     float lastOutput;

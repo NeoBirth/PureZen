@@ -29,19 +29,19 @@
 class MessageInlet : public MessageObject {
   
   public:
-    static MessageObject *newObject(PdMessage *initMessage, PdGraph *graph);
+    static MessageObject *new_object(PdMessage *init_message, PdGraph *graph);
     MessageInlet(PdGraph *graph);
     ~MessageInlet();
     
     static const char *getObjectLabel();
     std::string toString();
   
-    ObjectType getObjectType();
+    object::Type get_object_type();
   
     list<DspObject *> getProcessOrder();
     list<DspObject *> getProcessOrderFromInlet();
   
-    void receiveMessage(int inletIndex, PdMessage *message);
+    void receiveMessage(int inlet_index, PdMessage *message);
 };
 
 inline const char *MessageInlet::getObjectLabel() {

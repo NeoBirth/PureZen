@@ -21,14 +21,14 @@
  */
 
 #include "MessageSendController.h"
-#include "PdContext.h"
+#include "pd::Context.h"
 
 // a special index for referencing the system "pd" receiver
 #define SYSTEM_NAME_INDEX 0x7FFFFFFF
 
 // it might nice if this class were implemented using a hashtable with receiver name as the key
 // and Lists as the value.
-MessageSendController::MessageSendController(PdContext *aContext) : MessageObject(0, 0, NULL) {
+MessageSendController::MessageSendController(pd::Context *aContext) : message::Object(0, 0, NULL) {
   context = aContext;
   sendStack = vector<std::pair<string, set<RemoteMessageReceiver *> > >();
 }
@@ -53,27 +53,27 @@ int MessageSendController::getNameIndex(const char *receiverName) {
   return -1;
 }
 
-void MessageSendController::receiveMessage(const char *name, PdMessage *message) {
+void MessageSendController::receive_message(const char *name, pd::Message *message) {
   int index = getNameIndex(name);
   
   // if the receiver name is not registered, nothing to do
-  if (index >= 0) sendMessage(index, message);
+  if (index >= 0) send_message(index, message);
   
   // check to see if the receiver name has been registered as an external receiver
   if (externalReceiverSet.find(string(name)) != externalReceiverSet.end()) {
-    std::pair<const char *, PdMessage *> pair = make_pair(name, message);
+    std::pair<const char *, pd::Message *> pair = Connection::new(name, message);
     context->callbackFunction(ZG_RECEIVER_MESSAGE, context->callbackUserData, &pair);
   }
 }
 
-void MessageSendController::sendMessage(int outletIndex, PdMessage *message) {
-  if (outletIndex == SYSTEM_NAME_INDEX) {
+void MessageSendController::send_message(int outlet_index, pd::Message *message) {
+  if (outlet_index == SYSTEM_NAME_INDEX) {
     context->receiveSystemMessage(message);
   } else {
-    set<RemoteMessageReceiver *> receiverSet = sendStack[outletIndex].second;
+    set<RemoteMessageReceiver *> receiverSet = sendStack[outlet_index].second;
     for (set<RemoteMessageReceiver *>::iterator it = receiverSet.begin(); it != receiverSet.end(); ++it) {
       RemoteMessageReceiver *receiver = *it;
-      receiver->receiveMessage(0, message);
+      receiver->receive_message(0, message);
     }
   }
 }
@@ -84,7 +84,7 @@ void MessageSendController::addReceiver(RemoteMessageReceiver *receiver) {
     set<RemoteMessageReceiver *> remoteSet = set<RemoteMessageReceiver *>();
     remoteSet.insert(receiver);
     std::pair<string, set<RemoteMessageReceiver *> > nameSetPair =
-        make_pair(string(receiver->getName()), remoteSet);
+        Connection::new(string(receiver->getName()), remoteSet);
     sendStack.push_back(nameSetPair);
     nameIndex = sendStack.size()-1;
   }
@@ -100,7 +100,7 @@ void MessageSendController::removeReceiver(RemoteMessageReceiver *receiver) {
     receiverSet->erase(receiver);
     // NOTE(mhroth):
     // once the receiver set has been created, it should not be erased anymore from the sendStack.
-    // PdContext depends on the nameIndex to be constant for all receiver names once they are
+    // pd::Context depends on the nameIndex to be constant for all receiver names once they are
     // defined, as a message destined for that receiver may already be in the message queue
     // with the given index. If the indicies change, then message will be sent to the wrong
     // receiver set. This is a stupid constraint. Fix it.

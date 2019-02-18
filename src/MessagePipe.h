@@ -28,8 +28,8 @@
 class MessagePipe : public MessageObject {
   
   public:
-    static MessageObject *newObject(PdMessage *initMessage, PdGraph *graph);
-    MessagePipe(PdMessage *initMessage, PdGraph *pdGraph);
+    static MessageObject *new_object(PdMessage *init_message, PdGraph *graph);
+    MessagePipe(PdMessage *init_message, PdGraph *pdGraph);
     ~MessagePipe();
   
     static const char *getObjectLabel();
@@ -39,10 +39,10 @@ class MessagePipe : public MessageObject {
   
     // override <code>sendMessage</code> in order to remove the message from the scheduled
     // message list as it is sent out.
-    void sendMessage(int outletIndex, PdMessage *message);
+    void sendMessage(int outlet_index, PdMessage *message);
     
   private:
-    void processMessage(int inletIndex, PdMessage *message);
+    void process_message(int inlet_index, PdMessage *message);
   
     double delayMs; // the delay in milliseconds
     list<PdMessage *> scheduledMessagesList;

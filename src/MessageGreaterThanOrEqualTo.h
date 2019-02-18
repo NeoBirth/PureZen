@@ -29,8 +29,8 @@
 class MessageGreaterThanOrEqualTo : public MessageObject {
 
   public:
-    static MessageObject *newObject(PdMessage *initMessage, PdGraph *graph);
-    MessageGreaterThanOrEqualTo(PdMessage *initMessage, PdGraph *graph);
+    static MessageObject *new_object(PdMessage *init_message, PdGraph *graph);
+    MessageGreaterThanOrEqualTo(PdMessage *init_message, PdGraph *graph);
     ~MessageGreaterThanOrEqualTo();
 
     static const char *getObjectLabel();
@@ -38,7 +38,7 @@ class MessageGreaterThanOrEqualTo : public MessageObject {
 
   private:
     void init(float constant);
-    void processMessage(int inletIndex, PdMessage *message);
+    void process_message(int inlet_index, PdMessage *message);
 
     float constant;
     float lastOutput;

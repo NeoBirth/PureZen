@@ -23,13 +23,13 @@
 #include "MessageInlet.h"
 #include "PdGraph.h"
 
-MessageObject *MessageInlet::newObject(PdMessage *initMessage, PdGraph *graph) {
+message::Object *MessageInlet::new_object(pd::Message *init_message, PdGraph *graph) {
   return new MessageInlet(graph);
 }
 
 // MessageInlet is initialised with an inlet because it manages connections from outside of the
 // containing graph.
-MessageInlet::MessageInlet(PdGraph *graph) : MessageObject(1, 1, graph) {
+MessageInlet::MessageInlet(PdGraph *graph) : message::Object(1, 1, graph) {
   // nothing to do
 }
 
@@ -37,25 +37,25 @@ MessageInlet::~MessageInlet() {
   // nothing to do
 }
 
-ObjectType MessageInlet::getObjectType() {
+object::Type MessageInlet::get_object_type() {
   return MESSAGE_INLET;
 }
 
-void MessageInlet::receiveMessage(int inletIndex, PdMessage *message) {
-  sendMessage(0, message);
+void MessageInlet::receive_message(int inlet_index, pd::Message *message) {
+  send_message(0, message);
 }
 
-list<DspObject *> MessageInlet::getProcessOrder() {
+list<DspObject *> MessageInlet::get_process_order() {
   // a MessageInlet always returns an empty list as it does not process any audio
   return list<DspObject *>();
 }
 
-list<DspObject *> MessageInlet::getProcessOrderFromInlet() {
+list<DspObject *> MessageInlet::get_process_orderFromInlet() {
   list<DspObject *> processList;
-  for (list<ObjectLetPair>::iterator it = incomingMessageConnections[0].begin();
-      it != incomingMessageConnections[0].end(); ++it) {
-    ObjectLetPair objectLetPair = *it;
-    list<DspObject *> parentProcessList = objectLetPair.first->getProcessOrder();
+  for (list<Connection>::iterator it = incoming_connections[0].begin();
+      it != incoming_connections[0].end(); ++it) {
+    Connection obj_let_pair = *it;
+    list<DspObject *> parentProcessList = obj_let_pair.first->get_process_order();
     processList.splice(processList.end(), parentProcessList);
   }
   return processList;

@@ -29,6 +29,6 @@ class PdMessage;
 typedef struct {
   PdMessage *message;
   int index;
-} MessageLetPair;
+} MessageConnection;
 
 #endif // _MESSAGE_LET_PAIR_H_

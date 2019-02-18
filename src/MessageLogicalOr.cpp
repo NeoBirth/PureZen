@@ -22,11 +22,11 @@
 
 #include "MessageLogicalOr.h"
 
-MessageObject *MessageLogicalOr::newObject(PdMessage *initMessage, PdGraph *graph) {
-  return new MessageLogicalOr(initMessage, graph);
+message::Object *MessageLogicalOr::new_object(pd::Message *init_message, PdGraph *graph) {
+  return new MessageLogicalOr(init_message, graph);
 }
 
-MessageLogicalOr::MessageLogicalOr(PdMessage *initMessage, PdGraph *graph) : MessageObject(2, 1, graph) {
+MessageLogicalOr::MessageLogicalOr(pd::Message *init_message, PdGraph *graph) : message::Object(2, 1, graph) {
   left = 0.0f;
   right = 0.0f;
 }
@@ -35,8 +35,8 @@ MessageLogicalOr::~MessageLogicalOr() {
   // nothing to do
 }
 
-void MessageLogicalOr::processMessage(int inletIndex, PdMessage *message) {
-  switch (inletIndex) {
+void MessageLogicalOr::process_message(int inlet_index, pd::Message *message) {
+  switch (inlet_index) {
     case 0: {
       switch (message->get_type(0)) {
         case FLOAT: {
@@ -44,10 +44,10 @@ void MessageLogicalOr::processMessage(int inletIndex, PdMessage *message) {
           // allow fallthrough
         }
         case BANG: {
-          PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(1);
-          outgoingMessage->initWithTimestampAndFloat(message->get_timestamp(),
+          pd::Message *outgoing_message = PD_MESSAGE_ON_STACK(1);
+          outgoing_message->from_timestamp_and_float(message->get_timestamp(),
               (left == 0.0f && right == 0.0f) ? 0.0f : 1.0f);
-          sendMessage(0, outgoingMessage);
+          send_message(0, outgoing_message);
           break;
         }
         default: {

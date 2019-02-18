@@ -29,15 +29,15 @@
 class MessageReceive : public RemoteMessageReceiver {
   
   public:
-    static MessageObject *newObject(PdMessage *initMessage, PdGraph *graph);
-    MessageReceive(PdMessage *initMessage, PdGraph *graph);
+    static MessageObject *new_object(PdMessage *init_message, PdGraph *graph);
+    MessageReceive(PdMessage *init_message, PdGraph *graph);
     ~MessageReceive();
     
     static const char *getObjectLabel();
     std::string toString();
-    ObjectType getObjectType();
+    object::Type get_object_type();
   
-    void receiveMessage(int inletIndex, PdMessage *message);
+    void receiveMessage(int inlet_index, PdMessage *message);
 };
 
 inline const char *MessageReceive::getObjectLabel() {
@@ -48,7 +48,7 @@ inline std::string MessageReceive::toString() {
   return std::string(MessageReceive::getObjectLabel()) + " " + name;
 }
 
-inline ObjectType MessageReceive::getObjectType() {
+inline object::Type MessageReceive::get_object_type() {
   return MESSAGE_RECEIVE;
 }
 

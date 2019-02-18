@@ -25,7 +25,7 @@
 #include "DspInlet.h"
 #include "PdGraph.h"
 
-MessageObject *DspInlet::newObject(PdMessage *initMessage, PdGraph *graph) {
+message::Object *DspInlet::new_object(pd::Message *init_message, PdGraph *graph) {
   return new DspInlet(graph);
 }
 
@@ -37,30 +37,30 @@ DspInlet::~DspInlet() {
   // nothing to do
 }
 
-list<DspObject *> DspInlet::getProcessOrder() {
+list<DspObject *> DspInlet::get_process_order() {
   // inlet~ does not process audio, so it always returns an empty list
   return list<DspObject *>();
 }
 
-list<DspObject *> DspInlet::getProcessOrderFromInlet() {
-  return DspObject::getProcessOrder();
+list<DspObject *> DspInlet::get_process_orderFromInlet() {
+  return DspObject::get_process_order();
 }
 
-void DspInlet::setDspBufferAtInlet(float *buffer, unsigned int inletIndex) {
-  DspObject::setDspBufferAtInlet(buffer, inletIndex);
+void DspInlet::setDspBufferAtInlet(float *buffer, unsigned int inlet_index) {
+  DspObject::setDspBufferAtInlet(buffer, inlet_index);
   
   // additionally reserve this buffer in order to account for outgoing connections
   graph->getBufferPool()->reserveBuffer(buffer, outgoingDspConnections[0].size());
   
   // when the dsp buffer updates at a given inlet, inform all receiving objects
-  for (list<ObjectLetPair>::iterator it = outgoingDspConnections[0].begin();
+  for (list<Connection>::iterator it = outgoingDspConnections[0].begin();
       it != outgoingDspConnections[0].end(); ++it) {
-    ObjectLetPair letPair = *it;
+    Connection letPair = *it;
     DspObject *dspObject = reinterpret_cast<DspObject *>(letPair.first);
     dspObject->setDspBufferAtInlet(dspBufferAtInlet[0], letPair.second);
   }
 }
 
-float *DspInlet::getDspBufferAtOutlet(int outletIndex) {
+float *DspInlet::getDspBufferAtOutlet(int outlet_index) {
   return (dspBufferAtInlet[0] == NULL) ? graph->getBufferPool()->getZeroBuffer() : dspBufferAtInlet[0];
 }

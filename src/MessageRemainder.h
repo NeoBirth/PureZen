@@ -29,8 +29,8 @@
 class MessageRemainder : public MessageObject {
 
   public:
-    static MessageObject *newObject(PdMessage *initMessage, PdGraph *graph);
-    MessageRemainder(PdMessage *initMessage, PdGraph *graph);
+    static MessageObject *new_object(PdMessage *init_message, PdGraph *graph);
+    MessageRemainder(PdMessage *init_message, PdGraph *graph);
     MessageRemainder(float constant, PdGraph *graph);
     ~MessageRemainder();
 
@@ -39,7 +39,7 @@ class MessageRemainder : public MessageObject {
 
   private:
     void init(float constant);
-    void processMessage(int inletIndex, PdMessage *message);
+    void process_message(int inlet_index, PdMessage *message);
 
     int constant;
 };

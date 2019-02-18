@@ -22,12 +22,12 @@
 
 #include "MessageDiv.h"
 
-MessageObject *MessageDiv::newObject(PdMessage *initMessage, PdGraph *graph) {
-  return new MessageDiv(initMessage, graph);
+message::Object *MessageDiv::new_object(pd::Message *init_message, PdGraph *graph) {
+  return new MessageDiv(init_message, graph);
 }
 
-MessageDiv::MessageDiv(PdMessage *initMessage, PdGraph *graph) : MessageObject(2, 1, graph) {
-  constant = initMessage->is_float(0) ? initMessage->get_float(0) : 1.0f;
+MessageDiv::MessageDiv(pd::Message *init_message, PdGraph *graph) : message::Object(2, 1, graph) {
+  constant = init_message->is_float(0) ? init_message->get_float(0) : 1.0f;
   if (constant == 0.0f) constant = 1.0f;
   else if (constant < 0.0f) constant = -constant;
 }
@@ -36,16 +36,16 @@ MessageDiv::~MessageDiv() {
   // nothing to do
 }
 
-void MessageDiv::processMessage(int inletIndex, PdMessage *message) {
-  switch (inletIndex) {
+void MessageDiv::process_message(int inlet_index, pd::Message *message) {
+  switch (inlet_index) {
     case 0: {
       if (message->is_float(0)) {
         float f = message->get_float(0);
         if (f < 0.0f) f -= (constant-1.0f);
         float result = truncf(f/constant);
-        PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(1);
-        outgoingMessage->initWithTimestampAndFloat(message->get_timestamp(), result);
-        sendMessage(0, outgoingMessage);
+        pd::Message *outgoing_message = PD_MESSAGE_ON_STACK(1);
+        outgoing_message->from_timestamp_and_float(message->get_timestamp(), result);
+        send_message(0, outgoing_message);
       }
       break;
     }

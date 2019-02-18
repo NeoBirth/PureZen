@@ -30,8 +30,8 @@
 class DspRifft : public DspObject {
   
   public:
-    static MessageObject *newObject(PdMessage *initMessage, PdGraph *graph);
-    DspRifft(PdMessage *initMessage, PdGraph *graph);
+    static MessageObject *new_object(PdMessage *init_message, PdGraph *graph);
+    DspRifft(PdMessage *init_message, PdGraph *graph);
     ~DspRifft();
     
     static const char *getObjectLabel();

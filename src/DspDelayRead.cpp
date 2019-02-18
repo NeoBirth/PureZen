@@ -25,14 +25,14 @@
 #include "DspDelayWrite.h"
 #include "PdGraph.h"
 
-MessageObject *DspDelayRead::newObject(PdMessage *initMessage, PdGraph *graph) {
-  return new DspDelayRead(initMessage, graph);
+message::Object *DspDelayRead::new_object(pd::Message *init_message, PdGraph *graph) {
+  return new DspDelayRead(init_message, graph);
 }
 
-DspDelayRead::DspDelayRead(PdMessage *initMessage, PdGraph *graph) : DelayReceiver(1, 0, 0, 1, graph) {
-  if (initMessage->is_symbol(0) && initMessage->is_float(1)) {
-    name = utils::copy_string(initMessage->get_symbol(0));
-    delayInSamples = utils::millisecondsToSamples(initMessage->get_float(1), graph->getSampleRate());
+DspDelayRead::DspDelayRead(pd::Message *init_message, PdGraph *graph) : DelayReceiver(1, 0, 0, 1, graph) {
+  if (init_message->is_symbol(0) && init_message->is_float(1)) {
+    name = utils::copy_string(init_message->get_symbol(0));
+    delayInSamples = utils::millisecondsToSamples(init_message->get_float(1), graph->getSampleRate());
   } else {
     graph->printErr("delread~ must be initialised in the format [delread~ name delay].");
     delayInSamples = 0.0f;
@@ -47,12 +47,12 @@ DspDelayRead::~DspDelayRead() {
   // nothing to do
 }
 
-void DspDelayRead::onInletConnectionUpdate(unsigned int inletIndex) {
-//  processFunction = (incomingMessageConnections[0].size() > 0) ? &processScalar : &processSignal;
+void DspDelayRead::onInletConnectionUpdate(unsigned int inlet_index) {
+//  processFunction = (incoming_connections[0].size() > 0) ? &processScalar : &processSignal;
 }
 
-void DspDelayRead::processMessage(int inletIndex, PdMessage *message) {
-  if (inletIndex == 0 && message->is_float(0)) {
+void DspDelayRead::process_message(int inlet_index, pd::Message *message) {
+  if (inlet_index == 0 && message->is_float(0)) {
     // update the delay time
     delayInSamples = utils::millisecondsToSamples(message->get_float(0), graph->getSampleRate());
   }

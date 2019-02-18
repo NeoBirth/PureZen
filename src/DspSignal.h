@@ -29,8 +29,8 @@
 class DspSignal : public DspObject {
   
   public:
-    static MessageObject *newObject(PdMessage *initMessage, PdGraph *graph);
-    DspSignal(PdMessage *initMessage, PdGraph *graph);
+    static MessageObject *new_object(PdMessage *init_message, PdGraph *graph);
+    DspSignal(PdMessage *init_message, PdGraph *graph);
     ~DspSignal();
   
     static const char *getObjectLabel();
@@ -38,7 +38,7 @@ class DspSignal : public DspObject {
   
   private:
     static void processScalar(DspObject *dspObject, int fromIndex, int toIndex);
-    void processMessage(int inletIndex, PdMessage *message);
+    void process_message(int inlet_index, PdMessage *message);
   
     float constant;
 };

@@ -22,21 +22,21 @@
 
 #include "MessageReceive.h"
 
-MessageObject *MessageReceive::newObject(PdMessage *initMessage, PdGraph *graph) {
-  return new MessageReceive(initMessage, graph);
+message::Object *MessageReceive::new_object(pd::Message *init_message, PdGraph *graph) {
+  return new MessageReceive(init_message, graph);
 }
 
-MessageReceive::MessageReceive(PdMessage *initMessage, PdGraph *graph) :
+MessageReceive::MessageReceive(pd::Message *init_message, PdGraph *graph) :
     RemoteMessageReceiver(0, 1, graph) {
   // a receive object can be instantiated with no name. It receives a default.
-  name = utils::copy_string(initMessage->is_symbol(0)
-      ? initMessage->get_symbol(0) : "zg_default_sendreceive_name");
+  name = utils::copy_string(init_message->is_symbol(0)
+      ? init_message->get_symbol(0) : "zg_default_sendreceive_name");
 }
 
 MessageReceive::~MessageReceive() {
   free(name);
 }
 
-void MessageReceive::receiveMessage(int inletIndex, PdMessage *message) {
-  sendMessage(0, message); // send all received messages to the outlet
+void MessageReceive::receive_message(int inlet_index, pd::Message *message) {
+  send_message(0, message); // send all received messages to the outlet
 }

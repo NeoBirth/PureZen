@@ -29,8 +29,8 @@
 class DspCosine : public DspObject {
 
   public:
-    static MessageObject *newObject(PdMessage *initMessage, PdGraph *graph);
-    DspCosine(PdMessage *initMessage, PdGraph *graph);
+    static MessageObject *new_object(PdMessage *init_message, PdGraph *graph);
+    DspCosine(PdMessage *init_message, PdGraph *graph);
     ~DspCosine();
 
     static const char *getObjectLabel();
@@ -39,7 +39,7 @@ class DspCosine : public DspObject {
   private:
     static void procesSignal(DspObject *dspObject, int fromIndex, int toIndex);
   
-    float sampleRate;
+    float sample_rate;
     static float *cos_table; // the Cosine lookup table
     static int refCount; // a reference counter for Cosine table. Now we know when to free it.
 };

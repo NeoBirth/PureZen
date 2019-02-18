@@ -34,8 +34,8 @@
 class MessageDeclare : public MessageObject {
   
   public:
-    static MessageObject *newObject(PdMessage *initMessage, PdGraph *graph);
-    MessageDeclare(PdMessage *initMessage, PdGraph *graph);
+    static MessageObject *new_object(PdMessage *init_message, PdGraph *graph);
+    MessageDeclare(PdMessage *init_message, PdGraph *graph);
     ~MessageDeclare();
     
     static const char *getObjectLabel();

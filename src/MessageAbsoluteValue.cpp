@@ -22,11 +22,11 @@
 
 #include "MessageAbsoluteValue.h"
 
-MessageObject *MessageAbsoluteValue::newObject(PdMessage *initMessage, PdGraph *graph) {
-  return new MessageAbsoluteValue(initMessage, graph);
+message::Object *MessageAbsoluteValue::new_object(pd::Message *init_message, PdGraph *graph) {
+  return new MessageAbsoluteValue(init_message, graph);
 }
 
-MessageAbsoluteValue::MessageAbsoluteValue(PdMessage *initMessage, PdGraph *graph) : MessageObject(1, 1, graph) {
+MessageAbsoluteValue::MessageAbsoluteValue(pd::Message *init_message, PdGraph *graph) : message::Object(1, 1, graph) {
   // nothing to do
 }
 
@@ -34,10 +34,10 @@ MessageAbsoluteValue::~MessageAbsoluteValue() {
   // nothing to do
 }
 
-void MessageAbsoluteValue::processMessage(int inletIndex, PdMessage *message) {
+void MessageAbsoluteValue::process_message(int inlet_index, pd::Message *message) {
   if (message->is_float(0)) {
-    PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(1);
-    outgoingMessage->initWithTimestampAndFloat(message->get_timestamp(), fabsf(message->get_float(0)));
-    sendMessage(0, outgoingMessage);
+    pd::Message *outgoing_message = PD_MESSAGE_ON_STACK(1);
+    outgoing_message->from_timestamp_and_float(message->get_timestamp(), fabsf(message->get_float(0)));
+    send_message(0, outgoing_message);
   }
 }

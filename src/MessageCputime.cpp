@@ -22,11 +22,11 @@
 
 #include "MessageCputime.h"
 
-MessageObject *MessageCputime::newObject(PdMessage *initMessage, PdGraph *graph) {
-  return new MessageCputime(initMessage, graph);
+message::Object *MessageCputime::new_object(pd::Message *init_message, PdGraph *graph) {
+  return new MessageCputime(init_message, graph);
 }
 
-MessageCputime::MessageCputime(PdMessage *initMessage, PdGraph *graph) : MessageObject(2, 1, graph) {
+MessageCputime::MessageCputime(pd::Message *init_message, PdGraph *graph) : message::Object(2, 1, graph) {
   // nothing to do
 }
 
@@ -34,8 +34,8 @@ MessageCputime::~MessageCputime() {
   // nothing to do
 }
 
-void MessageCputime::processMessage(int inletIndex, PdMessage *message) {
-  switch (inletIndex) {
+void MessageCputime::process_message(int inlet_index, pd::Message *message) {
+  switch (inlet_index) {
     case 0: {
       if (message->is_bang(0)) {
         gettimeofday(&start, NULL);
@@ -49,9 +49,9 @@ void MessageCputime::processMessage(int inletIndex, PdMessage *message) {
         double elapsedTime = (end.tv_sec - start.tv_sec) * 1000.0; // sec to ms
         elapsedTime += (end.tv_usec - start.tv_usec) / 1000.0; // us to ms
         
-        PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(1);
-        outgoingMessage->initWithTimestampAndFloat(message->get_timestamp(), (float) elapsedTime);
-        sendMessage(0, outgoingMessage);
+        pd::Message *outgoing_message = PD_MESSAGE_ON_STACK(1);
+        outgoing_message->from_timestamp_and_float(message->get_timestamp(), (float) elapsedTime);
+        send_message(0, outgoing_message);
       }
       break;
     }

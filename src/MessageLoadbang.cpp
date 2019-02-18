@@ -23,14 +23,14 @@
 #include "MessageLoadbang.h"
 #include "PdGraph.h"
 
-MessageObject *MessageLoadbang::newObject(PdMessage *initMessage, PdGraph *graph) {
+message::Object *MessageLoadbang::new_object(pd::Message *init_message, PdGraph *graph) {
   return new MessageLoadbang(graph);
 }
 
-MessageLoadbang::MessageLoadbang(PdGraph *graph) : MessageObject(0, 1, graph) {
-  PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(1);
-  outgoingMessage->initWithTimestampAndBang(0.0);
-  graph->scheduleMessage(this, 0, outgoingMessage);
+MessageLoadbang::MessageLoadbang(PdGraph *graph) : message::Object(0, 1, graph) {
+  pd::Message *outgoing_message = PD_MESSAGE_ON_STACK(1);
+  outgoing_message->from_timestamp_and_bang(0.0);
+  graph->schedule_message(this, 0, outgoing_message);
 }
 
 MessageLoadbang::~MessageLoadbang() {
