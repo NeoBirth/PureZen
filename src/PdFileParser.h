@@ -29,7 +29,7 @@
 #include <string.h>
 #include "StaticUtils.h"
 
-class PdContext;
+class pd::Context;
 class PdGraph;
 
 using namespace std;
@@ -47,10 +47,10 @@ class PdFileParser {
     PdFileParser(string aString);
     ~PdFileParser();
   
-    PdGraph *execute(PdContext *context);
+    PdGraph *execute(pd::Context *context);
 
   private:
-    PdGraph *execute(PdMessage *initMsg, PdGraph *graph, PdContext *context, bool isSubPatch);
+    PdGraph *execute(PdMessage *initMsg, PdGraph *graph, pd::Context *context, bool isSubPatch);
 
     /**
      * Returns the next logical message in the file, or <code>NULL</code> if the end of the file

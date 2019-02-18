@@ -23,28 +23,28 @@
 #include "MessageOutlet.h"
 #include "PdGraph.h"
 
-MessageObject *MessageOutlet::newObject(PdMessage *initMessage, PdGraph *graph) {
-  return new MessageOutlet(initMessage, graph);
+message::Object *MessageOutlet::new_object(pd::Message *init_message, PdGraph *graph) {
+  return new MessageOutlet(init_message, graph);
 }
 
 // MessageOutlets is initialised with one outlet because it handles all outgoing connections
 // for the containing graph.
-MessageOutlet::MessageOutlet(PdMessage *initMessage, PdGraph *graph) : MessageObject(1, 1, graph) {
-  canvasX = 0;
+MessageOutlet::MessageOutlet(pd::Message *init_message, PdGraph *graph) : message::Object(1, 1, graph) {
+  coordinates.x = 0;
 }
 
 MessageOutlet::~MessageOutlet() {
   // nothing to do
 }
 
-bool MessageOutlet::isLeafNode() {
+bool MessageOutlet::is_leaf_node() {
   return true;
 }
 
-ObjectType MessageOutlet::getObjectType() {
+object::Type MessageOutlet::get_object_type() {
   return MESSAGE_OUTLET;
 }
 
-void MessageOutlet::receiveMessage(int inletIndex, PdMessage *message) {
-  sendMessage(0, message);
+void MessageOutlet::receive_message(int inlet_index, pd::Message *message) {
+  send_message(0, message);
 }

@@ -23,7 +23,7 @@
 #include "MessageMessageBox.h"
 #include "PdGraph.h"
 
-MessageObject *MessageMessageBox::newObject(PdMessage *initString, PdGraph *graph) {
+message::Object *MessageMessageBox::new_object(pd::Message *initString, PdGraph *graph) {
   return new MessageMessageBox(initString->get_symbol(0), graph);
 }
 
@@ -40,7 +40,7 @@ MessageObject *MessageMessageBox::newObject(PdMessage *initString, PdGraph *grap
  * The first symbol is the name of a message receiver. The remainder of the string is converted
  * into a message.
  */
-MessageMessageBox::MessageMessageBox(char *initString, PdGraph *graph) : MessageObject(1, 1, graph) {
+MessageMessageBox::MessageMessageBox(char *initString, PdGraph *graph) : message::Object(1, 1, graph) {
   // parse the entire initialisation string
   vector<string> messageInitListAll = utils::tokenize_string(initString, "\\;");
   
@@ -51,7 +51,7 @@ MessageMessageBox::MessageMessageBox(char *initString, PdGraph *graph) : Message
     int maxElements = (initString.size()/2)+1;
     // NOTE(mhroth): though this is alloca is in a for loop, it is not expected that the compiler
     // will do anything funny, like unrolling the loop, thereby causing unexpected stack overflows
-    PdMessage *message = PD_MESSAGE_ON_STACK(maxElements);
+    pd::Message *message = PD_MESSAGE_ON_STACK(maxElements);
     // utils::tokenize_string does not remove the trailing ";" from the
     // original string. We should not process it because it will result in an empty message. 
     if (strcmp(initString.c_str(), ";") != 0) {
@@ -71,11 +71,11 @@ MessageMessageBox::MessageMessageBox(char *initString, PdGraph *graph) : Message
       string name = string(initString, 0, initString.find(" "));
       string messageString = string(initString, initString.find(" ")+1);
       int maxElements = (messageString.size()/2)+1;
-      PdMessage *message = PD_MESSAGE_ON_STACK(maxElements);
+      pd::Message *message = PD_MESSAGE_ON_STACK(maxElements);
       char str[messageString.size()+1]; strcpy(str, messageString.c_str());
       message->from_string(0.0, maxElements, str);
       MessageNamedDestination namedDestination = 
-          make_pair(utils::copy_string(name.c_str()), message->clone_on_heap());
+          Connection::new(utils::copy_string(name.c_str()), message->clone_on_heap());
       remoteMessageList.push_back(namedDestination);
     }
   }
@@ -95,48 +95,48 @@ MessageMessageBox::~MessageMessageBox() {
   }
 }
 
-void MessageMessageBox::processMessage(int inletIndex, PdMessage *message) {
+void MessageMessageBox::process_message(int inlet_index, pd::Message *message) {
 #define RES_BUFFER_LENGTH 64
   char resolvedName[RES_BUFFER_LENGTH]; // resolution buffer for named destination
   
   // NOTE(mhroth): if any message has more than 64 elements, that's very bad
-  PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(64);
+  pd::Message *outgoing_message = PD_MESSAGE_ON_STACK(64);
   
   // send local messages
   for (int i = 0; i < localMessageList.size(); i++) {
-    PdMessage *messageTemplate = localMessageList.at(i);
+    pd::Message *messageTemplate = localMessageList.at(i);
     int numElements = messageTemplate->get_num_elements();
-    outgoingMessage->from_timestamp(message->get_timestamp(), numElements);
-    memcpy(outgoingMessage->get_element(0), messageTemplate->get_element(0), numElements*sizeof(pd::message::Atom));
+    outgoing_message->from_timestamp(message->get_timestamp(), numElements);
+    memcpy(outgoing_message->get_element(0), messageTemplate->get_element(0), numElements*sizeof(pd::message::Atom));
     for (int i = 0; i < numElements; i++) {
       if (messageTemplate->is_symbol(i)) {
         char *buffer = (char *) alloca(RES_BUFFER_LENGTH * sizeof(char));
         // TODO(mhroth): resolve string, but may be in stack buffer
-        PdMessage::resolve_string(messageTemplate->get_symbol(i), message, 1, buffer, RES_BUFFER_LENGTH);
-        outgoingMessage->parseAndSetMessageElement(i, buffer); // buffer is resolved to float or string
+        pd::Message::resolve_string(messageTemplate->get_symbol(i), message, 1, buffer, RES_BUFFER_LENGTH);
+        outgoing_message->parseAndSetMessageElement(i, buffer); // buffer is resolved to float or string
       }
     }
-    sendMessage(0, outgoingMessage);
+    send_message(0, outgoing_message);
   }
 
   // send remote messages
   for (int i = 0; i < remoteMessageList.size(); i++) {
     MessageNamedDestination namedDestination = remoteMessageList.at(i);
 
-    PdMessage::resolve_string(namedDestination.first, message, 1, resolvedName, RES_BUFFER_LENGTH);
+    pd::Message::resolve_string(namedDestination.first, message, 1, resolvedName, RES_BUFFER_LENGTH);
     
-    PdMessage *messageTemplate = namedDestination.second;
+    pd::Message *messageTemplate = namedDestination.second;
     int numElements = messageTemplate->get_num_elements();
-    outgoingMessage->from_timestamp(message->get_timestamp(), numElements);
-    memcpy(outgoingMessage->get_element(0), messageTemplate->get_element(0), numElements*sizeof(pd::message::Atom));
+    outgoing_message->from_timestamp(message->get_timestamp(), numElements);
+    memcpy(outgoing_message->get_element(0), messageTemplate->get_element(0), numElements*sizeof(pd::message::Atom));
     for (int i = 0; i < numElements; i++) {
       if (messageTemplate->is_symbol(i)) {
         char *buffer = (char *) alloca(RES_BUFFER_LENGTH * sizeof(char));
         // TODO(mhroth): resolve string, but may be in stack buffer
-        PdMessage::resolve_string(messageTemplate->get_symbol(i), message, 1, buffer, RES_BUFFER_LENGTH);
-        outgoingMessage->set_symbol(i, buffer);
+        pd::Message::resolve_string(messageTemplate->get_symbol(i), message, 1, buffer, RES_BUFFER_LENGTH);
+        outgoing_message->set_symbol(i, buffer);
       }
     }
-    graph->sendMessageToNamedReceivers(resolvedName, outgoingMessage);
+    graph->send_messageToNamedReceivers(resolvedName, outgoing_message);
   }
 }

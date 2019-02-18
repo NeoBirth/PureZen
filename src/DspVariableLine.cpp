@@ -24,11 +24,11 @@
 #include "DspVariableLine.h"
 #include "PdGraph.h"
 
-MessageObject *DspVariableLine::newObject(PdMessage *initMessage, PdGraph *graph) {
-  return new DspVariableLine(initMessage, graph);
+message::Object *DspVariableLine::new_object(pd::Message *init_message, PdGraph *graph) {
+  return new DspVariableLine(init_message, graph);
 }
 
-DspVariableLine::DspVariableLine(PdMessage *initMessage, PdGraph *graph) : DspObject(3, 0, 0, 1, graph) {
+DspVariableLine::DspVariableLine(pd::Message *init_message, PdGraph *graph) : DspObject(3, 0, 0, 1, graph) {
   numSamplesToTarget = 0.0f;
   target = 0.0f;
   slope = 0.0f;
@@ -43,8 +43,8 @@ DspVariableLine::~DspVariableLine() {
   // to delete pending messages here
 }
 
-void DspVariableLine::processMessage(int inletIndex, PdMessage *message) {
-  switch (inletIndex) {
+void DspVariableLine::process_message(int inlet_index, pd::Message *message) {
+  switch (inlet_index) {
     case 0: {
       if (message->is_float(0)) {
         float target = message->get_float(0);
@@ -52,7 +52,7 @@ void DspVariableLine::processMessage(int inletIndex, PdMessage *message) {
         float delay = message->is_float(2) ? message->get_float(2) : 0.0f;
 
         // clear all messages after the given start time, insert the new message into the list
-        PdMessage *controlMessage = PD_MESSAGE_ON_STACK(2);
+        pd::Message *controlMessage = PD_MESSAGE_ON_STACK(2);
         controlMessage->from_timestamp(message->get_timestamp() + delay, 2);
         controlMessage->set_float(0, target);
         controlMessage->set_float(1, interval);
@@ -63,7 +63,7 @@ void DspVariableLine::processMessage(int inletIndex, PdMessage *message) {
           // if there is no delay on the message, act on it immediately
           updatePathWithMessage(controlMessage);
         } else {
-          PdMessage *heapMessage = graph->scheduleMessage(this, 0, controlMessage);
+          pd::Message *heapMessage = graph->schedule_message(this, 0, controlMessage);
           messageList.push_back(heapMessage);
         }
 
@@ -87,8 +87,8 @@ void DspVariableLine::processMessage(int inletIndex, PdMessage *message) {
 }
 
 void DspVariableLine::clearAllMessagesAtOrAfter(double timestamp) {
-  for (list<PdMessage *>::iterator it = messageList.begin(); it != messageList.end(); ++it) {
-    PdMessage *message = *it;
+  for (list<pd::Message *>::iterator it = messageList.begin(); it != messageList.end(); ++it) {
+    pd::Message *message = *it;
     if (timestamp < message->get_timestamp()) {
       clearAllMessagesFrom(it);
       break;
@@ -96,17 +96,17 @@ void DspVariableLine::clearAllMessagesAtOrAfter(double timestamp) {
   }
 }
 
-void DspVariableLine::clearAllMessagesFrom(list<PdMessage *>::iterator it) {
-  list<PdMessage *>::iterator itCopy = it;
+void DspVariableLine::clearAllMessagesFrom(list<pd::Message *>::iterator it) {
+  list<pd::Message *>::iterator itCopy = it;
   while (it != messageList.end()) {
-    PdMessage *message = *it++;
+    pd::Message *message = *it++;
     graph->cancelMessage(this, 0, message);
   }
 
   messageList.erase(itCopy, messageList.end());
 }
 
-void DspVariableLine::updatePathWithMessage(PdMessage *message) {
+void DspVariableLine::updatePathWithMessage(pd::Message *message) {
   if (message == NULL) {
     // no message, level everything off
     numSamplesToTarget = 0.0f;
@@ -123,7 +123,7 @@ void DspVariableLine::updatePathWithMessage(PdMessage *message) {
   }
 }
 
-void DspVariableLine::sendMessage(int outletIndex, PdMessage *message) {
+void DspVariableLine::send_message(int outlet_index, pd::Message *message) {
   // this message should be at the front of the messageList, but we use the more general remove
   // function just in case
   messageList.remove(message);

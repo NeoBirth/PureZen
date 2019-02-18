@@ -25,12 +25,12 @@
 
 class PdGraph;
 
-MessageObject *DspAdd::newObject(PdMessage *initMessage, PdGraph *graph) {
-  return new DspAdd(initMessage, graph);
+message::Object *DspAdd::new_object(pd::Message *init_message, PdGraph *graph) {
+  return new DspAdd(init_message, graph);
 }
 
-DspAdd::DspAdd(PdMessage *initMessage, PdGraph *graph) : DspObject(2, 2, 0, 1, graph) {
-  constant = initMessage->is_float(0) ? initMessage->get_float(0) : 0.0f;
+DspAdd::DspAdd(pd::Message *init_message, PdGraph *graph) : DspObject(2, 2, 0, 1, graph) {
+  constant = init_message->is_float(0) ? init_message->get_float(0) : 0.0f;
   processFunctionNoMessage = &processScalar;
 }
 
@@ -38,7 +38,7 @@ DspAdd::~DspAdd() {
   // nothing to do
 }
 
-void DspAdd::onInletConnectionUpdate(unsigned int inletIndex) {
+void DspAdd::onInletConnectionUpdate(unsigned int inlet_index) {
   processFunction = (incomingDspConnections[0].size() > 0 && incomingDspConnections[1].size() > 0)
       ? &processSignal : &processScalar;
 }
@@ -50,8 +50,8 @@ std::string DspAdd::toString() {
   return str;
 }
 
-void DspAdd::processMessage(int inletIndex, PdMessage *message) {
-  if (inletIndex == 1 && message->is_float(0)) {
+void DspAdd::process_message(int inlet_index, pd::Message *message) {
+  if (inlet_index == 1 && message->is_float(0)) {
     constant = message->get_float(0);
   }
 }

@@ -34,8 +34,8 @@ class DspThrow;
 class DspCatch : public DspObject {
   
   public:
-    static MessageObject *newObject(PdMessage *initMessage, PdGraph *graph);
-    DspCatch(PdMessage *initMessage, PdGraph *graph);
+    static MessageObject *new_object(PdMessage *init_message, PdGraph *graph);
+    DspCatch(PdMessage *init_message, PdGraph *graph);
     ~DspCatch();
 
     list<DspObject *> getProcessOrder();
@@ -45,7 +45,7 @@ class DspCatch : public DspObject {
   
     const char *getName() { return name; }
     static const char *getObjectLabel() { return "catch~"; }
-    ObjectType getObjectType() { return DSP_CATCH; }
+    object::Type get_object_type() { return DSP_CATCH; }
     string toString();
   
   private:

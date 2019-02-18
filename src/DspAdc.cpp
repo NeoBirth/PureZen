@@ -23,7 +23,7 @@
 #include "DspAdc.h"
 #include "PdGraph.h"
 
-MessageObject *DspAdc::newObject(PdMessage *initMessage, PdGraph *graph) {
+message::Object *DspAdc::new_object(pd::Message *init_message, PdGraph *graph) {
   return new DspAdc(graph);
 }
 
@@ -35,6 +35,6 @@ DspAdc::~DspAdc() {
   // nothing to do
 }
 
-float *DspAdc::getDspBufferAtOutlet(int outletIndex) {
-  return graph->getGlobalDspBufferAtInlet(outletIndex);
+float *DspAdc::getDspBufferAtOutlet(int outlet_index) {
+  return graph->getGlobalDspBufferAtInlet(outlet_index);
 }

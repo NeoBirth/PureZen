@@ -23,11 +23,11 @@
 #include "MessageSamplerate.h"
 #include "PdGraph.h"
 
-MessageObject *MessageSamplerate::newObject(PdMessage *initMessage, PdGraph *graph) {
-  return new MessageSamplerate(initMessage, graph);
+message::Object *MessageSamplerate::new_object(pd::Message *init_message, PdGraph *graph) {
+  return new MessageSamplerate(init_message, graph);
 }
 
-MessageSamplerate::MessageSamplerate(PdMessage *initMessage, PdGraph *graph) : MessageObject(1, 1, graph) {
+MessageSamplerate::MessageSamplerate(pd::Message *init_message, PdGraph *graph) : message::Object(1, 1, graph) {
   // nothing to do
 }
 
@@ -35,10 +35,10 @@ MessageSamplerate::~MessageSamplerate() {
   // nothing to do
 }
 
-void MessageSamplerate::MessageSamplerate::processMessage(int inletIndex, PdMessage *message) {
+void MessageSamplerate::MessageSamplerate::process_message(int inlet_index, pd::Message *message) {
   if (message->is_bang(0)) {
-    PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(1);
-    outgoingMessage->initWithTimestampAndFloat(message->get_timestamp(), graph->getSampleRate());
-    sendMessage(0, outgoingMessage);
+    pd::Message *outgoing_message = PD_MESSAGE_ON_STACK(1);
+    outgoing_message->from_timestamp_and_float(message->get_timestamp(), graph->getSampleRate());
+    send_message(0, outgoing_message);
   }
 }

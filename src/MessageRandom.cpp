@@ -22,12 +22,12 @@
 
 #include "MessageRandom.h"
 
-MessageObject *MessageRandom::newObject(PdMessage *initMessage, PdGraph *graph) {
-  return new MessageRandom(initMessage, graph);
+message::Object *MessageRandom::new_object(pd::Message *init_message, PdGraph *graph) {
+  return new MessageRandom(init_message, graph);
 }
 
-MessageRandom::MessageRandom(PdMessage *initMessage, PdGraph *graph) : MessageObject(2, 1, graph) {
-  max_inc = initMessage->is_float(0) ? ((int) initMessage->get_float(0))-1 : 1;
+MessageRandom::MessageRandom(pd::Message *init_message, PdGraph *graph) : message::Object(2, 1, graph) {
+  max_inc = init_message->is_float(0) ? ((int) init_message->get_float(0))-1 : 1;
   twister = new MTRand();
 }
 
@@ -35,8 +35,8 @@ MessageRandom::~MessageRandom() {
   delete twister;
 }
 
-void MessageRandom::processMessage(int inletIndex, PdMessage *message) {
-  switch (inletIndex) {
+void MessageRandom::process_message(int inlet_index, pd::Message *message) {
+  switch (inlet_index) {
     case 0: {
       switch (message->get_type(0)) {
         case SYMBOL: {
@@ -46,9 +46,9 @@ void MessageRandom::processMessage(int inletIndex, PdMessage *message) {
           break;
         }
         case BANG: {
-          PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(1);
-          outgoingMessage->initWithTimestampAndFloat(message->get_timestamp(), (float) twister->randInt(max_inc));
-          sendMessage(0, outgoingMessage);
+          pd::Message *outgoing_message = PD_MESSAGE_ON_STACK(1);
+          outgoing_message->from_timestamp_and_float(message->get_timestamp(), (float) twister->randInt(max_inc));
+          send_message(0, outgoing_message);
           break;
         }
         default: break;

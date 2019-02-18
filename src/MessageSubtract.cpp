@@ -22,12 +22,12 @@
 
 #include "MessageSubtract.h"
 
-MessageObject *MessageSubtract::newObject(PdMessage *initMessage, PdGraph *graph) {
-  return new MessageSubtract(initMessage, graph);
+message::Object *MessageSubtract::new_object(pd::Message *init_message, PdGraph *graph) {
+  return new MessageSubtract(init_message, graph);
 }
 
-MessageSubtract::MessageSubtract(PdMessage *initMessage, PdGraph *graph) : MessageObject(2, 1, graph) {
-  constant = initMessage->is_float(0) ? initMessage->get_float(0) : 0.0f;
+MessageSubtract::MessageSubtract(pd::Message *init_message, PdGraph *graph) : message::Object(2, 1, graph) {
+  constant = init_message->is_float(0) ? init_message->get_float(0) : 0.0f;
   last = 0.0f;
 }
 
@@ -41,8 +41,8 @@ std::string MessageSubtract::toString() {
   return str;
 }
 
-void MessageSubtract::processMessage(int inletIndex, PdMessage *message) {
-  switch (inletIndex) {
+void MessageSubtract::process_message(int inlet_index, pd::Message *message) {
+  switch (inlet_index) {
     case 0: {
       switch (message->get_type(0)) {
         case FLOAT: {
@@ -50,9 +50,9 @@ void MessageSubtract::processMessage(int inletIndex, PdMessage *message) {
           // allow fallthrough
         }
         case BANG: {
-          PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(1);
-          outgoingMessage->initWithTimestampAndFloat(message->get_timestamp(), last);
-          sendMessage(0, outgoingMessage);
+          pd::Message *outgoing_message = PD_MESSAGE_ON_STACK(1);
+          outgoing_message->from_timestamp_and_float(message->get_timestamp(), last);
+          send_message(0, outgoing_message);
           break;
         }
         default: return;

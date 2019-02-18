@@ -25,12 +25,12 @@
 
 class PdGraph;
 
-MessageObject *DspMinimum::newObject(PdMessage *initMessage, PdGraph *graph) {
-  return new DspMinimum(initMessage, graph);
+message::Object *DspMinimum::new_object(pd::Message *init_message, PdGraph *graph) {
+  return new DspMinimum(init_message, graph);
 }
 
-DspMinimum::DspMinimum(PdMessage *initMessage, PdGraph *graph) : DspObject(2, 2, 0, 1, graph) {
-  constant = initMessage->is_float(0) ? initMessage->get_float(0) : 0.0f;
+DspMinimum::DspMinimum(pd::Message *init_message, PdGraph *graph) : DspObject(2, 2, 0, 1, graph) {
+  constant = init_message->is_float(0) ? init_message->get_float(0) : 0.0f;
   processFunction = &processScalar;
   processFunctionNoMessage = &processScalar;
 }
@@ -45,13 +45,13 @@ string DspMinimum::toString() {
   return  string(str);
 }
 
-void DspMinimum::processMessage(int inletIndex, PdMessage *message) {
-  if (inletIndex == 1) {
+void DspMinimum::process_message(int inlet_index, pd::Message *message) {
+  if (inlet_index == 1) {
     if (message->is_float(0)) constant = message->get_float(0);
   }
 }
 
-void DspMinimum::onInletConnectionUpdate(unsigned int inletIndex) {
+void DspMinimum::onInletConnectionUpdate(unsigned int inlet_index) {
   processFunction = (!incomingDspConnections[0].empty() && !incomingDspConnections[1].empty())
       ? &processSignal : &processScalar;
 }

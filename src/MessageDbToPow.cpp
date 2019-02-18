@@ -22,11 +22,11 @@
 
 #include "MessageDbToPow.h"
 
-MessageObject *MessageDbToPow::newObject(PdMessage *initMessage, PdGraph *graph) {
+message::Object *MessageDbToPow::new_object(pd::Message *init_message, PdGraph *graph) {
   return new MessageDbToPow(graph);
 }
 
-MessageDbToPow::MessageDbToPow(PdGraph *graph) : MessageObject(1, 1, graph) {
+MessageDbToPow::MessageDbToPow(PdGraph *graph) : message::Object(1, 1, graph) {
   // nothing to do
 }
 
@@ -34,12 +34,12 @@ MessageDbToPow::~MessageDbToPow() {
   // nothing to do
 }
 
-void MessageDbToPow::processMessage(int inletIndex, PdMessage *message) {
+void MessageDbToPow::process_message(int inlet_index, pd::Message *message) {
   if (message->is_float(0)) {
     float dbToPow = (message->get_float(0) <= 0.0f) ? 0.0f :
         powf(0.00001f * powf(10.0f,(message->get_float(0))/20.0f),2.0f);
-    PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(1);
-    outgoingMessage->initWithTimestampAndFloat(message->get_timestamp(), dbToPow);
-    sendMessage(0, outgoingMessage);
+    pd::Message *outgoing_message = PD_MESSAGE_ON_STACK(1);
+    outgoing_message->from_timestamp_and_float(message->get_timestamp(), dbToPow);
+    send_message(0, outgoing_message);
   }
 }

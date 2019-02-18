@@ -23,11 +23,11 @@
 #include "DspBang.h"
 #include "PdGraph.h"
 
-MessageObject *DspBang::newObject(PdMessage *initMessage, PdGraph *graph) {
-  return new DspBang(initMessage, graph);
+message::Object *DspBang::new_object(pd::Message *init_message, PdGraph *graph) {
+  return new DspBang(init_message, graph);
 }
 
-DspBang::DspBang(PdMessage *initMessage, PdGraph *graph) : DspObject(1, 0, 1, 0, graph) {
+DspBang::DspBang(pd::Message *init_message, PdGraph *graph) : DspObject(1, 0, 1, 0, graph) {
   processFunction = &processDsp;
   processFunctionNoMessage = &processDsp;
 }
@@ -39,7 +39,7 @@ DspBang::~DspBang() {
 void DspBang::processDsp(DspObject *dspObject, int fromIndex, int toIndex) {
   DspBang *d = reinterpret_cast<DspBang *>(dspObject);
   // message will be automatically rescheduled for beginning of next block
-  PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(1);
-  outgoingMessage->initWithTimestampAndBang(0.0);
-  d->graph->scheduleMessage(d, 0, outgoingMessage);
+  pd::Message *outgoing_message = PD_MESSAGE_ON_STACK(1);
+  outgoing_message->from_timestamp_and_bang(0.0);
+  d->graph->schedule_message(d, 0, outgoing_message);
 }

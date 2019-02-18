@@ -23,13 +23,13 @@
 #include "MessageValue.h"
 #include "PdGraph.h"
 
-MessageObject *MessageValue::newObject(PdMessage *initMessage, PdGraph *graph) {
-  return new MessageValue(initMessage, graph);
+message::Object *MessageValue::new_object(pd::Message *init_message, PdGraph *graph) {
+  return new MessageValue(init_message, graph);
 }
 
-MessageValue::MessageValue(PdMessage *initMessage, PdGraph *graph) : MessageObject(1, 1, graph) {
-  if (initMessage->is_symbol(0)) {
-    name = utils::copy_string(initMessage->get_symbol(0));
+MessageValue::MessageValue(pd::Message *init_message, PdGraph *graph) : message::Object(1, 1, graph) {
+  if (init_message->is_symbol(0)) {
+    name = utils::copy_string(init_message->get_symbol(0));
   } else {
     name = NULL;
     graph->printErr("Object \"value\" MUST be initialised with a name.");
@@ -40,16 +40,16 @@ MessageValue::~MessageValue() {
   free(name);
 }
 
-void MessageValue::processMessage(int inletIndex, PdMessage *message) {
+void MessageValue::process_message(int inlet_index, pd::Message *message) {
   switch (message->get_type(0)) {
     case FLOAT: {
       graph->setValueForName(name, message->get_float(0));
       break;
     }
     case BANG: {
-      PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(1);
-      outgoingMessage->initWithTimestampAndFloat(message->get_timestamp(), graph->getValueForName(name));
-      sendMessage(0, outgoingMessage);
+      pd::Message *outgoing_message = PD_MESSAGE_ON_STACK(1);
+      outgoing_message->from_timestamp_and_float(message->get_timestamp(), graph->getValueForName(name));
+      send_message(0, outgoing_message);
       break;
     }
     default: break;

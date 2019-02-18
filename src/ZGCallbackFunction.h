@@ -33,7 +33,7 @@ typedef enum {
   
   /**
    * Suggestion to turn on or off context signal processing. Argument is int* to 1 or 0.
-   * Note that message and signal processing are dependent in ZenGarden. If PdContext::process()
+   * Note that message and signal processing are dependent in ZenGarden. If pd::Context::process()
    * is no longer called, then messages will also stop being processed.
    */
   ZG_PD_DSP,

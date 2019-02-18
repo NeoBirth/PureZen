@@ -24,13 +24,13 @@
 #include "DspVCF.h"
 #include "PdGraph.h"
 
-MessageObject *DspVCF::newObject(PdMessage *initMessage, PdGraph *graph) {
-  return new DspVCF(initMessage, graph);
+message::Object *DspVCF::new_object(pd::Message *init_message, PdGraph *graph) {
+  return new DspVCF(init_message, graph);
 }
 
-DspVCF::DspVCF(PdMessage *initMessage, PdGraph *graph) : DspObject(3, 3, 0, 2, graph) {
-  sampleRate = graph->getSampleRate();
-  calculateFilterCoefficients(this->sampleRate/2.0f, 1.0f); // initialise the filter completely open
+DspVCF::DspVCF(pd::Message *init_message, PdGraph *graph) : DspObject(3, 3, 0, 2, graph) {
+  sample_rate = graph->getSampleRate();
+  calculateFilterCoefficients(this->sample_rate/2.0f, 1.0f); // initialise the filter completely open
   tap_0 = tap_1 = 0.0f;
 }
 
@@ -48,7 +48,7 @@ void DspVCF::calculateFilterCoefficients(float f, float q) {
   if (q < 0.0f) q = 0.0f;
   this->centerFrequency = f;
   this->q = q;
-  omega = f * (2.0f * M_PI) / sampleRate;
+  omega = f * (2.0f * M_PI) / sample_rate;
   if (q < 0.001) oneminusr = 1.0f;
   else oneminusr = omega/q;
   if (oneminusr > 1.0f) oneminusr = 1.0f;
@@ -67,9 +67,9 @@ float DspVCF::sigbp_qcos(float f) {
   }
 }
 
-void DspVCF::processMessage(int inletIndex, PdMessage *message) {
+void DspVCF::process_message(int inlet_index, pd::Message *message) {
   // not sure what the other inlets do wrt messages
-  if (inletIndex == 2) {
+  if (inlet_index == 2) {
     if (message->is_float(0)) {
       q = message->get_float(0); // update the resonance (q)
     }

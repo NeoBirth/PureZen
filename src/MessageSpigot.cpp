@@ -22,23 +22,23 @@
 
 #include "MessageSpigot.h"
 
-MessageObject *MessageSpigot::newObject(PdMessage *initMessage, PdGraph *graph) {
-  return new MessageSpigot(initMessage, graph);
+message::Object *MessageSpigot::new_object(pd::Message *init_message, PdGraph *graph) {
+  return new MessageSpigot(init_message, graph);
 }
 
-MessageSpigot::MessageSpigot(PdMessage *initMessage, PdGraph *graph) : MessageObject(2, 1, graph) {
-  constant = initMessage->is_float(0) ? initMessage->get_float(0) : 0.0f;
+MessageSpigot::MessageSpigot(pd::Message *init_message, PdGraph *graph) : message::Object(2, 1, graph) {
+  constant = init_message->is_float(0) ? init_message->get_float(0) : 0.0f;
 }
 
 MessageSpigot::~MessageSpigot() {
   // nothing to do
 }
 
-void MessageSpigot::processMessage(int inletIndex, PdMessage *message) {
-  switch (inletIndex) {
+void MessageSpigot::process_message(int inlet_index, pd::Message *message) {
+  switch (inlet_index) {
     case 0: {
       if (constant != 0.0f) {
-        sendMessage(0, message); // if the spigot is on, pass on the message
+        send_message(0, message); // if the spigot is on, pass on the message
       }
       break;
     }

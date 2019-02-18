@@ -23,11 +23,11 @@
 #include "ArrayArithmetic.h"
 #include "DspImplicitAdd.h"
 
-MessageObject *DspImplicitAdd::newObject(PdMessage *initMessage, PdGraph *graph) {
-  return new DspImplicitAdd(initMessage, graph);
+message::Object *DspImplicitAdd::new_object(pd::Message *init_message, PdGraph *graph) {
+  return new DspImplicitAdd(init_message, graph);
 }
 
-DspImplicitAdd::DspImplicitAdd(PdMessage *initMessage, PdGraph *graph) : DspObject(0, 2, 0, 1, graph) {
+DspImplicitAdd::DspImplicitAdd(pd::Message *init_message, PdGraph *graph) : DspObject(0, 2, 0, 1, graph) {
   processFunction = &processSignal;
 }
 

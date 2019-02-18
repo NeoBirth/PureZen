@@ -22,11 +22,11 @@
 
 #include "MessagePowToDb.h"
 
-MessageObject *MessagePowToDb::newObject(PdMessage *initMessage, PdGraph *graph) {
-  return new MessagePowToDb(initMessage, graph);
+message::Object *MessagePowToDb::new_object(pd::Message *init_message, PdGraph *graph) {
+  return new MessagePowToDb(init_message, graph);
 }
 
-MessagePowToDb::MessagePowToDb(PdMessage *initMessage, PdGraph *graph) : MessageObject(1, 1, graph) {
+MessagePowToDb::MessagePowToDb(pd::Message *init_message, PdGraph *graph) : message::Object(1, 1, graph) {
   // nothing to do
 }
 
@@ -34,12 +34,12 @@ MessagePowToDb::~MessagePowToDb() {
   // nothing to do
 }
 
-void MessagePowToDb::processMessage(int inletIndex, PdMessage *message) {
+void MessagePowToDb::process_message(int inlet_index, pd::Message *message) {
   if (message->is_float(0)) {
-    PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(1);
+    pd::Message *outgoing_message = PD_MESSAGE_ON_STACK(1);
     float f = message->get_float(0);
-    outgoingMessage->initWithTimestampAndFloat(message->get_timestamp(),
+    outgoing_message->from_timestamp_and_float(message->get_timestamp(),
         (f <= 0.0f) ? 0.0f : 100.0f + 10.0f * log10f(f));
-    sendMessage(0, outgoingMessage);
+    send_message(0, outgoing_message);
   }
 }

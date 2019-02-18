@@ -28,8 +28,8 @@
 class DspDivide : public DspObject {
 
   public:
-    static MessageObject *newObject(PdMessage *initMessage, PdGraph *graph);
-    DspDivide(PdMessage *initMessage, PdGraph *graph);
+    static MessageObject *new_object(PdMessage *init_message, PdGraph *graph);
+    DspDivide(PdMessage *init_message, PdGraph *graph);
     ~DspDivide();
 
     static const char *getObjectLabel();
@@ -38,9 +38,9 @@ class DspDivide : public DspObject {
   private:
     static void processSignal(DspObject *dspObject, int fromIndex, int toIndex);
     static void processScalar(DspObject *dspObject, int fromIndex, int toIndex);
-    void processMessage(int inletIndex, PdMessage *message);
+    void process_message(int inlet_index, PdMessage *message);
   
-    void onInletConnectionUpdate(unsigned int inletIndex);
+    void onInletConnectionUpdate(unsigned int inlet_index);
   
     float constant;
 };

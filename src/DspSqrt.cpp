@@ -23,11 +23,11 @@
 #include "DspSqrt.h"
 #include "PdGraph.h"
 
-MessageObject *DspSqrt::newObject(PdMessage *initMessage, PdGraph *graph) {
-  return new DspSqrt(initMessage, graph);
+message::Object *DspSqrt::new_object(pd::Message *init_message, PdGraph *graph) {
+  return new DspSqrt(init_message, graph);
 }
 
-DspSqrt::DspSqrt(PdMessage *initMessage, PdGraph *graph) : DspObject(0, 1, 0, 1, graph) {
+DspSqrt::DspSqrt(pd::Message *init_message, PdGraph *graph) : DspObject(0, 1, 0, 1, graph) {
   processFunction = &processSignal;
 }
 

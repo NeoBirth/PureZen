@@ -24,25 +24,25 @@
 #include "DspDelayWrite.h"
 #include "PdGraph.h"
 
-MessageObject *DspDelayWrite::newObject(PdMessage *initMessage, PdGraph *graph) {
-  return new DspDelayWrite(initMessage, graph);
+message::Object *DspDelayWrite::new_object(pd::Message *init_message, PdGraph *graph) {
+  return new DspDelayWrite(init_message, graph);
 }
 
-DspDelayWrite::DspDelayWrite(PdMessage *initMessage, PdGraph *graph) : DspObject(0, 1, 0, 0, graph) {
-  if (initMessage->is_symbol(0) && initMessage->is_float(1)) {
-    bufferLength = (int) ceilf(utils::millisecondsToSamples(initMessage->get_float(1), 
+DspDelayWrite::DspDelayWrite(pd::Message *init_message, PdGraph *graph) : DspObject(0, 1, 0, 0, graph) {
+  if (init_message->is_symbol(0) && init_message->is_float(1)) {
+    bufferLength = (int) ceilf(utils::millisecondsToSamples(init_message->get_float(1), 
         graph->getSampleRate())); 
-    if (bufferLength % blockSizeInt != 0) {
-      bufferLength = ((bufferLength/blockSizeInt)+2) * blockSizeInt;
+    if (bufferLength % block_sizeInt != 0) {
+      bufferLength = ((bufferLength/block_sizeInt)+2) * block_sizeInt;
     } else {
-      bufferLength += blockSizeInt;
+      bufferLength += block_sizeInt;
     }
     headIndex = 0;
     // buffer[bufferLength] == buffer[0], which makes calculation in vd~ easier
     int numBufferLengthBytes = (bufferLength+1)*sizeof(float);
     dspBufferAtOutlet[0] = ALLOC_ALIGNED_BUFFER(numBufferLengthBytes);
     memset(dspBufferAtOutlet[0], 0, numBufferLengthBytes); // zero the delay buffer
-    name = utils::copy_string(initMessage->get_symbol(0));
+    name = utils::copy_string(init_message->get_symbol(0));
   } else {
     graph->printErr("ERROR: delwrite~ must be initialised as [delwrite~ name delay].");
     headIndex = 0;

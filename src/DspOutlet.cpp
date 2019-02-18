@@ -24,7 +24,7 @@
 #include "DspOutlet.h"
 #include "PdGraph.h"
 
-MessageObject *DspOutlet::newObject(PdMessage *initMessage, PdGraph *graph) {
+message::Object *DspOutlet::new_object(pd::Message *init_message, PdGraph *graph) {
   return new DspOutlet(graph);
 }
 
@@ -36,20 +36,20 @@ DspOutlet::~DspOutlet() {
   // nothing to do
 }
 
-float *DspOutlet::getDspBufferAtOutlet(int outletIndex) {
+float *DspOutlet::getDspBufferAtOutlet(int outlet_index) {
   return (dspBufferAtInlet[0] == NULL) ? graph->getBufferPool()->getZeroBuffer() : dspBufferAtInlet[0];
 }
 
-void DspOutlet::setDspBufferAtInlet(float *buffer, unsigned int inletIndex) {
-  DspObject::setDspBufferAtInlet(buffer, inletIndex);
+void DspOutlet::setDspBufferAtInlet(float *buffer, unsigned int inlet_index) {
+  DspObject::setDspBufferAtInlet(buffer, inlet_index);
   
   // additionally reserve buffer to account for outgoing connections
   graph->getBufferPool()->reserveBuffer(buffer, outgoingDspConnections[0].size());
   
   // when the dsp buffer updates at a given inlet, inform all receiving objects
-  list<ObjectLetPair> dspConnections = outgoingDspConnections[0];
-  for (list<ObjectLetPair>::iterator it = dspConnections.begin(); it != dspConnections.end(); ++it) {
-    ObjectLetPair letPair = *it;
+  list<Connection> dspConnections = outgoingDspConnections[0];
+  for (list<Connection>::iterator it = dspConnections.begin(); it != dspConnections.end(); ++it) {
+    Connection letPair = *it;
     DspObject *dspObject = reinterpret_cast<DspObject *>(letPair.first);
     dspObject->setDspBufferAtInlet(dspBufferAtInlet[0], letPair.second);
   }

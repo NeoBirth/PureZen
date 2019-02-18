@@ -29,15 +29,15 @@
 class MessageSamplerate : public MessageObject {
   
   public:
-    static MessageObject *newObject(PdMessage *initMessage, PdGraph *graph);
-    MessageSamplerate(PdMessage *initMessage, PdGraph *graph);
+    static MessageObject *new_object(PdMessage *init_message, PdGraph *graph);
+    MessageSamplerate(PdMessage *init_message, PdGraph *graph);
     ~MessageSamplerate();
     
     static const char *getObjectLabel();
     std::string toString();
     
   private:
-    void processMessage(int inletIndex, PdMessage *message);
+    void process_message(int inlet_index, PdMessage *message);
 };
 
 inline const char *MessageSamplerate::getObjectLabel() {

@@ -22,11 +22,11 @@
 
 #include "MessageCosine.h"
 
-MessageObject *MessageCosine::newObject(PdMessage *initMessage, PdGraph *graph) {
-  return new MessageCosine(initMessage, graph);
+message::Object *MessageCosine::new_object(pd::Message *init_message, PdGraph *graph) {
+  return new MessageCosine(init_message, graph);
 }
 
-MessageCosine::MessageCosine(PdMessage *initMessage, PdGraph *graph) : MessageObject(1, 1, graph) {
+MessageCosine::MessageCosine(pd::Message *init_message, PdGraph *graph) : message::Object(1, 1, graph) {
   // nothing to do
 }
 
@@ -34,10 +34,10 @@ MessageCosine::~MessageCosine() {
   // nothing to do
 }
 
-void MessageCosine::processMessage(int inletIndex, PdMessage *message) {
+void MessageCosine::process_message(int inlet_index, pd::Message *message) {
   if (message->is_float(0)) {
-    PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(1);
-    outgoingMessage->initWithTimestampAndFloat(message->get_timestamp(), cosf(message->get_float(0)));
-    sendMessage(0, outgoingMessage);
+    pd::Message *outgoing_message = PD_MESSAGE_ON_STACK(1);
+    outgoing_message->from_timestamp_and_float(message->get_timestamp(), cosf(message->get_float(0)));
+    send_message(0, outgoing_message);
   }
 }

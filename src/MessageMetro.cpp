@@ -23,13 +23,13 @@
 #include "MessageMetro.h"
 #include "PdGraph.h"
 
-MessageObject *MessageMetro::newObject(PdMessage *initMessage, PdGraph *graph) {
-  return new MessageMetro(initMessage, graph);
+message::Object *MessageMetro::new_object(pd::Message *init_message, PdGraph *graph) {
+  return new MessageMetro(init_message, graph);
 }
 
-MessageMetro::MessageMetro(PdMessage *initMessage, PdGraph *graph) : MessageObject(2, 1, graph) {
+MessageMetro::MessageMetro(pd::Message *init_message, PdGraph *graph) : message::Object(2, 1, graph) {
   // default to interval of one second
-  intervalInMs = initMessage->is_float(0) ? (double) initMessage->get_float(0) : 1000.0;
+  intervalInMs = init_message->is_float(0) ? (double) init_message->get_float(0) : 1000.0;
   pendingMessage = NULL;
 }
 
@@ -43,8 +43,8 @@ string MessageMetro::toString() {
   return string(str);
 }
 
-void MessageMetro::processMessage(int inletIndex, PdMessage *message) {
-  switch (inletIndex) {
+void MessageMetro::process_message(int inlet_index, pd::Message *message) {
+  switch (inlet_index) {
     case 0: {
       switch (message->get_type(0)) {
         case FLOAT: {
@@ -80,14 +80,14 @@ void MessageMetro::processMessage(int inletIndex, PdMessage *message) {
   }
 }
 
-void MessageMetro::sendMessage(int outletIndex, PdMessage *message) {
+void MessageMetro::send_message(int outlet_index, pd::Message *message) {
   // schedule the pending message before the current one is sent so that if a stop message
   // arrives at this object while in this function, then the next message can be cancelled
   pendingMessage = PD_MESSAGE_ON_STACK(1);
-  pendingMessage->initWithTimestampAndBang(message->get_timestamp() + intervalInMs);
-  pendingMessage = graph->scheduleMessage(this, 0, pendingMessage);
+  pendingMessage->from_timestamp_and_bang(message->get_timestamp() + intervalInMs);
+  pendingMessage = graph->schedule_message(this, 0, pendingMessage);
 
-  MessageObject::sendMessage(outletIndex, message);
+  message::Object::send_message(outlet_index, message);
 }
 
 void MessageMetro::startMetro(double timestamp) {
@@ -96,9 +96,9 @@ void MessageMetro::startMetro(double timestamp) {
   // recently received bang.
   stopMetro();
 
-  PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(1);
-  outgoingMessage->initWithTimestampAndBang(timestamp);
-  sendMessage(0, outgoingMessage);
+  pd::Message *outgoing_message = PD_MESSAGE_ON_STACK(1);
+  outgoing_message->from_timestamp_and_bang(timestamp);
+  send_message(0, outgoing_message);
 }
 
 void MessageMetro::stopMetro() {

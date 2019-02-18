@@ -23,48 +23,48 @@
 #include "MessagePipe.h"
 #include "PdGraph.h"
 
-MessageObject *MessagePipe::newObject(PdMessage *initMessage, PdGraph *graph) {
-  return new MessagePipe(initMessage, graph);
+message::Object *MessagePipe::new_object(pd::Message *init_message, PdGraph *graph) {
+  return new MessagePipe(init_message, graph);
 }
 
-MessagePipe::MessagePipe(PdMessage *initMessage, PdGraph *graph) : MessageObject(2, 1, graph) {
-  delayMs = initMessage->is_float(0) ? (double) initMessage->get_float(0) : 0.0;
+MessagePipe::MessagePipe(pd::Message *init_message, PdGraph *graph) : message::Object(2, 1, graph) {
+  delayMs = init_message->is_float(0) ? (double) init_message->get_float(0) : 0.0;
 }
 
 MessagePipe::~MessagePipe() {
   // nothing to do
 }
 
-bool MessagePipe::shouldDistributeMessageToInlets() {
+bool MessagePipe::should_distribute_message_to_inlets() {
   return false;
 }
 
-void MessagePipe::sendMessage(int outletIndex, PdMessage *message) {
+void MessagePipe::send_message(int outlet_index, pd::Message *message) {
   // remove the scheduled message from the list before it is sent
   scheduledMessagesList.remove(message);
-  MessageObject::sendMessage(outletIndex, message);
+  message::Object::send_message(outlet_index, message);
 }
 
-void MessagePipe::processMessage(int inletIndex, PdMessage *message) {
-  switch (inletIndex) {
+void MessagePipe::process_message(int inlet_index, pd::Message *message) {
+  switch (inlet_index) {
     case 0: {
       switch (message->get_type(0)) {
         case SYMBOL: {
           if (message->is_symbol_str(0, "flush")) {
             // cancel all scheduled messages and send them immediately
-            for(list<PdMessage *>::iterator it = scheduledMessagesList.begin();
+            for(list<pd::Message *>::iterator it = scheduledMessagesList.begin();
                 it != scheduledMessagesList.end(); it++) {
-              // send the message using the super class's sendMessage because otherwise the
+              // send the message using the super class's send_message because otherwise the
               // list will be changed while iterating over it. Leads to badness.
               (*it)->set_timestamp(message->get_timestamp());
-              MessageObject::sendMessage(0, *it);
+              message::Object::send_message(0, *it);
               graph->cancelMessage(this, 0, *it); // cancel the scheduled message and free it from memory
             }
             scheduledMessagesList.clear();
             break;
           } else if (message->is_symbol_str(0, "clear")) {
             // cancel all scheduled messages
-            for(list<PdMessage *>::iterator it = scheduledMessagesList.begin();
+            for(list<pd::Message *>::iterator it = scheduledMessagesList.begin();
                 it != scheduledMessagesList.end(); it++) {
               graph->cancelMessage(this, 0, *it);
             }
@@ -77,10 +77,10 @@ void MessagePipe::processMessage(int inletIndex, PdMessage *message) {
         case BANG: {
           // copy the message, update the timestamp, schedule it to be sent later
           int numElements = message->get_num_elements();
-          PdMessage *scheduledMessage = PD_MESSAGE_ON_STACK(numElements);
+          pd::Message *scheduledMessage = PD_MESSAGE_ON_STACK(numElements);
           scheduledMessage->from_timestamp(message->get_timestamp() + delayMs, numElements);
           memcpy(scheduledMessage->get_element(0), message->get_element(0), numElements * sizeof(pd::message::Atom));
-          scheduledMessagesList.push_back(graph->scheduleMessage(this, 0, scheduledMessage));
+          scheduledMessagesList.push_back(graph->schedule_message(this, 0, scheduledMessage));
           break;
         }
         default: {

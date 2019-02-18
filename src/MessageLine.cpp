@@ -25,13 +25,13 @@
 
 #define DEFAULT_GRAIN_RATE 20.0 // 20ms
 
-MessageObject *MessageLine::newObject(PdMessage *initMessage, PdGraph *graph) {
-  return new MessageLine(initMessage, graph);
+message::Object *MessageLine::new_object(pd::Message *init_message, PdGraph *graph) {
+  return new MessageLine(init_message, graph);
 }
 
-MessageLine::MessageLine(PdMessage *initMessage, PdGraph *graph) : MessageObject(2, 1, graph) {
-  currentValue = initMessage->is_float(0) ? initMessage->get_float(0) : 0.0f;
-  grainRate = initMessage->is_float(1) ? (double) initMessage->get_float(1) : DEFAULT_GRAIN_RATE;
+MessageLine::MessageLine(pd::Message *init_message, PdGraph *graph) : message::Object(2, 1, graph) {
+  currentValue = init_message->is_float(0) ? init_message->get_float(0) : 0.0f;
+  grainRate = init_message->is_float(1) ? (double) init_message->get_float(1) : DEFAULT_GRAIN_RATE;
   slope = 0.0f;
   pendingMessage = NULL;
   lastMessageTimestamp = 0.0;
@@ -42,8 +42,8 @@ MessageLine::~MessageLine() {
   // nothing to do
 }
 
-void MessageLine::processMessage(int inletIndex, PdMessage *message) {
-  switch (inletIndex) {
+void MessageLine::process_message(int inlet_index, pd::Message *message) {
+  switch (inlet_index) {
     case 0: {
       switch (message->get_num_elements()) {
         case 1: {
@@ -55,9 +55,9 @@ void MessageLine::processMessage(int inletIndex, PdMessage *message) {
 
             // jump to the given value
             lastMessageTimestamp = message->get_timestamp();
-            PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(1);
-            outgoingMessage->initWithTimestampAndFloat(message->get_timestamp(), currentValue);
-            sendMessage(0, outgoingMessage);
+            pd::Message *outgoing_message = PD_MESSAGE_ON_STACK(1);
+            outgoing_message->from_timestamp_and_float(message->get_timestamp(), currentValue);
+            send_message(0, outgoing_message);
           } else if (message->is_symbol_set(0, "stop")) {
             cancelPendingMessage();
           }
@@ -76,15 +76,15 @@ void MessageLine::processMessage(int inletIndex, PdMessage *message) {
             }
             slope = (targetValue - currentValue) / duration;
 
-            // cancel any previous pending messages. The next message will be scheduled in sendMessage()
+            // cancel any previous pending messages. The next message will be scheduled in send_message()
             cancelPendingMessage();
 
             if (slope != 0.0f) {
               // send the current message (if the slope isn't flat)
               lastMessageTimestamp = message->get_timestamp();
-              PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(1);
-              outgoingMessage->initWithTimestampAndFloat(message->get_timestamp(), currentValue);
-              sendMessage(0, outgoingMessage);
+              pd::Message *outgoing_message = PD_MESSAGE_ON_STACK(1);
+              outgoing_message->from_timestamp_and_float(message->get_timestamp(), currentValue);
+              send_message(0, outgoing_message);
             }
           } else if (message->is_symbol_str(0, "set") && message->is_float(1)) {
             cancelPendingMessage();
@@ -121,15 +121,15 @@ void MessageLine::cancelPendingMessage() {
   }
 }
 
-void MessageLine::sendMessage(int outletIndex, PdMessage *message) {
+void MessageLine::send_message(int outlet_index, pd::Message *message) {
   // now that this message is being sent, the current value of this [line] object is certain
   currentValue = message->get_float(0);
   if (slope > 0.0f) {
     if (currentValue < targetValue) {
       pendingMessage = PD_MESSAGE_ON_STACK(1);
-      pendingMessage->initWithTimestampAndFloat(message->get_timestamp() + grainRate,
+      pendingMessage->from_timestamp_and_float(message->get_timestamp() + grainRate,
           currentValue + slope * grainRate);
-      pendingMessage = graph->scheduleMessage(this, 0, pendingMessage);
+      pendingMessage = graph->schedule_message(this, 0, pendingMessage);
     } else { // currentValue >= targetValue
       // in case the current value is greater than the target value, due to floating-point precision error
       currentValue = targetValue;
@@ -139,9 +139,9 @@ void MessageLine::sendMessage(int outletIndex, PdMessage *message) {
   } else if (slope < 0.0f) {
     if (currentValue > targetValue) {
       pendingMessage = PD_MESSAGE_ON_STACK(1);
-      pendingMessage->initWithTimestampAndFloat(message->get_timestamp() + grainRate,
+      pendingMessage->from_timestamp_and_float(message->get_timestamp() + grainRate,
           currentValue + slope * grainRate);
-      pendingMessage = graph->scheduleMessage(this, 0, pendingMessage);
+      pendingMessage = graph->schedule_message(this, 0, pendingMessage);
     } else { // currentValue <= targetValue
       currentValue = targetValue;
       message->set_float(0, currentValue);
@@ -151,5 +151,5 @@ void MessageLine::sendMessage(int outletIndex, PdMessage *message) {
   // do nothing if slope == 0.0f (i.e., flat)
 
   lastMessageTimestamp = message->get_timestamp();
-  MessageObject::sendMessage(outletIndex, message);
+  message::Object::send_message(outlet_index, message);
 }

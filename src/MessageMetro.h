@@ -31,17 +31,17 @@ class PdGraph;
 class MessageMetro : public MessageObject {
   
   public:
-    static MessageObject *newObject(PdMessage *initMessage, PdGraph *graph);
-    MessageMetro(PdMessage *initMessage, PdGraph *graph);
+    static MessageObject *new_object(PdMessage *init_message, PdGraph *graph);
+    MessageMetro(PdMessage *init_message, PdGraph *graph);
     ~MessageMetro();
   
     static const char *getObjectLabel();
     std::string toString();
   
-    void sendMessage(int outletIndex, PdMessage *message);
+    void sendMessage(int outlet_index, PdMessage *message);
     
   private:
-    void processMessage(int inletIndex, PdMessage *message);
+    void process_message(int inlet_index, PdMessage *message);
   
     /* Cancels the current <code>pendingMessage</code>. */
     void stopMetro();

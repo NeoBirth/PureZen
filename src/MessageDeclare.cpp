@@ -22,13 +22,13 @@
 
 #include "MessageDeclare.h"
 
-MessageObject *MessageDeclare::newObject(PdMessage *initMessage, PdGraph *graph) {
-  return new MessageDeclare(initMessage, graph);
+message::Object *MessageDeclare::new_object(pd::Message *init_message, PdGraph *graph) {
+  return new MessageDeclare(init_message, graph);
 }
 
-MessageDeclare::MessageDeclare(PdMessage *initMessage, PdGraph *graph) : MessageObject(0, 0, graph) {
-  target = initMessage->is_symbol(0) ? utils::copy_string(initMessage->get_symbol(0)) : NULL;
-  argument = initMessage->is_symbol(1) ? utils::copy_string(initMessage->get_symbol(1)) : NULL;
+MessageDeclare::MessageDeclare(pd::Message *init_message, PdGraph *graph) : message::Object(0, 0, graph) {
+  target = init_message->is_symbol(0) ? utils::copy_string(init_message->get_symbol(0)) : NULL;
+  argument = init_message->is_symbol(1) ? utils::copy_string(init_message->get_symbol(1)) : NULL;
 }
 
 MessageDeclare::~MessageDeclare() {

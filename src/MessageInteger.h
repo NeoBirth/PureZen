@@ -29,8 +29,8 @@
 class MessageInteger : public MessageObject {
 
   public:
-    static MessageObject *newObject(PdMessage *initMessage, PdGraph *graph);
-    MessageInteger(PdMessage *initMessage, PdGraph *graph);
+    static MessageObject *new_object(PdMessage *init_message, PdGraph *graph);
+    MessageInteger(PdMessage *init_message, PdGraph *graph);
     ~MessageInteger();
 
     static const char *getObjectLabel();
@@ -38,7 +38,7 @@ class MessageInteger : public MessageObject {
 
   private:
     void init(float constant);
-    void processMessage(int inletIndex, PdMessage *message);
+    void process_message(int inlet_index, PdMessage *message);
 
     float constant;
 };

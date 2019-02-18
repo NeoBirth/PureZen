@@ -25,12 +25,12 @@
 
 class PdGraph;
 
-MessageObject *DspMultiply::newObject(PdMessage *initMessage, PdGraph *graph) {
-  return new DspMultiply(initMessage, graph);
+message::Object *DspMultiply::new_object(pd::Message *init_message, PdGraph *graph) {
+  return new DspMultiply(init_message, graph);
 }
 
-DspMultiply::DspMultiply(PdMessage *initMessage, PdGraph *graph) : DspObject(2, 2, 0, 1, graph) {
-  constant = initMessage->is_float(0) ? initMessage->get_float(0) : 0.0f;
+DspMultiply::DspMultiply(pd::Message *init_message, PdGraph *graph) : DspObject(2, 2, 0, 1, graph) {
+  constant = init_message->is_float(0) ? init_message->get_float(0) : 0.0f;
   inputConstant = 0.0f;
   processFunctionNoMessage = &processScalar;
 }
@@ -46,7 +46,7 @@ string DspMultiply::toString() {
   return string(str);
 }
 
-void DspMultiply::onInletConnectionUpdate(unsigned int inletIndex) {
+void DspMultiply::onInletConnectionUpdate(unsigned int inlet_index) {
   if (incomingDspConnections[0].size() > 0 && incomingDspConnections[1].size() > 0) {
     processFunction = &processSignal;
   } else {
@@ -56,8 +56,8 @@ void DspMultiply::onInletConnectionUpdate(unsigned int inletIndex) {
   }
 }
 
-void DspMultiply::processMessage(int inletIndex, PdMessage *message) {
-  switch (inletIndex) {
+void DspMultiply::process_message(int inlet_index, pd::Message *message) {
+  switch (inlet_index) {
     case 0: if (message->is_float(0)) inputConstant = message->get_float(0); break;
     case 1: if (message->is_float(0)) constant = message->get_float(0); break;
     default: break;

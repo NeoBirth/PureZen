@@ -2,7 +2,7 @@
  *  Copyright 2010,2012 Reality Jockey, Ltd.
  *                 info@rjdj.me
  *                 http://rjdj.me/
- * 
+ *
  *  This file is part of ZenGarden.
  *
  *  ZenGarden is free software: you can redistribute it and/or modify
@@ -14,7 +14,7 @@
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU Lesser General Public License for more details.
- *  
+ *
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with ZenGarden.  If not, see <http://www.gnu.org/licenses/>.
  *
@@ -27,17 +27,17 @@
 
 /** [bang~] */
 class DspBang : public DspObject {
-  
+
   public:
-    static MessageObject *newObject(PdMessage *initMessage, PdGraph *graph);
-    DspBang(PdMessage *initMessage, PdGraph *graph);
+    static MessageObject *new_object(PdMessage *init_message, PdGraph *graph);
+    DspBang(PdMessage *init_message, PdGraph *graph);
     ~DspBang();
-    
+
     static const char *getObjectLabel();
     std::string toString();
-  
-    ConnectionType getConnectionType(int outletIndex) { return MESSAGE; }
-    
+
+    connection::Type get_connection_type(int outlet_index) { return MESSAGE; }
+
   private:
     static void processDsp(DspObject *dspObject, int fromIndex, int toIndex);
 };

@@ -28,13 +28,13 @@
 class DspDelayWrite : public DspObject {
   
   public:
-    static MessageObject *newObject(PdMessage *initMessage, PdGraph *graph);
-    DspDelayWrite(PdMessage *initMessage, PdGraph *graph);
+    static MessageObject *new_object(PdMessage *init_message, PdGraph *graph);
+    DspDelayWrite(PdMessage *init_message, PdGraph *graph);
     ~DspDelayWrite();
   
     static const char *getObjectLabel();
     std::string toString();
-    ObjectType getObjectType();
+    object::Type get_object_type();
   
     const char *getName();
   
@@ -60,7 +60,7 @@ inline const char *DspDelayWrite::getObjectLabel() {
   return "delwrite~";
 }
 
-inline ObjectType DspDelayWrite::getObjectType() {
+inline object::Type DspDelayWrite::get_object_type() {
   return DSP_DELAY_WRITE;
 }
   

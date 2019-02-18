@@ -29,15 +29,15 @@
 class DspSend : public DspObject {
   
   public:
-    static MessageObject *newObject(PdMessage *initMessage, PdGraph *graph);
-    DspSend(PdMessage *initMessage, PdGraph *graph);
+    static MessageObject *new_object(PdMessage *init_message, PdGraph *graph);
+    DspSend(PdMessage *init_message, PdGraph *graph);
     ~DspSend();
     
     const char *getName();
     static const char *getObjectLabel();
     std::string toString();
   
-    ObjectType getObjectType();
+    object::Type get_object_type();
     
   private:
     static void processSignal(DspObject *dspObject, int fromIndex, int toIndex);
@@ -57,7 +57,7 @@ inline const char *DspSend::getObjectLabel() {
   return "send~";
 }
 
-inline ObjectType DspSend::getObjectType() {
+inline object::Type DspSend::get_object_type() {
   return DSP_SEND;
 }
 

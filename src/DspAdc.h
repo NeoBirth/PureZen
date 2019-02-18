@@ -28,7 +28,7 @@
 class DspAdc : public DspObject {
   
   public:
-    static MessageObject *newObject(PdMessage *initMessage, PdGraph *graph);
+    static MessageObject *new_object(PdMessage *init_message, PdGraph *graph);
     DspAdc(PdGraph *graph);
     ~DspAdc();
   
@@ -39,9 +39,9 @@ class DspAdc : public DspObject {
     // in the dsp list
     bool doesProcessAudio() { return false; }
   
-    bool canSetBufferAtOutlet(unsigned int outletIndex) { return false; }
+    bool canSetBufferAtOutlet(unsigned int outlet_index) { return false; }
   
-    float *getDspBufferAtOutlet(int outletIndex);
+    float *getDspBufferAtOutlet(int outlet_index);
 };
 
 inline const char *DspAdc::getObjectLabel() {

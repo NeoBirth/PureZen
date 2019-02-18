@@ -27,12 +27,12 @@
 float *DspOsc::cos_table = NULL;
 int DspOsc::refCount = 0;
 
-MessageObject *DspOsc::newObject(PdMessage *initMessage, PdGraph *graph) {
-  return new DspOsc(initMessage, graph);
+message::Object *DspOsc::new_object(pd::Message *init_message, PdGraph *graph) {
+  return new DspOsc(init_message, graph);
 }
 
-DspOsc::DspOsc(PdMessage *initMessage, PdGraph *graph) : DspObject(2, 2, 0, 1, graph) {
-  frequency = initMessage->is_float(0) ? initMessage->get_float(0) : 0.0f;
+DspOsc::DspOsc(pd::Message *init_message, PdGraph *graph) : DspObject(2, 2, 0, 1, graph) {
+  frequency = init_message->is_float(0) ? init_message->get_float(0) : 0.0f;
   sampleStep = frequency * 65536.0f / graph->getSampleRate();
   #if __SSE3__
   short step = (short) roundf(sampleStep);
@@ -60,7 +60,7 @@ DspOsc::~DspOsc() {
   }
 }
 
-void DspOsc::onInletConnectionUpdate(unsigned int inletIndex) {
+void DspOsc::onInletConnectionUpdate(unsigned int inlet_index) {
   // TODO(mhroth): support this with processSignal
 }
 
@@ -70,8 +70,8 @@ string DspOsc::toString() {
   return string(str);
 }
 
-void DspOsc::processMessage(int inletIndex, PdMessage *message) {
-  switch (inletIndex) {
+void DspOsc::process_message(int inlet_index, pd::Message *message) {
+  switch (inlet_index) {
     case 0: { // update the frequency
       if (message->is_float(0)) {
         frequency = fabsf(message->get_float(0));

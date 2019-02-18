@@ -29,13 +29,13 @@
 class MessageTable : public RemoteMessageReceiver {
   
   public:
-    static MessageObject *newObject(PdMessage *initMessage, PdGraph *graph);
-    MessageTable(PdMessage *initMessage, PdGraph *graph);
+    static MessageObject *new_object(PdMessage *init_message, PdGraph *graph);
+    MessageTable(PdMessage *init_message, PdGraph *graph);
     ~MessageTable();
   
     static const char *getObjectLabel();
     std::string toString();
-    ObjectType getObjectType();
+    object::Type get_object_type();
   
     /** Get a pointer to the table's buffer. */
     float *getBuffer(int *bufferLength);
@@ -49,7 +49,7 @@ class MessageTable : public RemoteMessageReceiver {
   
   private:
     // tables can receive sent messages
-    void processMessage(int inletIndex, PdMessage *message);
+    void process_message(int inlet_index, PdMessage *message);
   
     float *buffer;
     int bufferLength;
@@ -59,7 +59,7 @@ inline const char *MessageTable::getObjectLabel() {
   return "table";
 }
 
-inline ObjectType MessageTable::getObjectType() {
+inline object::Type MessageTable::get_object_type() {
   return MESSAGE_TABLE;
 }
 

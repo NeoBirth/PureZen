@@ -22,21 +22,21 @@
 
 #include "MessageSwap.h"
 
-MessageObject *MessageSwap::newObject(PdMessage *initMessage, PdGraph *graph) {
-  return new MessageSwap(initMessage, graph);
+message::Object *MessageSwap::new_object(pd::Message *init_message, PdGraph *graph) {
+  return new MessageSwap(init_message, graph);
 }
 
-MessageSwap::MessageSwap(PdMessage *initMessage, PdGraph *graph) : MessageObject(2, 2, graph) {
+MessageSwap::MessageSwap(pd::Message *init_message, PdGraph *graph) : message::Object(2, 2, graph) {
   left = 0.0f;
-  right = initMessage->is_float(0) ? initMessage->get_float(0) : 0.0f;
+  right = init_message->is_float(0) ? init_message->get_float(0) : 0.0f;
 }
 
 MessageSwap::~MessageSwap() {
   // nothing to do
 }
 
-void MessageSwap::processMessage(int inletIndex, PdMessage *message) {
-  switch (inletIndex) {
+void MessageSwap::process_message(int inlet_index, pd::Message *message) {
+  switch (inlet_index) {
     case 0: {
       switch (message->get_type(0)) {
         case FLOAT: {
@@ -44,12 +44,12 @@ void MessageSwap::processMessage(int inletIndex, PdMessage *message) {
           // allow fallthrough
         }
         case BANG: {
-          PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(1);
-          outgoingMessage->initWithTimestampAndFloat(message->get_timestamp(), left);
-          sendMessage(1, outgoingMessage); // send a message from outlet 1
+          pd::Message *outgoing_message = PD_MESSAGE_ON_STACK(1);
+          outgoing_message->from_timestamp_and_float(message->get_timestamp(), left);
+          send_message(1, outgoing_message); // send a message from outlet 1
           
-          outgoingMessage->initWithTimestampAndFloat(message->get_timestamp(), right);
-          sendMessage(0, outgoingMessage); // send a message from outlet 0
+          outgoing_message->from_timestamp_and_float(message->get_timestamp(), right);
+          send_message(0, outgoing_message); // send a message from outlet 0
           break;
         }
         default: {

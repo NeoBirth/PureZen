@@ -25,13 +25,13 @@
 
 class PdGraph;
 
-MessageObject *DspClip::newObject(PdMessage *initMessage, PdGraph *graph) {
-  return new DspClip(initMessage, graph);
+message::Object *DspClip::new_object(pd::Message *init_message, PdGraph *graph) {
+  return new DspClip(init_message, graph);
 }
 
-DspClip::DspClip(PdMessage *initMessage, PdGraph *graph) : DspObject(3, 1, 0, 1, graph) {
-  lowerBound = initMessage->is_float(0) ? initMessage->get_float(0) : -1.0f;
-  upperBound = initMessage->is_float(1) ? initMessage->get_float(1) : 1.0f;
+DspClip::DspClip(pd::Message *init_message, PdGraph *graph) : DspObject(3, 1, 0, 1, graph) {
+  lowerBound = init_message->is_float(0) ? init_message->get_float(0) : -1.0f;
+  upperBound = init_message->is_float(1) ? init_message->get_float(1) : 1.0f;
   processFunction = &processScalar;
   processFunctionNoMessage = &processScalar;
 }
@@ -46,8 +46,8 @@ std::string DspClip::toString() {
   return str;
 }
 
-void DspClip::processMessage(int inletIndex, PdMessage *message) {
-  switch (inletIndex) {
+void DspClip::process_message(int inlet_index, pd::Message *message) {
+  switch (inlet_index) {
     case 1: if (message->is_float(0)) lowerBound = message->get_float(0); break; // set the lower bound
     case 2: if (message->is_float(0)) upperBound = message->get_float(0); break; // set the upper bound
     default: break;

@@ -29,8 +29,8 @@
 class DspVariableLine : public DspObject {
   
   public:
-    static MessageObject *newObject(PdMessage *initMessage, PdGraph *graph);
-    DspVariableLine(PdMessage *initMessage, PdGraph *graph);
+    static MessageObject *new_object(PdMessage *init_message, PdGraph *graph);
+    DspVariableLine(PdMessage *init_message, PdGraph *graph);
     ~DspVariableLine();
     
     static const char *getObjectLabel();
@@ -40,12 +40,12 @@ class DspVariableLine : public DspObject {
     bool shouldDistributeMessageToInlets();
   
     // override sendMessage in order to update path
-    void sendMessage(int outletIndex, PdMessage *message);
+    void sendMessage(int outlet_index, PdMessage *message);
     
   private:
     static void processSignal(DspObject *dspObject, int fromIndex, int toIndex);
   
-    void processMessage(int inletIndex, PdMessage *message);
+    void process_message(int inlet_index, PdMessage *message);
   
     void clearAllMessagesAtOrAfter(double timestamp);
   

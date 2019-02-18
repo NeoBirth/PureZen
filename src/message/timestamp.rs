@@ -18,7 +18,7 @@
 //
 
 /// Message timestamps
-#[derive(Copy, Clone, Debug, PartialEq, PartialOrd)]
+#[derive(Copy, Clone, Debug, Default, PartialEq, PartialOrd)]
 pub struct Timestamp(pub(crate) f64);
 
 impl From<f64> for Timestamp {
@@ -30,11 +30,5 @@ impl From<f64> for Timestamp {
 impl From<Timestamp> for f64 {
     fn from(ts: Timestamp) -> f64 {
         ts.0
-    }
-}
-
-impl Default for Timestamp {
-    fn default() -> Timestamp {
-        Timestamp(0.0)
     }
 }

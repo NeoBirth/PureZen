@@ -22,40 +22,40 @@
 
 #include "MessageRoute.h"
 
-MessageObject *MessageRoute::newObject(PdMessage *initMessage, PdGraph *graph) {
-  return new MessageRoute(initMessage, graph);
+message::Object *MessageRoute::new_object(pd::Message *init_message, PdGraph *graph) {
+  return new MessageRoute(init_message, graph);
 }
 
-MessageRoute::MessageRoute(PdMessage *initMessage, PdGraph *graph) : 
-    MessageObject(1, initMessage->get_num_elements()+1, graph) {
-  routeMessage = initMessage->clone_on_heap();
+MessageRoute::MessageRoute(pd::Message *init_message, PdGraph *graph) : 
+    message::Object(1, init_message->get_num_elements()+1, graph) {
+  routeMessage = init_message->clone_on_heap();
 }
 
 MessageRoute::~MessageRoute() {
   routeMessage->freeMessage();
 }
 
-void MessageRoute::processMessage(int inletIndex, PdMessage *message) {
+void MessageRoute::process_message(int inlet_index, pd::Message *message) {
   int numRouteChecks = routeMessage->get_num_elements();
-  int outletIndex = numRouteChecks; // by default, send the message out of the right outlet
+  int outlet_index = numRouteChecks; // by default, send the message out of the right outlet
   // find which indicator that message matches
   pd::message::Atom *messageAtom = message->get_element(0);
   for (int i = 0; i < numRouteChecks; i++) {
     if (routeMessage->atom_is_equal_to(i, messageAtom)) {
-      outletIndex = i;
+      outlet_index = i;
       break;
     }
   }
   
-  if (outletIndex == numRouteChecks) {
+  if (outlet_index == numRouteChecks) {
     // no match found, forward on right oulet
-    sendMessage(outletIndex, message);
+    send_message(outlet_index, message);
   } else {
     // construct a new message to send from the given outlet
     int numElements = message->get_num_elements() - 1;
-    PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(numElements);
-    outgoingMessage->from_timestamp(message->get_timestamp(), numElements);
-    memcpy(outgoingMessage->get_element(0), message->get_element(1), numElements*sizeof(pd::message::Atom));
-    sendMessage(outletIndex, outgoingMessage);
+    pd::Message *outgoing_message = PD_MESSAGE_ON_STACK(numElements);
+    outgoing_message->from_timestamp(message->get_timestamp(), numElements);
+    memcpy(outgoing_message->get_element(0), message->get_element(1), numElements*sizeof(pd::message::Atom));
+    send_message(outlet_index, outgoing_message);
   }
 }

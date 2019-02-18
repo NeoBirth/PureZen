@@ -28,7 +28,7 @@
 class DspDac : public DspObject {
   
   public:
-    static MessageObject *newObject(PdMessage *initMessage, PdGraph *graph);
+    static MessageObject *new_object(PdMessage *init_message, PdGraph *graph);
     DspDac(PdGraph *graph);
     ~DspDac();
   

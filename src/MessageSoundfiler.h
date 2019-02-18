@@ -29,15 +29,15 @@
 class MessageSoundfiler : public MessageObject {
   
   public:
-    static MessageObject *newObject(PdMessage *initMessage, PdGraph *graph);
-    MessageSoundfiler(PdMessage *initMessage, PdGraph *pdGraph);
+    static MessageObject *new_object(PdMessage *init_message, PdGraph *graph);
+    MessageSoundfiler(PdMessage *init_message, PdGraph *pdGraph);
     ~MessageSoundfiler();
   
     static const char *getObjectLabel();
     std::string toString();
     
   private:
-    void processMessage(int inletIndex, PdMessage *message);
+    void process_message(int inlet_index, PdMessage *message);
 };
 
 inline const char *MessageSoundfiler::getObjectLabel() {

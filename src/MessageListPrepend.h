@@ -29,14 +29,14 @@
 class MessageListPrepend : public MessageObject {
   
   public:
-    MessageListPrepend(PdMessage *initMessage, PdGraph *graph);
+    MessageListPrepend(PdMessage *init_message, PdGraph *graph);
     ~MessageListPrepend();
     
     static const char *getObjectLabel();
     std::string toString();
     
   private:
-    void processMessage(int inletIndex, PdMessage *message);
+    void process_message(int inlet_index, PdMessage *message);
     
     PdMessage *prependMessage;
 };

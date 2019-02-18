@@ -25,12 +25,12 @@
 
 class PdGraph;
 
-MessageObject *DspSubtract::newObject(PdMessage *initMessage, PdGraph *graph) {
-  return new DspSubtract(initMessage, graph);
+message::Object *DspSubtract::new_object(pd::Message *init_message, PdGraph *graph) {
+  return new DspSubtract(init_message, graph);
 }
 
-DspSubtract::DspSubtract(PdMessage *initMessage, PdGraph *graph) : DspObject(2, 2, 0, 1, graph) {
-  constant = initMessage->is_float(0) ? initMessage->get_float(0) : 0.0f;
+DspSubtract::DspSubtract(pd::Message *init_message, PdGraph *graph) : DspObject(2, 2, 0, 1, graph) {
+  constant = init_message->is_float(0) ? init_message->get_float(0) : 0.0f;
   processFunctionNoMessage = &processScalar;
 }
 
@@ -45,13 +45,13 @@ string DspSubtract::toString() {
   return string(str);
 }
 
-void DspSubtract::onInletConnectionUpdate(unsigned int inletIndex) {
+void DspSubtract::onInletConnectionUpdate(unsigned int inlet_index) {
   processFunction = (incomingDspConnections[0].size() > 0 && incomingDspConnections[1].size() > 0)
       ? &processSignal : processScalar;
 }
 
-void DspSubtract::processMessage(int inletIndex, PdMessage *message) {
-  if (inletIndex == 1) {
+void DspSubtract::process_message(int inlet_index, pd::Message *message) {
+  if (inlet_index == 1) {
     if (message->is_float(0)) constant = message->get_float(0);
   }
 }

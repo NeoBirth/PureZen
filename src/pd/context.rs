@@ -41,23 +41,23 @@
 
 #pragma mark Constructor/Deconstructor
 
-PdContext::PdContext(int numInputChannels, int numOutputChannels, int blockSize, float sampleRate,
+pd::Context::pd::Context(int num_input_channels, int num_output_channels, int block_size, float sample_rate,
     void *(*function)(ZGCallbackFunction, void *, void *), void *userData) {
-  this->numInputChannels = numInputChannels;
-  this->numOutputChannels = numOutputChannels;
-  this->blockSize = blockSize;
-  this->sampleRate = sampleRate;
+  this->num_input_channels = num_input_channels;
+  this->num_output_channels = num_output_channels;
+  this->block_size = block_size;
+  this->sample_rate = sample_rate;
   callbackFunction = function;
   callbackUserData = userData;
   blockStartTimestamp = 0.0;
-  blockDurationMs = ((double) blockSize / (double) sampleRate) * 1000.0;
+  blockDurationMs = ((double) block_size / (double) sample_rate) * 1000.0;
   messageCallbackQueue = new OrderedMessageQueue();
   objectFactoryMap = new ObjectFactoryMap();
-  globalGraphId = 0;
-  bufferPool = new BufferPool(blockSize);
+  global_graph_id = 0;
+  bufferPool = new BufferPool(block_size);
 
-  numBytesInInputBuffers = blockSize * numInputChannels * sizeof(float);
-  numBytesInOutputBuffers = blockSize * numOutputChannels * sizeof(float);
+  numBytesInInputBuffers = block_size * num_input_channels * sizeof(float);
+  numBytesInOutputBuffers = block_size * num_output_channels * sizeof(float);
   globalDspInputBuffers = (numBytesInInputBuffers > 0) ? ALLOC_ALIGNED_BUFFER(numBytesInInputBuffers) : NULL;
   memset(globalDspInputBuffers, 0, numBytesInInputBuffers);
   globalDspOutputBuffers = (numBytesInOutputBuffers > 0) ? ALLOC_ALIGNED_BUFFER(numBytesInOutputBuffers) : NULL;
@@ -71,10 +71,10 @@ PdContext::PdContext(int numInputChannels, int numOutputChannels, int blockSize,
   pthread_mutexattr_t mta;
   pthread_mutexattr_init(&mta);
   pthread_mutexattr_settype(&mta, PTHREAD_MUTEX_RECURSIVE);
-  pthread_mutex_init(&contextLock, &mta);
+  pthread_mutex_init(&context_lock, &mta);
 }
 
-PdContext::~PdContext() {
+pd::Context::~pd::Context() {
   FREE_ALIGNED_BUFFER(globalDspInputBuffers);
   FREE_ALIGNED_BUFFER(globalDspOutputBuffers);
 
@@ -84,70 +84,70 @@ PdContext::~PdContext() {
   delete bufferPool;
 
   // delete all of the PdGraphs in the graph list
-  for (int i = 0; i < graphList.size(); i++) {
-    delete graphList[i];
+  for (int i = 0; i < graph_list.size(); i++) {
+    delete graph_list[i];
   }
 
   delete abstractionDatabase;
 
-  pthread_mutex_destroy(&contextLock);
+  pthread_mutex_destroy(&context_lock);
 }
 
 
 #pragma mark - External Object Management
 
-void PdContext::registerExternalObject(const char *objectLabel,
-    MessageObject *(*objFactory)(PdMessage *, PdGraph *)) {
+void pd::Context::registerExternalObject(const char *objectLabel,
+    message::Object *(*objFactory)(pd::Message *, PdGraph *)) {
   objectFactoryMap->registerExternalObject(objectLabel, objFactory);
 }
 
-void PdContext::unregisterExternalObject(const char *objectLabel) {
+void pd::Context::unregisterExternalObject(const char *objectLabel) {
   objectFactoryMap->unregisterExternalObject(objectLabel);
 }
 
 
 #pragma mark - Get Context Attributes
 
-int PdContext::getNumInputChannels() {
-  return numInputChannels;
+int pd::Context::getNumInputChannels() {
+  return num_input_channels;
 }
 
-int PdContext::getNumOutputChannels() {
-  return numOutputChannels;
+int pd::Context::getNumOutputChannels() {
+  return num_output_channels;
 }
 
-int PdContext::getBlockSize() {
-  return blockSize;
+int pd::Context::getBlockSize() {
+  return block_size;
 }
 
-float PdContext::getSampleRate() {
-  return sampleRate;
+float pd::Context::getSampleRate() {
+  return sample_rate;
 }
 
-float *PdContext::getGlobalDspBufferAtInlet(int inletIndex) {
-  return globalDspInputBuffers + (inletIndex * blockSize);
+float *pd::Context::getGlobalDspBufferAtInlet(int inlet_index) {
+  return globalDspInputBuffers + (inlet_index * block_size);
 }
 
-float *PdContext::getGlobalDspBufferAtOutlet(int outletIndex) {
-  return globalDspOutputBuffers + (outletIndex * blockSize);
+float *pd::Context::getGlobalDspBufferAtOutlet(int outlet_index) {
+  return globalDspOutputBuffers + (outlet_index * block_size);
 }
 
-double PdContext::getBlockStartTimestamp() {
+double pd::Context::getBlockStartTimestamp() {
   return blockStartTimestamp;
 }
 
-double PdContext::getBlockDuration() {
+double pd::Context::getBlockDuration() {
   return blockDurationMs;
 }
 
-int PdContext::getNextGraphId() {
-  return ++globalGraphId;
+int pd::Context::getNextGraphId() {
+  return ++global_graph_id;
 }
 
 
 #pragma mark - process
 
-void PdContext::process(float *inputBuffers, float *outputBuffers) {
+void pd::Context::process(float *inputBuffers, float *outputBuffers) {
   lock(); // lock the context
 
   // set up adc~ buffers
@@ -157,16 +157,16 @@ void PdContext::process(float *inputBuffers, float *outputBuffers) {
   memset(globalDspOutputBuffers, 0, numBytesInOutputBuffers);
 
   // Send all messages for this block
-  ObjectMessageLetPair omlPair;
+  ObjectMessageConnection omlPair;
   double nextBlockStartTimestamp = blockStartTimestamp + blockDurationMs;
   while (!messageCallbackQueue->empty() &&
       (omlPair = messageCallbackQueue->peek()).second.first->get_timestamp() < nextBlockStartTimestamp) {
 
     messageCallbackQueue->pop(); // remove the message from the queue
 
-    MessageObject *object = omlPair.first;
-    PdMessage *message = omlPair.second.first;
-    unsigned int outletIndex = omlPair.second.second;
+    message::Object *object = omlPair.first;
+    pd::Message *message = omlPair.second.first;
+    unsigned int outlet_index = omlPair.second.second;
     if (message->get_timestamp() < blockStartTimestamp) {
       // messages injected into the system with a timestamp behind the current block are automatically
       // rescheduled for the beginning of the current block. This is done in order to normalise
@@ -175,16 +175,16 @@ void PdContext::process(float *inputBuffers, float *outputBuffers) {
       message->set_timestamp(blockStartTimestamp);
     }
 
-    object->sendMessage(outletIndex, message);
+    object->send_message(outlet_index, message);
     message->freeMessage(); // free the message now that it has been sent and processed
   }
 
-  switch (graphList.size()) {
+  switch (graph_list.size()) {
     case 0: break;
-    case 1: graphList.front()->processFunction(graphList.front(), 0, 0); break;
+    case 1: graph_list.front()->processFunction(graph_list.front(), 0, 0); break;
     default: {
-      int numGraphs = graphList.size();
-      PdGraph **graph = &graphList.front();
+      int numGraphs = graph_list.size();
+      PdGraph **graph = &graph_list.front();
       for (int i = 0; i < numGraphs; ++i) {
         graph[i]->processFunction(graph[i], 0, 0);
       }
@@ -202,18 +202,18 @@ void PdContext::process(float *inputBuffers, float *outputBuffers) {
 
 #pragma mark - Un/Attach Graph
 
-void PdContext::attachGraph(PdGraph *graph) {
+void pd::Context::attachGraph(PdGraph *graph) {
   lock();
-  graphList.push_back(graph);
+  graph_list.push_back(graph);
   graph->attachToContext(true);
   graph->computeDeepLocalDspProcessOrder();
   unlock();
 }
 
-void PdContext::unattachGraph(PdGraph *graph) {
+void pd::Context::unattachGraph(PdGraph *graph) {
   lock();
-  graphList.erase(std::remove(graphList.begin(), graphList.end(), graph),
-    graphList.end());
+  graph_list.erase(std::remove(graph_list.begin(), graph_list.end(), graph),
+    graph_list.end());
   graph->attachToContext(false);
   unlock();
 }
@@ -221,15 +221,15 @@ void PdContext::unattachGraph(PdGraph *graph) {
 
 #pragma mark - New Object
 
-MessageObject *PdContext::newObject(const char *objectLabel, PdMessage *initMessage, PdGraph *graph) {
-  MessageObject *messageObject = objectFactoryMap->newObject(objectLabel, initMessage, graph);
-  if (messageObject != NULL) {
-    return messageObject;
+message::Object *pd::Context::new_object(const char *objectLabel, pd::Message *init_message, PdGraph *graph) {
+  message::Object *message_obj = objectFactoryMap->new_object(objectLabel, init_message, graph);
+  if (message_obj != NULL) {
+    return message_obj;
   } else if(utils::is_numeric(objectLabel)) {
     // special case for constructing a float object from a number
-    PdMessage *initMsg = PD_MESSAGE_ON_STACK(1);
-    initMsg->initWithTimestampAndFloat(0.0, atof(objectLabel));
-    return objectFactoryMap->newObject("float", initMsg, graph);
+    pd::Message *initMsg = PD_MESSAGE_ON_STACK(1);
+    initMsg->from_timestamp_and_float(0.0, atof(objectLabel));
+    return objectFactoryMap->new_object("float", initMsg, graph);
   } else {
     return NULL; // unknown object
   }
@@ -238,13 +238,13 @@ MessageObject *PdContext::newObject(const char *objectLabel, PdMessage *initMess
 
 #pragma mark - PrintStd/PrintErr
 
-void PdContext::printErr(char *msg) {
+void pd::Context::printErr(char *msg) {
   if (callbackFunction != NULL) {
     callbackFunction(ZG_PRINT_ERR, callbackUserData, msg);
   }
 }
 
-void PdContext::printErr(const char *msg, ...) {
+void pd::Context::printErr(const char *msg, ...) {
   char stringBuffer[1024];
   va_list ap;
   va_start(ap, msg);
@@ -254,13 +254,13 @@ void PdContext::printErr(const char *msg, ...) {
   printErr(stringBuffer);
 }
 
-void PdContext::printStd(char *msg) {
+void pd::Context::printStd(char *msg) {
   if (callbackFunction != NULL) {
     callbackFunction(ZG_PRINT_STD, callbackUserData, msg);
   }
 }
 
-void PdContext::printStd(const char *msg, ...) {
+void pd::Context::printStd(const char *msg, ...) {
   char stringBuffer[1024];
   va_list ap;
   va_start(ap, msg);
@@ -273,7 +273,7 @@ void PdContext::printStd(const char *msg, ...) {
 
 #pragma mark - Register/Unregister DspSend/Receive
 
-void PdContext::registerDspReceive(DspReceive *dspReceive) {
+void pd::Context::registerDspReceive(DspReceive *dspReceive) {
   // NOTE(mhroth): no duplicate check is made for dspReceive
   list<DspReceive *> *receiveList = &(dspReceiveMap[string(dspReceive->getName())]);
   receiveList->push_back(dspReceive);
@@ -285,13 +285,13 @@ void PdContext::registerDspReceive(DspReceive *dspReceive) {
   }
 }
 
-void PdContext::unregisterDspReceive(DspReceive *dspReceive) {
+void pd::Context::unregisterDspReceive(DspReceive *dspReceive) {
   list<DspReceive *> *receiveList = &(dspReceiveMap[string(dspReceive->getName())]);
   receiveList->remove(dspReceive);
-  dspReceive->setDspBufferAtInlet(dspReceive->getGraph()->getBufferPool()->getZeroBuffer(), 0);
+  dspReceive->setDspBufferAtInlet(dspReceive->get_graph()->getBufferPool()->getZeroBuffer(), 0);
 }
 
-void PdContext::registerDspSend(DspSend *dspSend) {
+void pd::Context::registerDspSend(DspSend *dspSend) {
   DspSend *sendObject = getDspSend(dspSend->getName());
   if (sendObject != NULL) {
     printErr("Duplicate send~ object found with name \"%s\".", dspSend->getName());
@@ -303,21 +303,21 @@ void PdContext::registerDspSend(DspSend *dspSend) {
   updateDspReceiveForSendWitBuffer(dspSend->getName(), dspSend->getDspBufferAtOutlet(0));
 }
 
-void PdContext::unregisterDspSend(DspSend *dspSend) {
+void pd::Context::unregisterDspSend(DspSend *dspSend) {
   dspSendList.remove(dspSend);
 
   // inform all previously connected receive~s that the send~ buffer does not exist anymore.
-  updateDspReceiveForSendWitBuffer(dspSend->getName(), dspSend->getGraph()->getBufferPool()->getZeroBuffer());
+  updateDspReceiveForSendWitBuffer(dspSend->getName(), dspSend->get_graph()->getBufferPool()->getZeroBuffer());
 }
 
-DspSend *PdContext::getDspSend(const char *name) {
+DspSend *pd::Context::getDspSend(const char *name) {
   for (list<DspSend *>::iterator it = dspSendList.begin(); it != dspSendList.end(); ++it) {
     if (!strcmp((*it)->getName(), name)) return *it;
   }
   return NULL;
 }
 
-void PdContext::updateDspReceiveForSendWitBuffer(const char *name, float *buffer) {
+void pd::Context::updateDspReceiveForSendWitBuffer(const char *name, float *buffer) {
   list<DspReceive *> receiveList = dspReceiveMap[string(name)];
   for (list<DspReceive *>::iterator it = receiveList.begin(); it != receiveList.end(); ++it) {
     DspReceive *dspReceive = *it;
@@ -328,15 +328,15 @@ void PdContext::updateDspReceiveForSendWitBuffer(const char *name, float *buffer
 
 #pragma mark - Register/Unregister Objects
 
-void PdContext::registerRemoteMessageReceiver(RemoteMessageReceiver *receiver) {
+void pd::Context::registerRemoteMessageReceiver(RemoteMessageReceiver *receiver) {
   sendController->addReceiver(receiver);
 }
 
-void PdContext::unregisterRemoteMessageReceiver(RemoteMessageReceiver *receiver) {
+void pd::Context::unregisterRemoteMessageReceiver(RemoteMessageReceiver *receiver) {
   sendController->removeReceiver(receiver);
 }
 
-void PdContext::registerDelayline(DspDelayWrite *delayline) {
+void pd::Context::registerDelayline(DspDelayWrite *delayline) {
   if (getDelayline(delayline->getName()) != NULL) {
     printErr("delwrite~ with duplicate name \"%s\" registered.", delayline->getName());
     return;
@@ -349,7 +349,7 @@ void PdContext::registerDelayline(DspDelayWrite *delayline) {
   }
 }
 
-void PdContext::registerDelayReceiver(DelayReceiver *delayReceiver) {
+void pd::Context::registerDelayReceiver(DelayReceiver *delayReceiver) {
   delayReceiverList.push_back(delayReceiver);
 
   // connect the delay receiver to the named delayline
@@ -357,14 +357,14 @@ void PdContext::registerDelayReceiver(DelayReceiver *delayReceiver) {
   delayReceiver->setDelayline(delayline);
 }
 
-DspDelayWrite *PdContext::getDelayline(const char *name) {
+DspDelayWrite *pd::Context::getDelayline(const char *name) {
   for (list<DspDelayWrite *>::iterator it = delaylineList.begin(); it != delaylineList.end(); ++it) {
     if (!strcmp((*it)->getName(), name)) return *it;
   }
   return NULL;
 }
 
-void PdContext::registerDspThrow(DspThrow *dspThrow) {
+void pd::Context::registerDspThrow(DspThrow *dspThrow) {
   // NOTE(mhroth): no duplicate testing for the same object more than once
   throwList.push_back(dspThrow);
 
@@ -374,7 +374,7 @@ void PdContext::registerDspThrow(DspThrow *dspThrow) {
   }
 }
 
-void PdContext::registerDspCatch(DspCatch *dspCatch) {
+void pd::Context::registerDspCatch(DspCatch *dspCatch) {
   DspCatch *catchObject = getDspCatch(dspCatch->getName());
   if (catchObject != NULL) {
     printErr("catch~ with duplicate name \"%s\" already exists.", dspCatch->getName());
@@ -388,14 +388,14 @@ void PdContext::registerDspCatch(DspCatch *dspCatch) {
   }
 }
 
-DspCatch *PdContext::getDspCatch(const char *name) {
+DspCatch *pd::Context::getDspCatch(const char *name) {
   for (list<DspCatch *>::iterator it = catchList.begin(); it != catchList.end(); it++) {
     if (!strcmp((*it)->getName(), name)) return (*it);
   }
   return NULL;
 }
 
-void PdContext::registerTable(MessageTable *table) {
+void pd::Context::registerTable(MessageTable *table) {
   if (getTable(table->getName()) != NULL) {
     printErr("Table with name \"%s\" already exists.", table->getName());
     return;
@@ -411,14 +411,14 @@ void PdContext::registerTable(MessageTable *table) {
   }
 }
 
-MessageTable *PdContext::getTable(const char *name) {
+MessageTable *pd::Context::getTable(const char *name) {
   for (list<MessageTable *>::iterator it = tableList.begin(); it != tableList.end(); it++) {
     if (!strcmp((*it)->getName(), name)) return (*it);
   }
   return NULL;
 }
 
-void PdContext::registerTableReceiver(TableReceiverInterface *tableReceiver) {
+void pd::Context::registerTableReceiver(TableReceiverInterface *tableReceiver) {
   tableReceiverList.push_back(tableReceiver); // add the new receiver
 
   // in case the tableread doesnt have the name of the table yet
@@ -428,26 +428,26 @@ void PdContext::registerTableReceiver(TableReceiverInterface *tableReceiver) {
   }
 }
 
-void PdContext::unregisterTableReceiver(TableReceiverInterface *tableReceiver) {
+void pd::Context::unregisterTableReceiver(TableReceiverInterface *tableReceiver) {
   tableReceiverList.remove(tableReceiver); // remove the receiver
   tableReceiver->setTable(NULL);
 }
 
-void PdContext::setValueForName(const char *name, float constant) {
+void pd::Context::setValueForName(const char *name, float constant) {
   valueMap[string(name)] = constant;
 }
 
-float PdContext::getValueForName(const char *name) {
+float pd::Context::getValueForName(const char *name) {
   return valueMap[string(name)];
 }
 
-void PdContext::registerExternalReceiver(const char *receiverName) {
+void pd::Context::registerExternalReceiver(const char *receiverName) {
   lock(); // don't update the external receiver registry while processing it, of course!
   sendController->registerExternalReceiver(receiverName);
   unlock();
 }
 
-void PdContext::unregisterExternalReceiver(const char *receiverName) {
+void pd::Context::unregisterExternalReceiver(const char *receiverName) {
   lock();
   sendController->unregisterExternalReceiver(receiverName);
   unlock();
@@ -456,14 +456,14 @@ void PdContext::unregisterExternalReceiver(const char *receiverName) {
 
 #pragma mark - Manage Messages
 
-void PdContext::sendMessageToNamedReceivers(char *name, PdMessage *message) {
-  sendController->receiveMessage(name, message);
+void pd::Context::send_messageToNamedReceivers(char *name, pd::Message *message) {
+  sendController->receive_message(name, message);
 }
 
-void PdContext::scheduleExternalMessageV(const char *receiverName, double timestamp,
+void pd::Context::scheduleExternalMessageV(const char *receiverName, double timestamp,
     const char *messageFormat, va_list ap) {
   int numElements = strlen(messageFormat);
-  PdMessage *message = PD_MESSAGE_ON_STACK(numElements);
+  pd::Message *message = PD_MESSAGE_ON_STACK(numElements);
   message->from_timestamp(timestamp, numElements);
   for (int i = 0; i < numElements; i++) { // format message
     switch (messageFormat[i]) {
@@ -477,49 +477,49 @@ void PdContext::scheduleExternalMessageV(const char *receiverName, double timest
   scheduleExternalMessage(receiverName, message);
 }
 
-void PdContext::scheduleExternalMessage(const char *receiverName, PdMessage *message) {
+void pd::Context::scheduleExternalMessage(const char *receiverName, pd::Message *message) {
   lock();
   int receiverNameIndex = sendController->getNameIndex(receiverName);
   if (receiverNameIndex >= 0) { // if the receiver exists
-    scheduleMessage(sendController, receiverNameIndex, message);
+    schedule_message(sendController, receiverNameIndex, message);
   }
   unlock();
 }
 
-void PdContext::scheduleExternalMessage(const char *receiverName, double timestamp, const char *initString) {
+void pd::Context::scheduleExternalMessage(const char *receiverName, double timestamp, const char *initString) {
   // do the heavy lifting of string parsing before the lock (minimise the critical section)
   int maxElements = (strlen(initString)/2)+1;
-  PdMessage *message = PD_MESSAGE_ON_STACK(maxElements);
+  pd::Message *message = PD_MESSAGE_ON_STACK(maxElements);
   char str[strlen(initString)+1]; strcpy(str, initString);
   message->from_string(timestamp, maxElements, str);
 
   lock(); // lock and load
   int receiverNameIndex = sendController->getNameIndex(receiverName);
   if (receiverNameIndex >= 0) { // if the receiver exists
-    scheduleMessage(sendController, receiverNameIndex, message);
+    schedule_message(sendController, receiverNameIndex, message);
   }
   unlock();
 }
 
-PdMessage *PdContext::scheduleMessage(MessageObject *messageObject, unsigned int outletIndex, PdMessage *message) {
+pd::Message *pd::Context::schedule_message(message::Object *message_obj, unsigned int outlet_index, pd::Message *message) {
   // basic argument checking. It may happen that the message is NULL in case a cancel message
   // is sent multiple times to a particular object, when no message is pending
-  if (message != NULL && messageObject != NULL) {
+  if (message != NULL && message_obj != NULL) {
     message = message->clone_on_heap();
-    messageCallbackQueue->insertMessage(messageObject, outletIndex, message);
+    messageCallbackQueue->insertMessage(message_obj, outlet_index, message);
     return message;
   }
   return NULL;
 }
 
-void PdContext::cancelMessage(MessageObject *messageObject, int outletIndex, PdMessage *message) {
-  if (message != NULL && outletIndex >= 0 && messageObject != NULL) {
-    messageCallbackQueue->removeMessage(messageObject, outletIndex, message);
+void pd::Context::cancelMessage(message::Object *message_obj, int outlet_index, pd::Message *message) {
+  if (message != NULL && outlet_index >= 0 && message_obj != NULL) {
+    messageCallbackQueue->removeMessage(message_obj, outlet_index, message);
     message->freeMessage();
   }
 }
 
-void PdContext::receiveSystemMessage(PdMessage *message) {
+void pd::Context::receiveSystemMessage(pd::Message *message) {
   // TODO(mhroth): What are all of the possible system messages?
   if (message->is_symbol_str(0, "obj")) {
     // TODO(mhroth): dynamic patching
@@ -535,6 +535,6 @@ void PdContext::receiveSystemMessage(PdMessage *message) {
   }
 }
 
-PdAbstractionDataBase *PdContext::getAbstractionDataBase() {
+PdAbstractionDataBase *pd::Context::getAbstractionDataBase() {
   return abstractionDatabase;
 }

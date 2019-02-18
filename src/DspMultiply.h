@@ -28,8 +28,8 @@
 class DspMultiply : public DspObject {
   
   public:
-    static MessageObject *newObject(PdMessage *initMessage, PdGraph *graph);
-    DspMultiply(PdMessage *initMessage, PdGraph *graph);
+    static MessageObject *new_object(PdMessage *init_message, PdGraph *graph);
+    DspMultiply(PdMessage *init_message, PdGraph *graph);
     ~DspMultiply();
   
     static const char *getObjectLabel();
@@ -39,9 +39,9 @@ class DspMultiply : public DspObject {
   private:
     static void processSignal(DspObject *dspObject, int fromIndex, int toIndex);
     static void processScalar(DspObject *dspObject, int fromIndex, int toIndex);
-    void processMessage(int inletIndex, PdMessage *message);
+    void process_message(int inlet_index, PdMessage *message);
   
-    void onInletConnectionUpdate(unsigned int inletIndex);
+    void onInletConnectionUpdate(unsigned int inlet_index);
     
     float inputConstant;
     float constant;

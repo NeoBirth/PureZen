@@ -23,13 +23,13 @@
 #include "DspSend.h"
 #include "PdGraph.h"
 
-MessageObject *DspSend::newObject(PdMessage *initMessage, PdGraph *graph) {
-  return new DspSend(initMessage, graph);
+message::Object *DspSend::new_object(pd::Message *init_message, PdGraph *graph) {
+  return new DspSend(init_message, graph);
 }
 
-DspSend::DspSend(PdMessage *initMessage, PdGraph *graph) : DspObject(0, 1, 0, 0, graph) {
-  if (initMessage->is_symbol(0)) {
-    name = utils::copy_string(initMessage->get_symbol(0));
+DspSend::DspSend(pd::Message *init_message, PdGraph *graph) : DspObject(0, 1, 0, 0, graph) {
+  if (init_message->is_symbol(0)) {
+    name = utils::copy_string(init_message->get_symbol(0));
     dspBufferAtOutlet[0] = ALLOC_ALIGNED_BUFFER(graph->getBlockSize()*sizeof(float));
   } else {
     name = NULL;

@@ -29,19 +29,19 @@
 class MessageNotein : public RemoteMessageReceiver {
   
   public:
-    static MessageObject *newObject(PdMessage *initMessage, PdGraph *graph);
-    MessageNotein(PdMessage *initMessage, PdGraph *graph);
+    static MessageObject *new_object(PdMessage *init_message, PdGraph *graph);
+    MessageNotein(PdMessage *init_message, PdGraph *graph);
     ~MessageNotein();
     
     static const char *getObjectLabel();
     std::string toString();
-    ObjectType getObjectType();
+    object::Type get_object_type();
   
     /** Returns the zero-indexed midi channel which this object outputs. -1 if omni. */
     int getChannel();
     
   private:
-    void processMessage(int inletIndex, PdMessage *message);
+    void process_message(int inlet_index, PdMessage *message);
     bool isOmni();
 
     int channel;
@@ -55,7 +55,7 @@ inline std::string MessageNotein::toString() {
   return MessageNotein::getObjectLabel();
 }
 
-inline ObjectType MessageNotein::getObjectType() {
+inline object::Type MessageNotein::get_object_type() {
   return MESSAGE_NOTEIN;
 }
 

@@ -24,12 +24,12 @@
 #include "DspTableRead.h"
 #include "PdGraph.h"
 
-MessageObject *DspTableRead::newObject(PdMessage *initMessage, PdGraph *graph) {
-  return new DspTableRead(initMessage, graph);
+message::Object *DspTableRead::new_object(pd::Message *init_message, PdGraph *graph) {
+  return new DspTableRead(init_message, graph);
 }
 
-DspTableRead::DspTableRead(PdMessage *initMessage, PdGraph *graph) : DspObject(2, 1, 0, 1, graph) {
-  name = initMessage->is_symbol(0) ? utils::copy_string(initMessage->get_symbol(0)) : NULL;
+DspTableRead::DspTableRead(pd::Message *init_message, PdGraph *graph) : DspObject(2, 1, 0, 1, graph) {
+  name = init_message->is_symbol(0) ? utils::copy_string(init_message->get_symbol(0)) : NULL;
   table = NULL;
   offset = 0.0f;
 }
@@ -42,8 +42,8 @@ void DspTableRead::setTable(MessageTable *aTable) {
   table = aTable;
 }
 
-void DspTableRead::processMessage(int inletIndex, PdMessage *message) {
-  switch (inletIndex) {
+void DspTableRead::process_message(int inlet_index, pd::Message *message) {
+  switch (inlet_index) {
     case 0: {
       if (message->is_symbol_str(0, "set") && message->is_symbol(1)) {
         // change the table from which this object reads

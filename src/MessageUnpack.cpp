@@ -23,13 +23,13 @@
 #include "MessageUnpack.h"
 #include "PdGraph.h"
 
-MessageObject *MessageUnpack::newObject(PdMessage *initMessage, PdGraph *graph) {
-  return new MessageUnpack(initMessage, graph);
+message::Object *MessageUnpack::new_object(pd::Message *init_message, PdGraph *graph) {
+  return new MessageUnpack(init_message, graph);
 }
 
-MessageUnpack::MessageUnpack(PdMessage *initMessage, PdGraph *graph) :
-    MessageObject(1, (initMessage->get_num_elements() < 2) ? 2 : initMessage->get_num_elements(), graph) {
-  if (initMessage->get_num_elements() < 2) {
+MessageUnpack::MessageUnpack(pd::Message *init_message, PdGraph *graph) :
+    message::Object(1, (init_message->get_num_elements() < 2) ? 2 : init_message->get_num_elements(), graph) {
+  if (init_message->get_num_elements() < 2) {
     // if unpack is not initialised with anything, assume two "anything" outputs
     templateMessage = PD_MESSAGE_ON_STACK(2);
     templateMessage->from_timestamp(0.0, 2);
@@ -37,7 +37,7 @@ MessageUnpack::MessageUnpack(PdMessage *initMessage, PdGraph *graph) :
     templateMessage->set_anything(1);
     templateMessage = templateMessage->clone_on_heap();
   } else {
-    templateMessage = initMessage->clone_on_heap();
+    templateMessage = init_message->clone_on_heap();
     templateMessage->resolve_symbols_to_type();
   }
 }
@@ -61,41 +61,41 @@ string MessageUnpack::toString() {
   return out;
 }
 
-void MessageUnpack::processMessage(int inletIndex, PdMessage *message) {
+void MessageUnpack::process_message(int inlet_index, pd::Message *message) {
   int numElements = message->get_num_elements();
   if (templateMessage->get_num_elements() < message->get_num_elements()) {
     numElements = templateMessage->get_num_elements();
   }
-  PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(1);
+  pd::Message *outgoing_message = PD_MESSAGE_ON_STACK(1);
   for (int i = numElements-1; i >= 0; i--) {
     elementType = templateMessage->get_type(i);
     if (elementType == message->get_type(i) || elementType == ANYTHING) {
       switch (elementType) {
         case FLOAT: {
-          outgoingMessage->initWithTimestampAndFloat(message->get_timestamp(), message->get_float(i));
-          sendMessage(i, outgoingMessage);
+          outgoing_message->from_timestamp_and_float(message->get_timestamp(), message->get_float(i));
+          send_message(i, outgoing_message);
           break;
         }
         case SYMBOL: {
-          outgoingMessage->initWithTimestampAndSymbol(message->get_timestamp(), message->get_symbol(i));
-          sendMessage(i, outgoingMessage);
+          outgoing_message->from_timestamp_and_symbol(message->get_timestamp(), message->get_symbol(i));
+          send_message(i, outgoing_message);
           break;
         }
         case ANYTHING: {
           switch (message->get_type(i)) {
             case FLOAT: {
-              outgoingMessage->initWithTimestampAndFloat(message->get_timestamp(), message->get_float(i));
+              outgoing_message->from_timestamp_and_float(message->get_timestamp(), message->get_float(i));
               break;
             }
             case SYMBOL: {
-              outgoingMessage->initWithTimestampAndSymbol(message->get_timestamp(), message->get_symbol(i));
+              outgoing_message->from_timestamp_and_symbol(message->get_timestamp(), message->get_symbol(i));
               break;
             }
             default: {
               break;
             }
           }
-          sendMessage(i, outgoingMessage);
+          send_message(i, outgoing_message);
         }
         default: {
           break;

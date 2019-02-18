@@ -29,18 +29,18 @@
 class MessageOutlet : public MessageObject {
   
   public:
-    static MessageObject *newObject(PdMessage *initMessage, PdGraph *graph);
-    MessageOutlet(PdMessage *initMessage, PdGraph *graph);
+    static MessageObject *new_object(PdMessage *init_message, PdGraph *graph);
+    MessageOutlet(PdMessage *init_message, PdGraph *graph);
     ~MessageOutlet();
     
     static const char *getObjectLabel();
     std::string toString();
   
-    ObjectType getObjectType();
+    object::Type get_object_type();
   
     bool isLeafNode();
   
-    void receiveMessage(int inletIndex, PdMessage *message);
+    void receiveMessage(int inlet_index, PdMessage *message);
 };
 
 inline const char *MessageOutlet::getObjectLabel() {

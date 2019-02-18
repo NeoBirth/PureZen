@@ -29,8 +29,8 @@
 class MessageGreaterThan : public MessageObject {
 
   public:
-    static MessageObject *newObject(PdMessage *initMessage, PdGraph *graph);
-    MessageGreaterThan(PdMessage *initMessage, PdGraph *graph);
+    static MessageObject *new_object(PdMessage *init_message, PdGraph *graph);
+    MessageGreaterThan(PdMessage *init_message, PdGraph *graph);
     MessageGreaterThan(float constant, PdGraph *graph);
     ~MessageGreaterThan();
 
@@ -39,7 +39,7 @@ class MessageGreaterThan : public MessageObject {
 
   private:
     void init(float constant);
-    void processMessage(int inletIndex, PdMessage *message);
+    void process_message(int inlet_index, PdMessage *message);
 
     float constant;
     float lastOutput;

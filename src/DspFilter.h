@@ -32,7 +32,7 @@ class DspFilter : public DspObject {
     DspFilter(int numMessageInlets, PdGraph *graph);
     ~DspFilter();
 
-    void onInletConnectionUpdate(unsigned int inletIndex);
+    void onInletConnectionUpdate(unsigned int inlet_index);
   
   protected:  
     static void processFilter(DspObject *dspObject, int fromIndex, int toIndex);

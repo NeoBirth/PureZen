@@ -24,17 +24,17 @@
 #include "BufferPool.h"
 #include "DspCatch.h"
 #include "DspThrow.h"
-#include "PdContext.h"
+#include "pd::Context.h"
 #include "PdGraph.h"
 
 
-MessageObject *DspCatch::newObject(PdMessage *initMessage, PdGraph *graph) {
-  return new DspCatch(initMessage, graph);
+message::Object *DspCatch::new_object(pd::Message *init_message, PdGraph *graph) {
+  return new DspCatch(init_message, graph);
 }
 
-DspCatch::DspCatch(PdMessage *initMessage, PdGraph *graph) : DspObject(0, 0, 0, 1, graph) {
-  if (initMessage->is_symbol(0)) {
-    name = utils::copy_string(initMessage->get_symbol(0));
+DspCatch::DspCatch(pd::Message *init_message, PdGraph *graph) : DspObject(0, 0, 0, 1, graph) {
+  if (init_message->is_symbol(0)) {
+    name = utils::copy_string(init_message->get_symbol(0));
   } else {
     name = NULL;
     graph->printErr("catch~ must be initialised with a name.");
@@ -101,16 +101,16 @@ void DspCatch::processMany(DspObject *dspObject, int fromIndex, int toIndex) {
 
 // catch objects should be processed after their corresponding throw object even though
 // there is no connection between them
-list<DspObject *> DspCatch::getProcessOrder() {
-  if (isOrdered) {
+list<DspObject *> DspCatch::get_process_order() {
+  if (is_ordered) {
     // if this object has already been ordered, then move on
     return list<DspObject *>();
   } else {
-    isOrdered = true;
+    is_ordered = true;
     list<DspObject *> processList;
     
     for (std::list<DspThrow *>::iterator throwIt = throwList.begin(); throwIt != throwList.end(); ++throwIt) {
-      list<DspObject *> parentProcessList = (*throwIt)->getProcessOrder();
+      list<DspObject *> parentProcessList = (*throwIt)->get_process_order();
       // combine the process lists
       processList.splice(processList.end(), parentProcessList);
     }

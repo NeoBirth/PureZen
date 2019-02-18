@@ -25,14 +25,14 @@
 
 #define SHORT_TO_FLOAT_RATIO 0.0000152590219f // == 1/(2^16 - 1)
 
-MessageObject *DspPhasor::newObject(PdMessage *initMessage, PdGraph *graph) {
-  return new DspPhasor(initMessage, graph);
+message::Object *DspPhasor::new_object(pd::Message *init_message, PdGraph *graph) {
+  return new DspPhasor(init_message, graph);
 }
 
-DspPhasor::DspPhasor(PdMessage *initMessage, PdGraph *graph) : DspObject(2, 2, 0, 1, graph) {  
-  PdMessage *message = PD_MESSAGE_ON_STACK(1);
-  message->initWithTimestampAndFloat(0.0, initMessage->is_float(0) ? initMessage->get_float(0) : 0.0f);
-  processMessage(0, message);
+DspPhasor::DspPhasor(pd::Message *init_message, PdGraph *graph) : DspObject(2, 2, 0, 1, graph) {  
+  pd::Message *message = PD_MESSAGE_ON_STACK(1);
+  message->from_timestamp_and_float(0.0, init_message->is_float(0) ? init_message->get_float(0) : 0.0f);
+  process_message(0, message);
 
   processFunction = &processScalar;
   processFunctionNoMessage = &processScalar;
@@ -48,12 +48,12 @@ string DspPhasor::toString() {
   return string(str);
 }
 
-void DspPhasor::onInletConnectionUpdate(unsigned int inletIndex) {
+void DspPhasor::onInletConnectionUpdate(unsigned int inlet_index) {
   processFunction = incomingDspConnections[0].empty() ? &processScalar : &processSignal;
 }
 
-void DspPhasor::processMessage(int inletIndex, PdMessage *message) {
-  switch (inletIndex) {
+void DspPhasor::process_message(int inlet_index, pd::Message *message) {
+  switch (inlet_index) {
     case 0: { // update the frequency
       if (message->is_float(0)) {
         frequency = message->get_float(0);

@@ -23,37 +23,37 @@
 #include "MessageSelect.h"
 #include "PdGraph.h"
 
-MessageObject *MessageSelect::newObject(PdMessage *initMessage, PdGraph *graph) {
-  return new MessageSelect(initMessage, graph);
+message::Object *MessageSelect::new_object(pd::Message *init_message, PdGraph *graph) {
+  return new MessageSelect(init_message, graph);
 }
 
-MessageSelect::MessageSelect(PdMessage *initMessage, PdGraph *graph) : 
-    MessageObject((initMessage->get_num_elements() < 2) ? 2 : 1, 
-                  (initMessage->get_num_elements() < 2) ? 2 : initMessage->get_num_elements()+1, graph) {
-  selectorMessage = initMessage->clone_on_heap();
+MessageSelect::MessageSelect(pd::Message *init_message, PdGraph *graph) : 
+    message::Object((init_message->get_num_elements() < 2) ? 2 : 1, 
+                  (init_message->get_num_elements() < 2) ? 2 : init_message->get_num_elements()+1, graph) {
+  selectorMessage = init_message->clone_on_heap();
 }
 
 MessageSelect::~MessageSelect() {
   selectorMessage->freeMessage();
 }
 
-void MessageSelect::processMessage(int inletIndex, PdMessage *message) {
-  switch (inletIndex) {
+void MessageSelect::process_message(int inlet_index, pd::Message *message) {
+  switch (inlet_index) {
     case 0: {
       pd::message::Atom *messageElement = message->get_element(0);
       int numSelectors = selectorMessage->get_num_elements();
       for (int i = 0; i < numSelectors; i++) {
         if (selectorMessage->atom_is_equal_to(i, messageElement)) {
           // send bang from matching outlet
-          PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(1);
-          outgoingMessage->initWithTimestampAndBang(message->get_timestamp());
-          sendMessage(i, outgoingMessage);
+          pd::Message *outgoing_message = PD_MESSAGE_ON_STACK(1);
+          outgoing_message->from_timestamp_and_bang(message->get_timestamp());
+          send_message(i, outgoing_message);
           return;
         }
       }
 
       // message does not match any selector. Send it out to of the last outlet.
-      sendMessage(numSelectors, message);
+      send_message(numSelectors, message);
       break;
     }
     case 1: {

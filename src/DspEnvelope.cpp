@@ -27,19 +27,19 @@
 /** By default, the analysis window size is 1024 samples. */
 #define DEFAULT_WINDOW_SIZE 1024
 
-MessageObject *DspEnvelope::newObject(PdMessage *initMessage, PdGraph *graph) {
-  return new DspEnvelope(initMessage, graph);
+message::Object *DspEnvelope::new_object(pd::Message *init_message, PdGraph *graph) {
+  return new DspEnvelope(init_message, graph);
 }
 
-DspEnvelope::DspEnvelope(PdMessage *initMessage, PdGraph *graph) : DspObject(0, 1, 1, 0, graph) {
-  if (initMessage->is_float(0)) {
-    if (initMessage->is_float(1)) {
+DspEnvelope::DspEnvelope(pd::Message *init_message, PdGraph *graph) : DspObject(0, 1, 1, 0, graph) {
+  if (init_message->is_float(0)) {
+    if (init_message->is_float(1)) {
       // if two parameters are provided, set the window size and window interval
-      windowSize = initMessage->get_float(0);
-      windowInterval = initMessage->get_float(1);
+      windowSize = init_message->get_float(0);
+      windowInterval = init_message->get_float(1);
     } else {
       // if one parameter is provided, set the window size
-      windowSize = (int) initMessage->get_float(0);
+      windowSize = (int) init_message->get_float(0);
       setWindowInterval(windowSize/2);
     }
   } else {
@@ -83,13 +83,13 @@ string DspEnvelope::toString() {
 void DspEnvelope::setWindowInterval(int newInterval) {
   int i = newInterval % graph->getBlockSize();
   if (i == 0) {
-    // windowInterval is a multiple of blockSize. Awesome :)
+    // windowInterval is a multiple of block_size. Awesome :)
     this->windowInterval = newInterval;
   } else if (i <= graph->getBlockSize()/2) {
-    // windowInterval is closer to the smaller multiple of blockSize
+    // windowInterval is closer to the smaller multiple of block_size
     this->windowInterval = (newInterval/graph->getBlockSize())*graph->getBlockSize();
   } else {
-    // windowInterval is closer to the larger multiple of blockSize
+    // windowInterval is closer to the larger multiple of block_size
     this->windowInterval = ((newInterval/graph->getBlockSize())+1)*graph->getBlockSize();
   }
 }
@@ -144,10 +144,10 @@ void DspEnvelope::processSignal(DspObject *dspObject, int fromIndex, int toIndex
     // result is normalised such that 1 RMS == 100 dB
     rms = 10.0f * log10f(rms) + 100.0f;
 
-    PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(1);
+    pd::Message *outgoing_message = PD_MESSAGE_ON_STACK(1);
     // graph will schedule this at the beginning of the next block because the timestamp will be
     // behind the block start timestamp
-    outgoingMessage->initWithTimestampAndFloat(0.0, (rms < 0.0f) ? 0.0f : rms);
-    d->graph->scheduleMessage(d, 0, outgoingMessage);
+    outgoing_message->from_timestamp_and_float(0.0, (rms < 0.0f) ? 0.0f : rms);
+    d->graph->schedule_message(d, 0, outgoing_message);
   }
 }

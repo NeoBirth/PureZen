@@ -29,15 +29,15 @@
 class MessageSend : public MessageObject {
   
   public:
-    static MessageObject *newObject(PdMessage *initMessage, PdGraph *graph);
-    MessageSend(PdMessage *initMessage, PdGraph *graph);
+    static MessageObject *new_object(PdMessage *init_message, PdGraph *graph);
+    MessageSend(PdMessage *init_message, PdGraph *graph);
     ~MessageSend();
     
     static const char *getObjectLabel();
     std::string toString();
-    ObjectType getObjectType();
+    object::Type get_object_type();
   
-    void receiveMessage(int inletIndex, PdMessage *message);
+    void receiveMessage(int inlet_index, PdMessage *message);
   
   private:
     char *name;
@@ -52,7 +52,7 @@ inline std::string MessageSend::toString() {
   return std::string(MessageSend::getObjectLabel()) + " " + name;
 }
 
-inline ObjectType MessageSend::getObjectType() {
+inline object::Type MessageSend::get_object_type() {
   return MESSAGE_SEND;
 }
 

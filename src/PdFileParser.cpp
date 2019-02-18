@@ -26,7 +26,7 @@
 #include "MessageTable.h"
 #include "MessageText.h"
 #include "PdAbstractionDataBase.h"
-#include "PdContext.h"
+#include "pd::Context.h"
 #include "PdFileParser.h"
 #include "PdGraph.h"
 
@@ -114,15 +114,15 @@ string PdFileParser::nextLine() {
 
 #pragma mark - execute
 
-PdGraph *PdFileParser::execute(PdContext *context) {
+PdGraph *PdFileParser::execute(pd::Context *context) {
   return execute(NULL, NULL, context, true);
 }
 
-PdGraph *PdFileParser::execute(PdMessage *initMsg, PdGraph *graph, PdContext *context, bool isSubPatch) {
+PdGraph *PdFileParser::execute(pd::Message *initMsg, PdGraph *graph, pd::Context *context, bool isSubPatch) {
 #define OBJECT_LABEL_RESOLUTION_BUFFER_LENGTH 32
 #define RESOLUTION_BUFFER_LENGTH 512
 #define INIT_MESSAGE_MAX_ELEMENTS 32
-  PdMessage *initMessage = PD_MESSAGE_ON_STACK(INIT_MESSAGE_MAX_ELEMENTS);
+  pd::Message *init_message = PD_MESSAGE_ON_STACK(INIT_MESSAGE_MAX_ELEMENTS);
 
   string message;
   MessageTable *lastArrayCreated = NULL;  // used to know on which table the #A line values have to be set
@@ -137,8 +137,8 @@ PdGraph *PdFileParser::execute(PdMessage *initMsg, PdGraph *graph, PdContext *co
     if (!strcmp(hashType, "#N")) {
       char *objectType = strtok(NULL, " ");
       if (!strcmp(objectType, "canvas")) {
-        int canvasX = atoi(strtok(NULL, " "));
-        int canvasY = atoi(strtok(NULL, " "));
+        int coordinates.x = atoi(strtok(NULL, " "));
+        int coordinates.y = atoi(strtok(NULL, " "));
         int canvasW = atoi(strtok(NULL, " "));
         int canvasH = atoi(strtok(NULL, " "));
         const char *canvasName = strtok(NULL, " ");
@@ -148,8 +148,8 @@ PdGraph *PdFileParser::execute(PdMessage *initMsg, PdGraph *graph, PdContext *co
         // NOTE(mhroth): pixel location is not recorded
         PdGraph *newGraph = NULL;
         if (graph == NULL) { // if no parent graph exists
-          initMessage->from_timestamp(0.0, 0); // make a dummy initMessage
-          newGraph = new PdGraph(initMessage, NULL, context, context->getNextGraphId(), "zg_root");
+          init_message->from_timestamp(0.0, 0); // make a dummy init_message
+          newGraph = new PdGraph(init_message, NULL, context, context->getNextGraphId(), "zg_root");
           if (!rootPath.empty()) {
             // inform the root graph of where it is in the file system, if this information exists.
             // This will allow abstractions to be correctly loaded.
@@ -158,7 +158,7 @@ PdGraph *PdFileParser::execute(PdMessage *initMsg, PdGraph *graph, PdContext *co
         } else {
           if (isSubPatch) {
             // a graph made a subpatch
-            newGraph = new PdGraph(graph->getArguments(), graph, context, graph->getGraphId(), canvasName);
+            newGraph = new PdGraph(graph->getArguments(), graph, context, graph->get_graphId(), canvasName);
           } else {
             // a graph made as an abstraction
             newGraph = new PdGraph(initMsg, graph, context, context->getNextGraphId(), (rootPath+fileName).c_str());
@@ -176,29 +176,29 @@ PdGraph *PdFileParser::execute(PdMessage *initMsg, PdGraph *graph, PdContext *co
       char *objectType = strtok(NULL, " ");
       if (!strcmp(objectType, "obj")) {
         // read the canvas coordinates (Pd defines them to be integers, ZG represents them as floats internally)
-        float canvasX = (float) atoi(strtok(NULL, " "));
-        float canvasY = (float) atoi(strtok(NULL, " "));
+        float coordinates.x = (float) atoi(strtok(NULL, " "));
+        float coordinates.y = (float) atoi(strtok(NULL, " "));
 
         // resolve $ variables in the object label (such as objects that are simply labeled "$1")
         char *objectLabel = strtok(NULL, " ;\r"); // delimit with " " or ";"
 
         char resBufferLabel[OBJECT_LABEL_RESOLUTION_BUFFER_LENGTH];
-        PdMessage::resolve_string(objectLabel, graph->getArguments(), 0,
+        pd::Message::resolve_string(objectLabel, graph->getArguments(), 0,
           resBufferLabel, OBJECT_LABEL_RESOLUTION_BUFFER_LENGTH); // object labels are always strings
                                                                   // even if they are numbers, e.g. "1"
 
         // resolve $ variables in the object arguments
         char *objectInitString = strtok(NULL, ";\r"); // get the object initialisation string
         char resBuffer[RESOLUTION_BUFFER_LENGTH];
-        initMessage->from_string_and_args(INIT_MESSAGE_MAX_ELEMENTS, objectInitString, graph->getArguments(),
+        init_message->from_string_and_args(INIT_MESSAGE_MAX_ELEMENTS, objectInitString, graph->getArguments(),
             resBuffer, RESOLUTION_BUFFER_LENGTH);
 
         // create the object
-        MessageObject *messageObject = context->newObject(resBufferLabel, initMessage, graph);
-        if (messageObject == NULL) { // object could not be created based on any known object factory functions
+        message::Object *message_obj = context->new_object(resBufferLabel, init_message, graph);
+        if (message_obj == NULL) { // object could not be created based on any known object factory functions
           if (context->getAbstractionDataBase()->existsAbstraction(objectLabel)) {
             PdFileParser *parser = new PdFileParser(context->getAbstractionDataBase()->getAbstraction(objectLabel));
-            messageObject = parser->execute(initMessage, graph, context, false);
+            message_obj = parser->execute(init_message, graph, context, false);
             delete parser;
           } else {
             string filename = string(objectLabel) + ".pd";
@@ -218,76 +218,76 @@ PdGraph *PdFileParser::execute(PdMessage *initMsg, PdGraph *graph, PdContext *co
               }
             }
             PdFileParser *parser = new PdFileParser(directory, filename);
-            messageObject = parser->execute(initMessage, graph, context, false);
+            message_obj = parser->execute(init_message, graph, context, false);
             delete parser;
           }
         } else {
           // add the object to the local graph and make any necessary registrations
-          graph->addObject(canvasX, canvasY, messageObject);
+          graph->addObject(coordinates.x, coordinates.y, message_obj);
         }
       } else if (!strcmp(objectType, "msg")) {
-        float canvasX = (float) atoi(strtok(NULL, " ")); // read the first canvas coordinate
-        float canvasY = (float) atoi(strtok(NULL, " ")); // read the second canvas coordinate
+        float coordinates.x = (float) atoi(strtok(NULL, " ")); // read the first canvas coordinate
+        float coordinates.y = (float) atoi(strtok(NULL, " ")); // read the second canvas coordinate
         char *objectInitString = strtok(NULL, "\n\r"); // get the message initialisation string (including trailing ';')
-        initMessage->initWithTimestampAndSymbol(0.0, objectInitString);
-        MessageObject *messageObject = context->newObject(
-          MessageMessageBox::getObjectLabel(), initMessage, graph);
-        graph->addObject(canvasX, canvasY, messageObject);
+        init_message->from_timestamp_and_symbol(0.0, objectInitString);
+        message::Object *message_obj = context->new_object(
+          MessageMessageBox::getObjectLabel(), init_message, graph);
+        graph->addObject(coordinates.x, coordinates.y, message_obj);
       } else if (!strcmp(objectType, "connect")) {
         int fromObjectIndex = atoi(strtok(NULL, " "));
-        int outletIndex = atoi(strtok(NULL, " "));
+        int outlet_index = atoi(strtok(NULL, " "));
         int toObjectIndex = atoi(strtok(NULL, " "));
-        int inletIndex = atoi(strtok(NULL, ";"));
-        graph->addConnection(fromObjectIndex, outletIndex, toObjectIndex, inletIndex);
+        int inlet_index = atoi(strtok(NULL, ";"));
+        graph->addConnection(fromObjectIndex, outlet_index, toObjectIndex, inlet_index);
       } else if (!strcmp(objectType, "floatatom")) {
-        float canvasX = (float) atoi(strtok(NULL, " "));
-        float canvasY = (float) atoi(strtok(NULL, " "));
-        initMessage->initWithTimestampAndFloat(0.0, 0.0f);
-        MessageObject *messageObject = context->newObject(
-            MessageFloat::getObjectLabel(), initMessage, graph); // defines a number box
-        graph->addObject(canvasX, canvasY, messageObject);
+        float coordinates.x = (float) atoi(strtok(NULL, " "));
+        float coordinates.y = (float) atoi(strtok(NULL, " "));
+        init_message->from_timestamp_and_float(0.0, 0.0f);
+        message::Object *message_obj = context->new_object(
+            MessageFloat::getObjectLabel(), init_message, graph); // defines a number box
+        graph->addObject(coordinates.x, coordinates.y, message_obj);
       } else if (!strcmp(objectType, "symbolatom")) {
-        float canvasX = (float) atoi(strtok(NULL, " "));
-        float canvasY = (float) atoi(strtok(NULL, " "));
-        initMessage->initWithTimestampAndSymbol(0.0, NULL);
-        MessageObject *messageObject = context->newObject(
-            MessageSymbol::getObjectLabel(), initMessage, graph);
-        graph->addObject(canvasX, canvasY, messageObject);
+        float coordinates.x = (float) atoi(strtok(NULL, " "));
+        float coordinates.y = (float) atoi(strtok(NULL, " "));
+        init_message->from_timestamp_and_symbol(0.0, NULL);
+        message::Object *message_obj = context->new_object(
+            MessageSymbol::getObjectLabel(), init_message, graph);
+        graph->addObject(coordinates.x, coordinates.y, message_obj);
       } else if (!strcmp(objectType, "restore")) {
         // the graph is finished being defined
         // pop the graph stack to the parent graph
         // the process order will be computed by the parent graph
         graph = graph->getParentGraph();
       } else if (!strcmp(objectType, "text")) {
-        float canvasX = (float) atoi(strtok(NULL, " "));
-        float canvasY = (float) atoi(strtok(NULL, " "));
+        float coordinates.x = (float) atoi(strtok(NULL, " "));
+        float coordinates.y = (float) atoi(strtok(NULL, " "));
         char *comment = strtok(NULL, ";"); // get the comment
-        initMessage->initWithTimestampAndSymbol(0.0, comment);
-        MessageObject *messageText = context->newObject(
-            MessageText::getObjectLabel(), initMessage, graph);
-        graph->addObject(canvasX, canvasY, messageText);
+        init_message->from_timestamp_and_symbol(0.0, comment);
+        message::Object *messageText = context->new_object(
+            MessageText::getObjectLabel(), init_message, graph);
+        graph->addObject(coordinates.x, coordinates.y, messageText);
       } else if (!strcmp(objectType, "declare")) {
         // set environment for loading patch
         char *objectInitString = strtok(NULL, ";"); // get the arguments to declare
-        initMessage->from_string(0.0, 2, objectInitString); // parse them
-        if (initMessage->is_symbol_str(0, "-path")) {
-          if (initMessage->is_symbol(1)) {
+        init_message->from_string(0.0, 2, objectInitString); // parse them
+        if (init_message->is_symbol_str(0, "-path")) {
+          if (init_message->is_symbol(1)) {
             // add symbol to declare directories
-            graph->addDeclarePath(initMessage->get_symbol(1));
+            graph->addDeclarePath(init_message->get_symbol(1));
           }
         } else {
-          context->printErr("declare \"%s\" flag is not supported.", initMessage->get_symbol(0));
+          context->printErr("declare \"%s\" flag is not supported.", init_message->get_symbol(0));
         }
       } else if (!strcmp(objectType, "array")) {
         // creates a new table
         // objectInitString should contain both name and buffer length
         char *objectInitString = strtok(NULL, ";"); // get the object initialisation string
         char resBuffer[RESOLUTION_BUFFER_LENGTH];
-        initMessage->from_string_and_args(4, objectInitString, graph->getArguments(), resBuffer, RESOLUTION_BUFFER_LENGTH);
-        lastArrayCreated = reinterpret_cast<MessageTable *>(context->newObject("table", initMessage, graph));
+        init_message->from_string_and_args(4, objectInitString, graph->getArguments(), resBuffer, RESOLUTION_BUFFER_LENGTH);
+        lastArrayCreated = reinterpret_cast<MessageTable *>(context->new_object("table", init_message, graph));
         lastArrayCreatedIndex = 0;
         graph->addObject(0, 0, lastArrayCreated);
-        context->printStd("PdFileParser: Replacer array with table, name: '%s'", initMessage->get_symbol(0));
+        context->printStd("PdFileParser: Replacer array with table, name: '%s'", init_message->get_symbol(0));
       } else if (!strcmp(objectType, "coords")) {
         continue;
       } else {

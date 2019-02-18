@@ -29,8 +29,8 @@
 class MessageText : public MessageObject {
   
   public:
-    static MessageObject *newObject(PdMessage *initMessage, PdGraph *graph);
-    MessageText(PdMessage *initMessage, PdGraph *graph);
+    static MessageObject *new_object(PdMessage *init_message, PdGraph *graph);
+    MessageText(PdMessage *init_message, PdGraph *graph);
     ~MessageText();
     
     static const char *getObjectLabel();

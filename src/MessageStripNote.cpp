@@ -22,11 +22,11 @@
 
 #include "MessageStripNote.h"
 
-MessageObject *MessageStripNote::newObject(PdMessage *initMessage, PdGraph *graph) {
-  return new MessageStripNote(initMessage, graph);
+message::Object *MessageStripNote::new_object(pd::Message *init_message, PdGraph *graph) {
+  return new MessageStripNote(init_message, graph);
 }
 
-MessageStripNote::MessageStripNote(PdMessage *initMessage, PdGraph *graph) : MessageObject(2, 2, graph) {
+MessageStripNote::MessageStripNote(pd::Message *init_message, PdGraph *graph) : message::Object(2, 2, graph) {
   // nothing to do
 }
 
@@ -34,15 +34,15 @@ MessageStripNote::~MessageStripNote() {
   // nothing to do
 }
 
-void MessageStripNote::processMessage(int inletIndex, PdMessage *message) {
-  if (inletIndex == 0) {
+void MessageStripNote::process_message(int inlet_index, pd::Message *message) {
+  if (inlet_index == 0) {
     if (message->is_float(0) && message->is_float(1) && message->get_float(1) > 0.0f) {
-      PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(1);
-      outgoingMessage->initWithTimestampAndFloat(message->get_timestamp(), message->get_float(1));
-      sendMessage(1, outgoingMessage);
+      pd::Message *outgoing_message = PD_MESSAGE_ON_STACK(1);
+      outgoing_message->from_timestamp_and_float(message->get_timestamp(), message->get_float(1));
+      send_message(1, outgoing_message);
 
-      outgoingMessage->initWithTimestampAndFloat(message->get_timestamp(), message->get_float(0));
-      sendMessage(0, outgoingMessage);
+      outgoing_message->from_timestamp_and_float(message->get_timestamp(), message->get_float(0));
+      send_message(0, outgoing_message);
     }
   }
   // NOTE(mhroth): no idea what right inlet is for

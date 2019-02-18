@@ -22,12 +22,12 @@
 
 #include "MessageMaximum.h"
 
-MessageObject *MessageMaximum::newObject(PdMessage *initMessage, PdGraph *graph) {
-  return new MessageMaximum(initMessage, graph);
+message::Object *MessageMaximum::new_object(pd::Message *init_message, PdGraph *graph) {
+  return new MessageMaximum(init_message, graph);
 }
 
-MessageMaximum::MessageMaximum(PdMessage *initMessage, PdGraph *graph) : MessageObject(2, 1, graph) {
-  constant = initMessage->is_float(0) ? initMessage->get_float(0) : 0.0f;
+MessageMaximum::MessageMaximum(pd::Message *init_message, PdGraph *graph) : message::Object(2, 1, graph) {
+  constant = init_message->is_float(0) ? init_message->get_float(0) : 0.0f;
   lastOutput = 0.0f;
 }
 
@@ -35,8 +35,8 @@ MessageMaximum::~MessageMaximum() {
   // nothing to do
 }
 
-void MessageMaximum::processMessage(int inletIndex, PdMessage *message) {
-  switch (inletIndex) {
+void MessageMaximum::process_message(int inlet_index, pd::Message *message) {
+  switch (inlet_index) {
     case 0: {
       switch (message->get_type(0)) {
         case FLOAT: {
@@ -44,9 +44,9 @@ void MessageMaximum::processMessage(int inletIndex, PdMessage *message) {
           // allow fallthrough
         }
         case BANG: {
-          PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(1);
-          outgoingMessage->initWithTimestampAndFloat(message->get_timestamp(), lastOutput);
-          sendMessage(0, outgoingMessage);
+          pd::Message *outgoing_message = PD_MESSAGE_ON_STACK(1);
+          outgoing_message->from_timestamp_and_float(message->get_timestamp(), lastOutput);
+          send_message(0, outgoing_message);
           break;
         }
         default: {

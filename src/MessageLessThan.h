@@ -29,8 +29,8 @@
 class MessageLessThan : public MessageObject {
 
   public:
-    static MessageObject *newObject(PdMessage *initMessage, PdGraph *graph);
-    MessageLessThan(PdMessage *initMessage, PdGraph *graph);
+    static MessageObject *new_object(PdMessage *init_message, PdGraph *graph);
+    MessageLessThan(PdMessage *init_message, PdGraph *graph);
     MessageLessThan(float constant, PdGraph *graph);
     ~MessageLessThan();
 
@@ -39,7 +39,7 @@ class MessageLessThan : public MessageObject {
 
   private:
     void init(float constant);
-    void processMessage(int inletIndex, PdMessage *message);
+    void process_message(int inlet_index, PdMessage *message);
 
     float constant;
     float lastOutput;

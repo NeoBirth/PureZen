@@ -33,19 +33,19 @@
 class DspTableRead4 : public DspObject, public TableReceiverInterface {
   
   public:
-    static MessageObject *newObject(PdMessage *initMessage, PdGraph *graph);
-    DspTableRead4(PdMessage *initMessage, PdGraph *graph);
+    static MessageObject *new_object(PdMessage *init_message, PdGraph *graph);
+    DspTableRead4(PdMessage *init_message, PdGraph *graph);
     ~DspTableRead4();
   
     static const char *getObjectLabel();
     std::string toString();
-    ObjectType getObjectType();
+    object::Type get_object_type();
   
     char *getName();
     void setTable(MessageTable *table);
   
   private:
-    void processMessage(int inletIndex, PdMessage *message);
+    void process_message(int inlet_index, PdMessage *message);
     void processDspWithIndex(int fromIndex, int toIndex);
   
     float offset;
@@ -61,7 +61,7 @@ inline const char *DspTableRead4::getObjectLabel() {
   return "tabread4~";
 }
 
-inline ObjectType DspTableRead4::getObjectType() {
+inline object::Type DspTableRead4::get_object_type() {
   return DSP_TABLE_READ4;
 }
 

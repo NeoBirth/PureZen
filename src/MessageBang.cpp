@@ -22,11 +22,11 @@
 
 #include "MessageBang.h"
 
-MessageObject *MessageBang::newObject(PdMessage *initMessage, PdGraph *graph) {
+message::Object *MessageBang::new_object(pd::Message *init_message, PdGraph *graph) {
   return new MessageBang(graph);
 }
 
-MessageBang::MessageBang(PdGraph *graph) : MessageObject(1, 1, graph) {
+MessageBang::MessageBang(PdGraph *graph) : message::Object(1, 1, graph) {
   // nothing to do
 }
 
@@ -34,8 +34,8 @@ MessageBang::~MessageBang() {
   // nothing to do
 }
 
-void MessageBang::processMessage(int inletIndex, PdMessage *message) {
-  PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(1);
-  outgoingMessage->initWithTimestampAndBang(message->get_timestamp());
-  sendMessage(0, outgoingMessage);
+void MessageBang::process_message(int inlet_index, pd::Message *message) {
+  pd::Message *outgoing_message = PD_MESSAGE_ON_STACK(1);
+  outgoing_message->from_timestamp_and_bang(message->get_timestamp());
+  send_message(0, outgoing_message);
 }

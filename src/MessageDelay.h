@@ -35,17 +35,17 @@
 class MessageDelay : public MessageObject {
   
   public:
-    static MessageObject *newObject(PdMessage *initMessage, PdGraph *graph);
-    MessageDelay(PdMessage *initMessage, PdGraph *graph);
+    static MessageObject *new_object(PdMessage *init_message, PdGraph *graph);
+    MessageDelay(PdMessage *init_message, PdGraph *graph);
     ~MessageDelay();
   
     static const char *getObjectLabel();
     std::string toString();
   
-    void sendMessage(int outletIndex, PdMessage *message);
+    void sendMessage(int outlet_index, PdMessage *message);
     
   private:
-    void processMessage(int inletIndex, PdMessage *message);
+    void process_message(int inlet_index, PdMessage *message);
   
     void cancelScheduledMessageIfExists();
   

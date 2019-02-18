@@ -23,21 +23,21 @@
 #include "OrderedMessageQueue.h"
 
 OrderedMessageQueue::OrderedMessageQueue() {
-  orderedMessageQueue = list<ObjectMessageLetPair>();
+  orderedMessageQueue = list<ObjectMessageConnection>();
 }
 
 OrderedMessageQueue::~OrderedMessageQueue() {
   // destroy all remaining inserted messages
-  for (list<ObjectMessageLetPair>::iterator it = orderedMessageQueue.begin();
+  for (list<ObjectMessageConnection>::iterator it = orderedMessageQueue.begin();
        it != orderedMessageQueue.end(); ++it) {
-    ObjectMessageLetPair omlPair = *it;
+    ObjectMessageConnection omlPair = *it;
     omlPair.second.first->freeMessage();
   }
 }
 
-void OrderedMessageQueue::insertMessage(MessageObject *messageObject, int outletIndex, PdMessage *message) {
-  ObjectMessageLetPair omlPair = make_pair(messageObject, make_pair(message, outletIndex));
-  for (list<ObjectMessageLetPair>::iterator it = orderedMessageQueue.begin();
+void OrderedMessageQueue::insertMessage(message::Object *message_obj, int outlet_index, pd::Message *message) {
+  ObjectMessageConnection omlPair = Connection::new(message_obj, Connection::new(message, outlet_index));
+  for (list<ObjectMessageConnection>::iterator it = orderedMessageQueue.begin();
        it != orderedMessageQueue.end(); ++it) {
     if (message->get_timestamp() < it->second.first->get_timestamp()) {
       orderedMessageQueue.insert(it, omlPair);
@@ -47,20 +47,20 @@ void OrderedMessageQueue::insertMessage(MessageObject *messageObject, int outlet
   orderedMessageQueue.push_back(omlPair); // insert at end
 }
 
-void OrderedMessageQueue::removeMessage(MessageObject *messageObject, int outletIndex, PdMessage *message) {
-  for (list<ObjectMessageLetPair>::iterator it = orderedMessageQueue.begin();
+void OrderedMessageQueue::removeMessage(message::Object *message_obj, int outlet_index, pd::Message *message) {
+  for (list<ObjectMessageConnection>::iterator it = orderedMessageQueue.begin();
        it != orderedMessageQueue.end(); ++it) {
-    ObjectMessageLetPair omlPair = *it;
-    if (omlPair.first == messageObject &&
+    ObjectMessageConnection omlPair = *it;
+    if (omlPair.first == message_obj &&
         omlPair.second.first == message &&
-        omlPair.second.second == outletIndex) {
+        omlPair.second.second == outlet_index) {
       orderedMessageQueue.erase(it);
       return;
     }
   }
 }
 
-ObjectMessageLetPair OrderedMessageQueue::peek() {
+ObjectMessageConnection OrderedMessageQueue::peek() {
   return orderedMessageQueue.front();
 }
 

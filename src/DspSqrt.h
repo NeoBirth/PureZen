@@ -30,8 +30,8 @@
 class DspSqrt : public DspObject {
   
   public:
-    static MessageObject *newObject(PdMessage *initMessage, PdGraph *graph);
-    DspSqrt(PdMessage *initMessage, PdGraph *graph);
+    static MessageObject *new_object(PdMessage *init_message, PdGraph *graph);
+    DspSqrt(PdMessage *init_message, PdGraph *graph);
     ~DspSqrt();
     
     static const char *getObjectLabel();

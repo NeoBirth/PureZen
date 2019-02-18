@@ -25,7 +25,7 @@
 
 #include "MessageObject.h"
 
-typedef std::pair<MessageObject *, std::pair<PdMessage *, unsigned int> > ObjectMessageLetPair;
+typedef std::pair<MessageObject *, std::pair<PdMessage *, unsigned int> > ObjectMessageConnection;
 
 class OrderedMessageQueue {
   
@@ -34,19 +34,19 @@ class OrderedMessageQueue {
     ~OrderedMessageQueue();
     
     /** Inserts the message into the ordered queue based on its scheduled time. */
-    void insertMessage(MessageObject *messageObject, int outletIndex, PdMessage *message);
+    void insertMessage(MessageObject *messageObject, int outlet_index, PdMessage *message);
   
     /** Removes the given message addressed to the given <code>MessageObject</code> from the queue. */
-    void removeMessage(MessageObject *messageObject, int outletIndex, PdMessage *message);
+    void removeMessage(MessageObject *messageObject, int outlet_index, PdMessage *message);
   
-    ObjectMessageLetPair peek();
+    ObjectMessageConnection peek();
   
     void pop();
   
     bool empty();
   
   private:
-    list<ObjectMessageLetPair> orderedMessageQueue;
+    list<ObjectMessageConnection> orderedMessageQueue;
 };
 
 #endif // _ORDERED_MESSAGE_QUEUE_H_

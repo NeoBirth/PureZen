@@ -23,7 +23,7 @@
 #include "DspNoise.h"
 #include "MersenneTwister.h"
 
-MessageObject *DspNoise::newObject(PdMessage *initMessage, PdGraph *graph) {
+message::Object *DspNoise::new_object(pd::Message *init_message, PdGraph *graph) {
   return new DspNoise(graph);
 }
 

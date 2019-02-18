@@ -2,7 +2,7 @@
  *  Copyright 2009,2010,2011,2012 Reality Jockey, Ltd.
  *                 info@rjdj.me
  *                 http://rjdj.me/
- * 
+ *
  *  This file is part of ZenGarden.
  *
  *  ZenGarden is free software: you can redistribute it and/or modify
@@ -14,7 +14,7 @@
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU Lesser General Public License for more details.
- *  
+ *
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with ZenGarden.  If not, see <http://www.gnu.org/licenses/>.
  *
@@ -37,7 +37,7 @@
 #define FREE_ALIGNED_BUFFER(_buffer) free(_buffer)
 #endif
 
-typedef std::pair<PdMessage *, unsigned int> MessageLetPair;
+typedef std::pair<PdMessage *, unsigned int> MessageConnection;
 
 /**
  * A <code>DspObject</code> is the abstract superclass of any object which processes audio.
@@ -45,126 +45,126 @@ typedef std::pair<PdMessage *, unsigned int> MessageLetPair;
  * can implicitly also process <code>PdMessage</code>s.
  */
 class DspObject : public MessageObject {
-  
+
   public:
     /** The nominal constructor. */
     DspObject(int numMessageInlets, int numDspInlets, int numMessageOutlets, int numDspOutlets, PdGraph *graph);
-  
-    /** 
+
+    /**
      * This constructor is used exclusively by <code>PdGraph</code>.
      * <code>DspObject</code> requires the blocksize in order to instantiate, however <code>PdGraph</code>
      * is a subclass of <code>DspObject</code> and thus the fields of the latter are not yet initialised
      * when the fomer fields are filled in.
      */
     DspObject(int numMessageInlets, int numDspInlets, int numMessageOutlets, int numDspOutlets,
-        int blockSize, PdGraph *graph);
-    
+        int block_size, PdGraph *graph);
+
     virtual ~DspObject();
-    
-    virtual void receiveMessage(int inletIndex, PdMessage *message);
-  
+
+    virtual void receiveMessage(int inlet_index, PdMessage *message);
+
     /* Override MessageObject::shouldDistributeMessageToInlets() */
     virtual bool shouldDistributeMessageToInlets() { return false; }
-    
+
     /** Process audio buffers in this block. */
     void (*processFunction)(DspObject *dspObject, int fromIndex, int toIndex);
-  
+
     /** Returns the connection type of the given outlet. */
-    virtual ConnectionType getConnectionType(int outletIndex);
+    virtual connection::Type get_connection_type(int outlet_index);
 
     /** Get and set buffers at inlets and outlets. */
-    virtual void setDspBufferAtInlet(float *buffer, unsigned int inletIndex);
-    virtual void setDspBufferAtOutlet(float *buffer, unsigned int outletIndex);
-    virtual float *getDspBufferAtInlet(int inletIndex);
-    virtual float *getDspBufferAtOutlet(int outletIndex);
-  
-  
+    virtual void setDspBufferAtInlet(float *buffer, unsigned int inlet_index);
+    virtual void setDspBufferAtOutlet(float *buffer, unsigned int outlet_index);
+    virtual float *getDspBufferAtInlet(int inlet_index);
+    virtual float *getDspBufferAtOutlet(int outlet_index);
+
+
     /** Return true if a buffer from the Buffer Pool should set set at the given outlet. False otherwise. */
-    virtual bool canSetBufferAtOutlet(unsigned int outletIndex) { return true; }
-  
-    virtual void addConnectionFromObjectToInlet(MessageObject *messageObject, int outletIndex, int inletIndex);
-    virtual void addConnectionToObjectFromOutlet(MessageObject *messageObject, int inletIndex, int outletIndex);
-    virtual void removeConnectionFromObjectToInlet(MessageObject *messageObject, int outletIndex, int inletIndex);
-    virtual void removeConnectionToObjectFromOutlet(MessageObject *messageObject, int inletIndex, int outletIndex);
-  
+    virtual bool canSetBufferAtOutlet(unsigned int outlet_index) { return true; }
+
+    virtual void addConnectionFromObjectToInlet(MessageObject *messageObject, int outlet_index, int inlet_index);
+    virtual void addConnectionToObjectFromOutlet(MessageObject *messageObject, int inlet_index, int outlet_index);
+    virtual void removeConnectionFromObjectToInlet(MessageObject *messageObject, int outlet_index, int inlet_index);
+    virtual void removeConnectionToObjectFromOutlet(MessageObject *messageObject, int inlet_index, int outlet_index);
+
     virtual bool doesProcessAudio() { return true; }
-  
+
     virtual bool isLeafNode();
 
     virtual list<DspObject *> getProcessOrder();
-  
+
     virtual unsigned int getNumInlets() {
-      return max(incomingMessageConnections.size(), incomingDspConnections.size());
+      return max(incoming_messageConnections.size(), incomingDspConnections.size());
     }
     virtual unsigned int getNumOutlets() {
-      return max(outgoingMessageConnections.size(), outgoingDspConnections.size());
+      return max(outgoing_messageConnections.size(), outgoingDspConnections.size());
     }
     virtual unsigned int getNumDspInlets() { return incomingDspConnections.size(); }
     virtual unsigned int getNumDspOutlets() { return outgoingDspConnections.size(); }
-  
+
     /**
      * Returns <i>all</i> incoming connections to the given inlet. This includes both message and
      * dsp connections.
      */
-    virtual list<ObjectLetPair> getIncomingConnections(unsigned int inletIndex);
-  
+    virtual list<ObjectConnection> getIncomingConnections(unsigned int inlet_index);
+
     /** Returns only incoming dsp connections to the given inlet. */
-    virtual list<ObjectLetPair> getIncomingDspConnections(unsigned int inletIndex);
-  
+    virtual list<ObjectConnection> getIncomingDspConnections(unsigned int inlet_index);
+
     /**
      * Returns <i>all</i> outgoing connections from the given outlet. This includes both message and
      * dsp connections.
      */
-    virtual list<ObjectLetPair> getOutgoingConnections(unsigned int outletIndex);
-  
+    virtual list<ObjectConnection> getOutgoingConnections(unsigned int outlet_index);
+
     /** Returns only outgoing dsp connections from the given outlet. */
-    virtual list<ObjectLetPair> getOutgoingDspConnections(unsigned int outletIndex);
-  
+    virtual list<ObjectConnection> getOutgoingDspConnections(unsigned int outlet_index);
+
     static const char *getObjectLabel() { return "obj~"; }
-    
+
   protected:
     static void processFunctionDefaultNoMessage(DspObject *dspObject, int fromIndex, int toIndex);
     static void processFunctionMessage(DspObject *dspObject, int fromIndex, int toIndex);
-  
+
     /* IMPORTANT: one of these two functions MUST be overridden (or processFunction()) */
     virtual void processDspWithIndex(double fromIndex, double toIndex);
     virtual void processDspWithIndex(int fromIndex, int toIndex);
-  
+
     /**
      * DspObject subclasses are informed that a connection change has happened to an inlet. A
      * message or signal connection has been added or removed. They may which to reconfigure their
      * (optimised) codepath with this new information.
      */
-    virtual void onInletConnectionUpdate(unsigned int inletIndex);
-  
+    virtual void onInletConnectionUpdate(unsigned int inlet_index);
+
     /** Immediately deletes all messages in the message queue without executing them. */
     void clearMessageQueue();
-    
+
     // both float and int versions of the blocksize are stored as different internal mechanisms
     // require different number formats
-    int blockSizeInt;
-  
+    int block_sizeInt;
+
     /** The local message queue. Messages that are pending for the next block. */
-    queue<MessageLetPair> messageQueue;
-  
+    queue<MessageConnection> messageQueue;
+
     /* An array of pointers to resolved dsp buffers at each inlet. */
     float *dspBufferAtInlet[3];
-  
+
     /* An array of pointers to resolved dsp buffers at each outlet. */
     float *dspBufferAtOutlet[3];
-  
+
     /** List of all dsp objects connecting to this object at each inlet. */
-    vector<list<ObjectLetPair> > incomingDspConnections;
-  
+    vector<list<ObjectConnection> > incomingDspConnections;
+
     /** List of all dsp objects to which this object connects at each outlet. */
-    vector<list<ObjectLetPair> > outgoingDspConnections;
-  
+    vector<list<ObjectConnection> > outgoingDspConnections;
+
     /** The process function to use when acting on a message. */
     void (*processFunctionNoMessage)(DspObject *dspObject, int fromIndex, int toIndex);
-  
+
   private:
     /** This function encapsulates the common code between the two constructors. */
-    void init(int numDspInlets, int numDspOutlets, int blockSize);
+    void init(int numDspInlets, int numDspOutlets, int block_size);
 };
 
 #endif // _DSP_OBJECT_H_

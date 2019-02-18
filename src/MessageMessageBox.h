@@ -31,7 +31,7 @@ typedef std::pair<char *, PdMessage *> MessageNamedDestination;
 class MessageMessageBox : public MessageObject {
 
   public:
-    static MessageObject *newObject(PdMessage *initMessage, PdGraph *graph);
+    static MessageObject *new_object(PdMessage *init_message, PdGraph *graph);
     MessageMessageBox(char *initString, PdGraph *graph);
     ~MessageMessageBox();
   
@@ -39,7 +39,7 @@ class MessageMessageBox : public MessageObject {
     std::string toString();
   
   private:
-    void processMessage(int inletIndex, PdMessage *message);
+    void process_message(int inlet_index, PdMessage *message);
   
     vector<PdMessage *> localMessageList;
     vector<MessageNamedDestination> remoteMessageList;

@@ -23,11 +23,11 @@
 #include "MessageSwitch.h"
 #include "PdGraph.h"
 
-MessageObject *MessageSwitch::newObject(PdMessage *initMessage, PdGraph *graph) {
-  return new MessageSwitch(initMessage, graph);
+message::Object *MessageSwitch::new_object(pd::Message *init_message, PdGraph *graph) {
+  return new MessageSwitch(init_message, graph);
 }
 
-MessageSwitch::MessageSwitch(PdMessage *initMessage, PdGraph *graph) : MessageObject(1, 0, graph) {
+MessageSwitch::MessageSwitch(pd::Message *init_message, PdGraph *graph) : message::Object(1, 0, graph) {
   // TODO(mhroth): parse object arguments 
 }
 
@@ -35,7 +35,7 @@ MessageSwitch::~MessageSwitch() {
   // nothing to do
 }
 
-void MessageSwitch::processMessage(int inletIndex, PdMessage *message) {
+void MessageSwitch::process_message(int inlet_index, pd::Message *message) {
   if (message->is_float(0)) {
     graph->setSwitch(message->get_float(0) != 0.0f);
   }

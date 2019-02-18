@@ -29,20 +29,20 @@
 class MessagePack : public MessageObject {
   
   public:
-    static MessageObject *newObject(PdMessage *initMessage, PdGraph *graph);
-    MessagePack(PdMessage *initMessage, PdGraph *graph);
+    static MessageObject *new_object(PdMessage *init_message, PdGraph *graph);
+    MessagePack(PdMessage *init_message, PdGraph *graph);
     ~MessagePack();
   
     static const char *getObjectLabel();
     std::string toString();
     
   private:
-    void processMessage(int inletIndex, PdMessage *message);
+    void process_message(int inlet_index, PdMessage *message);
   
-    /** A helper function for processMessage(). */
-    void onBangAtInlet(int inletIndex, double timestamp);
+    /** A helper function for process_message(). */
+    void onBangAtInlet(int inlet_index, double timestamp);
   
-    PdMessage *outgoingMessage;
+    PdMessage *outgoing_message;
 };
 
 inline const char *MessagePack::getObjectLabel() {

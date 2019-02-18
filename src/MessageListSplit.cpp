@@ -23,32 +23,32 @@
 #include <string.h>
 #include "MessageListSplit.h"
 
-MessageListSplit::MessageListSplit(PdMessage *initMessage, PdGraph *graph) : MessageObject(2, 3, graph) {
-  splitIndex = initMessage->is_float(0) ? (int) initMessage->get_float(0) : 0;
+MessageListSplit::MessageListSplit(pd::Message *init_message, PdGraph *graph) : message::Object(2, 3, graph) {
+  splitIndex = init_message->is_float(0) ? (int) init_message->get_float(0) : 0;
 }
 
 MessageListSplit::~MessageListSplit() {
   // nothing to do
 }
 
-void MessageListSplit::processMessage(int inletIndex, PdMessage *message) {
-  switch (inletIndex) {
+void MessageListSplit::process_message(int inlet_index, pd::Message *message) {
+  switch (inlet_index) {
     case 0: {
       int numElements = message->get_num_elements();
       if (numElements <= splitIndex) {
         // if there aren't enough elements to split on, forward the message on the third outlet
-        sendMessage(2, message);
+        send_message(2, message);
       } else {
         int numElems = numElements-splitIndex;
-        PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(numElems);
-        outgoingMessage->from_timestamp(message->get_timestamp(), numElems);
-        memcpy(outgoingMessage->get_element(0), message->get_element(splitIndex), numElems * sizeof(pd::message::Atom));
-        sendMessage(1, outgoingMessage);
+        pd::Message *outgoing_message = PD_MESSAGE_ON_STACK(numElems);
+        outgoing_message->from_timestamp(message->get_timestamp(), numElems);
+        memcpy(outgoing_message->get_element(0), message->get_element(splitIndex), numElems * sizeof(pd::message::Atom));
+        send_message(1, outgoing_message);
         
-        outgoingMessage = PD_MESSAGE_ON_STACK(splitIndex);
-        outgoingMessage->from_timestamp(message->get_timestamp(), splitIndex);
-        memcpy(outgoingMessage->get_element(0), message->get_element(0), splitIndex * sizeof(pd::message::Atom));
-        sendMessage(0, outgoingMessage);
+        outgoing_message = PD_MESSAGE_ON_STACK(splitIndex);
+        outgoing_message->from_timestamp(message->get_timestamp(), splitIndex);
+        memcpy(outgoing_message->get_element(0), message->get_element(0), splitIndex * sizeof(pd::message::Atom));
+        send_message(0, outgoing_message);
       }
       break;
     }

@@ -23,21 +23,21 @@
 #include "DspPrint.h"
 #include "PdGraph.h"
 
-MessageObject *DspPrint::newObject(PdMessage *initMessage, PdGraph *graph) {
-  return new DspPrint(initMessage, graph);
+message::Object *DspPrint::new_object(pd::Message *init_message, PdGraph *graph) {
+  return new DspPrint(init_message, graph);
 }
 
-DspPrint::DspPrint(PdMessage *initMessage, PdGraph *graph) : DspObject(1, 1, 0, 0, graph) {
-  name = utils::copy_string(initMessage->is_symbol(0) ? initMessage->get_symbol(0) : (char *) "print~");
+DspPrint::DspPrint(pd::Message *init_message, PdGraph *graph) : DspObject(1, 1, 0, 0, graph) {
+  name = utils::copy_string(init_message->is_symbol(0) ? init_message->get_symbol(0) : (char *) "print~");
 }
 
 DspPrint::~DspPrint() {
   free(name);
 }
 
-void DspPrint::processMessage(int inletIndex, PdMessage *message) {
+void DspPrint::process_message(int inlet_index, pd::Message *message) {
   if (message->is_bang(0)) {
-    int bufferMaxIndex = blockSizeInt - 1;
+    int bufferMaxIndex = block_sizeInt - 1;
     int totalLength = snprintf(NULL, 0, "%s:\n", name);
     float *inputBuffer = dspBufferAtInlet[0];
     for (int i = 0; i < bufferMaxIndex; i++) {

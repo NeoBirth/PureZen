@@ -22,13 +22,13 @@
 
 #include "MessageSymbol.h"
 
-MessageObject *MessageSymbol::newObject(PdMessage *initMessage, PdGraph *graph) {
-  return new MessageSymbol(initMessage, graph);
+message::Object *MessageSymbol::new_object(pd::Message *init_message, PdGraph *graph) {
+  return new MessageSymbol(init_message, graph);
 }
 
-MessageSymbol::MessageSymbol(PdMessage *initMessage, PdGraph *graph) : MessageObject(2, 1, graph) {
-  if (initMessage->is_symbol(0)) {
-    copy_string(initMessage->get_symbol(0));
+MessageSymbol::MessageSymbol(pd::Message *init_message, PdGraph *graph) : message::Object(2, 1, graph) {
+  if (init_message->is_symbol(0)) {
+    copy_string(init_message->get_symbol(0));
   } else {
     memset(symbol, 0, SYMBOL_BUFFER_LENGTH * sizeof(char));
   }
@@ -47,8 +47,8 @@ bool MessageSymbol::copy_string(const char *s) {
   }
 }
 
-void MessageSymbol::processMessage(int inletIndex, PdMessage *message) {
-  switch (inletIndex) {
+void MessageSymbol::process_message(int inlet_index, pd::Message *message) {
+  switch (inlet_index) {
     case 0: {
       switch (message->get_type(0)) {
         case SYMBOL: {
@@ -56,9 +56,9 @@ void MessageSymbol::processMessage(int inletIndex, PdMessage *message) {
           // allow fallthrough
         }
         case BANG: {
-          PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(1);
-          outgoingMessage->initWithTimestampAndSymbol(message->get_timestamp(), symbol);
-          sendMessage(0, outgoingMessage);
+          pd::Message *outgoing_message = PD_MESSAGE_ON_STACK(1);
+          outgoing_message->from_timestamp_and_symbol(message->get_timestamp(), symbol);
+          send_message(0, outgoing_message);
           break;
         }
         default: break;

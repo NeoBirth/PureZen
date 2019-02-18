@@ -29,8 +29,8 @@
 class MessageLessThanOrEqualTo : public MessageObject {
 
   public:
-    static MessageObject *newObject(PdMessage *initMessage, PdGraph *graph);
-    MessageLessThanOrEqualTo(PdMessage *initMessage, PdGraph *graph);
+    static MessageObject *new_object(PdMessage *init_message, PdGraph *graph);
+    MessageLessThanOrEqualTo(PdMessage *init_message, PdGraph *graph);
     MessageLessThanOrEqualTo(float constant, PdGraph *graph);
     ~MessageLessThanOrEqualTo();
 
@@ -39,7 +39,7 @@ class MessageLessThanOrEqualTo : public MessageObject {
 
   private:
     void init(float constant);
-    void processMessage(int inletIndex, PdMessage *message);
+    void process_message(int inlet_index, PdMessage *message);
 
     float constant;
     float lastOutput;

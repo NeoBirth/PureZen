@@ -29,8 +29,8 @@
 class MessageListAppend : public MessageObject {
   
   public:
-    static MessageObject *newObject(PdMessage *initMessage, PdGraph *graph);
-    MessageListAppend(PdMessage *initMessage, PdGraph *graph);
+    static MessageObject *new_object(PdMessage *init_message, PdGraph *graph);
+    MessageListAppend(PdMessage *init_message, PdGraph *graph);
     ~MessageListAppend();
     
     static const char *getObjectLabel();
@@ -39,7 +39,7 @@ class MessageListAppend : public MessageObject {
     bool shouldDistributeMessageToInlets();
     
   private:
-    void processMessage(int inletIndex, PdMessage *message);
+    void process_message(int inlet_index, PdMessage *message);
   
     PdMessage *appendMessage;
 };

@@ -24,12 +24,12 @@
 #include "DspDivide.h"
 #include "PdGraph.h"
 
-MessageObject *DspDivide::newObject(PdMessage *initMessage, PdGraph *graph) {
-  return new DspDivide(initMessage, graph);
+message::Object *DspDivide::new_object(pd::Message *init_message, PdGraph *graph) {
+  return new DspDivide(init_message, graph);
 }
 
-DspDivide::DspDivide(PdMessage *initMessage, PdGraph *graph) : DspObject(2, 2, 0, 1, graph) {
-  constant = initMessage->is_float(0) ? initMessage->get_float(0) : 0.0f;
+DspDivide::DspDivide(pd::Message *init_message, PdGraph *graph) : DspObject(2, 2, 0, 1, graph) {
+  constant = init_message->is_float(0) ? init_message->get_float(0) : 0.0f;
   processFunction = &processScalar;
   processFunctionNoMessage = &processScalar;
 }
@@ -38,7 +38,7 @@ DspDivide::~DspDivide() {
   // nothing to do
 }
 
-void DspDivide::onInletConnectionUpdate(unsigned int inletIndex) {
+void DspDivide::onInletConnectionUpdate(unsigned int inlet_index) {
   processFunction = (incomingDspConnections[0].size() > 0 && incomingDspConnections[1].size() > 0)
       ? &processSignal : &processScalar;
 }
@@ -50,8 +50,8 @@ string DspDivide::toString() {
   return string(str);
 }
 
-void DspDivide::processMessage(int inletIndex, PdMessage *message) {
-  if (inletIndex == 1) {
+void DspDivide::process_message(int inlet_index, pd::Message *message) {
+  if (inlet_index == 1) {
     if (message->is_float(0)) {
       if (message->get_float(0) == 0.0f) {
         constant = 1.0f;

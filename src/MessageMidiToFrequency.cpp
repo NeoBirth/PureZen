@@ -22,11 +22,11 @@
 
 #include "MessageMidiToFrequency.h"
 
-MessageObject *MessageMidiToFrequency::newObject(PdMessage *initMessage, PdGraph *graph) {
-  return new MessageMidiToFrequency(initMessage, graph);
+message::Object *MessageMidiToFrequency::new_object(pd::Message *init_message, PdGraph *graph) {
+  return new MessageMidiToFrequency(init_message, graph);
 }
 
-MessageMidiToFrequency::MessageMidiToFrequency(PdMessage *initMessage, PdGraph *graph) : MessageObject(1, 1, graph) {
+MessageMidiToFrequency::MessageMidiToFrequency(pd::Message *init_message, PdGraph *graph) : message::Object(1, 1, graph) {
   // nothing to do
 }
 
@@ -34,11 +34,11 @@ MessageMidiToFrequency::~MessageMidiToFrequency() {
   // nothing to do
 }
 
-void MessageMidiToFrequency::processMessage(int inletIndex, PdMessage *message) {
+void MessageMidiToFrequency::process_message(int inlet_index, pd::Message *message) {
   if (message->is_float(0)) {
-    PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(1);
+    pd::Message *outgoing_message = PD_MESSAGE_ON_STACK(1);
     float value = 440.0f * powf(2.0f, (message->get_float(0) - 69.0f) / 12.0f);
-    outgoingMessage->initWithTimestampAndFloat(message->get_timestamp(), value);
-    sendMessage(0, outgoingMessage);
+    outgoing_message->from_timestamp_and_float(message->get_timestamp(), value);
+    send_message(0, outgoing_message);
   }
 }

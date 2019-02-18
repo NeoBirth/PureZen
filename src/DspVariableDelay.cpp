@@ -25,14 +25,14 @@
 #include "DspVariableDelay.h"
 #include "PdGraph.h"
 
-MessageObject *DspVariableDelay::newObject(PdMessage *initMessage, PdGraph *graph) {
-  return new DspVariableDelay(initMessage, graph);
+message::Object *DspVariableDelay::new_object(pd::Message *init_message, PdGraph *graph) {
+  return new DspVariableDelay(init_message, graph);
 }
 
-DspVariableDelay::DspVariableDelay(PdMessage *initMessage, PdGraph *graph) : DelayReceiver(0, 1, 0, 1, graph) {
-  if (initMessage->is_symbol(0)) {
-    name = utils::copy_string(initMessage->get_symbol(0));
-    sampleRate = graph->getSampleRate();
+DspVariableDelay::DspVariableDelay(pd::Message *init_message, PdGraph *graph) : DelayReceiver(0, 1, 0, 1, graph) {
+  if (init_message->is_symbol(0)) {
+    name = utils::copy_string(init_message->get_symbol(0));
+    sample_rate = graph->getSampleRate();
   } else {
     graph->printErr("vd~ requires the name of a delayline. None given.");
     name = NULL;
@@ -49,35 +49,35 @@ void DspVariableDelay::processDspWithIndex(int fromIndex, int toIndex) {
   float *buffer = delayline->getBuffer(&headIndex, &bufferLength);
   float bufferLengthFloat = (float) bufferLength;
   
-  float targetIndexBase = (float) (headIndex - blockSizeInt);
+  float targetIndexBase = (float) (headIndex - block_sizeInt);
   #if __APPLE__
-  float xArray[blockSizeInt];
-  float targetIndexBaseArray[blockSizeInt];
+  float xArray[block_sizeInt];
+  float targetIndexBaseArray[block_sizeInt];
   
   // calculate delay in samples (vector version of utils::millisecondsToSamples)
-  float samplesPerMillisecond = sampleRate / 1000.0f;
-  vDSP_vsmul(dspBufferAtInlet[0], 1, &samplesPerMillisecond, xArray, 1, blockSizeInt);
+  float samplesPerMillisecond = sample_rate / 1000.0f;
+  vDSP_vsmul(dspBufferAtInlet[0], 1, &samplesPerMillisecond, xArray, 1, block_sizeInt);
   
   float zero = 0.0f;
   float one = 1.0f;
-  vDSP_vclip(xArray, 1, &zero, &bufferLengthFloat, xArray, 1, blockSizeInt); // clip the delay between 0 and the buffer length
-  vDSP_vramp(&targetIndexBase, &one, targetIndexBaseArray, 1, blockSizeInt);  // create targetIndexBaseArray
-  vDSP_vsub(xArray, 1, targetIndexBaseArray, 1, xArray, 1, blockSizeInt); // targetIndexBaseArray - xArray (== targetSampleIndex)
+  vDSP_vclip(xArray, 1, &zero, &bufferLengthFloat, xArray, 1, block_sizeInt); // clip the delay between 0 and the buffer length
+  vDSP_vramp(&targetIndexBase, &one, targetIndexBaseArray, 1, block_sizeInt);  // create targetIndexBaseArray
+  vDSP_vsub(xArray, 1, targetIndexBaseArray, 1, xArray, 1, block_sizeInt); // targetIndexBaseArray - xArray (== targetSampleIndex)
   
   // ensure that targetSampleIndex is positive
   // TODO(mhroth): vectorise this!
-  for (int i = 0; i < blockSizeInt; i++) {
+  for (int i = 0; i < block_sizeInt; i++) {
     if (xArray[i] < 0.0f) {
       xArray[i] += bufferLengthFloat;
     }
   }
   
   // do table lookup (in buffer) using xArray as indicies, with linear interpolation 
-  vDSP_vlint(buffer, xArray, 1, dspBufferAtOutlet[0], 1, blockSizeInt, bufferLength);
+  vDSP_vlint(buffer, xArray, 1, dspBufferAtOutlet[0], 1, block_sizeInt, bufferLength);
   #else
   float *inputbuffer = dspBufferAtInlet[0];
-  for (int i = 0; i < blockSizeInt; i++, targetIndexBase+=1.0f) {
-    float delayInSamples = utils::millisecondsToSamples(inputbuffer[i], sampleRate);
+  for (int i = 0; i < block_sizeInt; i++, targetIndexBase+=1.0f) {
+    float delayInSamples = utils::millisecondsToSamples(inputbuffer[i], sample_rate);
     if (delayInSamples < 0.0f) {
       delayInSamples = 0.0f;
     } else if (delayInSamples > bufferLengthFloat) {

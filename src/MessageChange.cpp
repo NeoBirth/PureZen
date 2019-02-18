@@ -22,36 +22,36 @@
 
 #include "MessageChange.h"
 
-MessageObject *MessageChange::newObject(PdMessage *initMessage, PdGraph *graph) {
-  return new MessageChange(initMessage, graph);
+message::Object *MessageChange::new_object(pd::Message *init_message, PdGraph *graph) {
+  return new MessageChange(init_message, graph);
 }
 
-MessageChange::MessageChange(PdMessage *initMessage, PdGraph *graph) : MessageObject(1, 1, graph) {
-   prevValue = initMessage->is_float(0) ? initMessage->get_float(0) : 0.0f;
+MessageChange::MessageChange(pd::Message *init_message, PdGraph *graph) : message::Object(1, 1, graph) {
+   prevValue = init_message->is_float(0) ? init_message->get_float(0) : 0.0f;
 }
 
 MessageChange::~MessageChange() {
   // nothing to do
 }
 
-void MessageChange::processMessage(int inletIndex, PdMessage *message) {
+void MessageChange::process_message(int inlet_index, pd::Message *message) {
   switch (message->get_type(0)) {
     case FLOAT: {
       // output only if input is different than what is already there
       float messageValue = message->get_float(0);
       if (messageValue != prevValue) {
-        PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(1);
-        outgoingMessage->initWithTimestampAndFloat(message->get_timestamp(), messageValue);
+        pd::Message *outgoing_message = PD_MESSAGE_ON_STACK(1);
+        outgoing_message->from_timestamp_and_float(message->get_timestamp(), messageValue);
         prevValue = messageValue;
-        sendMessage(0, outgoingMessage);
+        send_message(0, outgoing_message);
       }
       break;
     }
     case BANG: {
       // force output
-      PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(1);
-      outgoingMessage->initWithTimestampAndFloat(message->get_timestamp(), prevValue);
-      sendMessage(0, outgoingMessage);
+      pd::Message *outgoing_message = PD_MESSAGE_ON_STACK(1);
+      outgoing_message->from_timestamp_and_float(message->get_timestamp(), prevValue);
+      send_message(0, outgoing_message);
       break;
     }
     case SYMBOL: {

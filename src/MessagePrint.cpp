@@ -23,13 +23,13 @@
 #include "MessagePrint.h"
 #include "PdGraph.h"
 
-MessageObject *MessagePrint::newObject(PdMessage *initMessage, PdGraph *graph) {
-  return new MessagePrint(initMessage, graph);
+message::Object *MessagePrint::new_object(pd::Message *init_message, PdGraph *graph) {
+  return new MessagePrint(init_message, graph);
 }
 
-MessagePrint::MessagePrint(PdMessage *initMessage, PdGraph *graph) : MessageObject(1, 0, graph) {
-  if (initMessage->is_symbol(0)) {
-    name = initMessage->is_symbol_str(0, "-n") ? NULL : utils::copy_string(initMessage->get_symbol(0));
+MessagePrint::MessagePrint(pd::Message *init_message, PdGraph *graph) : message::Object(1, 0, graph) {
+  if (init_message->is_symbol(0)) {
+    name = init_message->is_symbol_str(0, "-n") ? NULL : utils::copy_string(init_message->get_symbol(0));
   } else {
     name = utils::copy_string((char *) "print");
   }
@@ -39,7 +39,7 @@ MessagePrint::~MessagePrint() {
   free(name);
 }
 
-void MessagePrint::processMessage(int inletIndex, PdMessage *message) {
+void MessagePrint::process_message(int inlet_index, pd::Message *message) {
   char *out = message->toString();
   if (name != NULL) {
     graph->printStd("[@ %.3fms] %s: %s", message->get_timestamp(), name, out);

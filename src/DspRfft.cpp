@@ -25,13 +25,13 @@
 #include "DspRfft.h"
 #include "PdGraph.h"
 
-MessageObject *DspRfft::newObject(PdMessage *initMessage, PdGraph *graph) {
-  return new DspRfft(initMessage, graph);
+message::Object *DspRfft::new_object(pd::Message *init_message, PdGraph *graph) {
+  return new DspRfft(init_message, graph);
 }
 
-DspRfft::DspRfft(PdMessage *initMessage, PdGraph *graph) : DspObject(0, 1, 0, 2, graph) {
+DspRfft::DspRfft(pd::Message *init_message, PdGraph *graph) : DspObject(0, 1, 0, 2, graph) {
   #if __APPLE__
-  log2n = lrintf(log2f((float) blockSizeInt));
+  log2n = lrintf(log2f((float) block_sizeInt));
   fftSetup = vDSP_create_fftsetup(log2n, kFFTRadix2);
   zeroBuffer = graph->getBufferPool()->getZeroBuffer(); // cache the local zero buffer
   #else
@@ -64,7 +64,7 @@ void DspRfft::processSignal(DspObject *dspObject, int fromIndex, int toIndex) {
   // way that Pd does. But since the Apple fft and ifft functions require the symmetric values,
   // we leave it like this for now.
   
-  //int halfBlockSize = blockSizeInt >> 1;
+  //int halfBlockSize = block_sizeInt >> 1;
   //memset(dspBufferAtOutlet0+halfBlockSize+1, 0, (halfBlockSize-1) * sizeof(float));
   //memset(dspBufferAtOutlet[1]+halfBlockSize, 0, halfBlockSize * sizeof(float));
   #endif // __APPLE__

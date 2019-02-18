@@ -32,8 +32,8 @@
 class DspImplicitAdd : public DspObject {
   
 public:
-  static MessageObject *newObject(PdMessage *initMessage, PdGraph *graph);
-  DspImplicitAdd(PdMessage *initMessage, PdGraph *graph);
+  static MessageObject *new_object(PdMessage *init_message, PdGraph *graph);
+  DspImplicitAdd(PdMessage *init_message, PdGraph *graph);
   ~DspImplicitAdd();
   
   static const char *getObjectLabel();

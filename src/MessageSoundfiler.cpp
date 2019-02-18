@@ -26,11 +26,11 @@
 
 #include <sndfile.h>
 
-MessageObject *MessageSoundfiler::newObject(PdMessage *initMessage, PdGraph *graph) {
-  return new MessageSoundfiler(initMessage, graph);
+message::Object *MessageSoundfiler::new_object(pd::Message *init_message, PdGraph *graph) {
+  return new MessageSoundfiler(init_message, graph);
 }
 
-MessageSoundfiler::MessageSoundfiler(PdMessage *initMessage, PdGraph *graph) : MessageObject(1, 1, graph) {
+MessageSoundfiler::MessageSoundfiler(pd::Message *init_message, PdGraph *graph) : message::Object(1, 1, graph) {
   // TODO(mhroth)
 }
 
@@ -38,7 +38,7 @@ MessageSoundfiler::~MessageSoundfiler() {
   // nothing to do
 }
 
-void MessageSoundfiler::processMessage(int inletIndex, PdMessage *message)
+void MessageSoundfiler::process_message(int inlet_index, pd::Message *message)
 {
   if (message->is_symbol_str(0, "read"))
   {
@@ -133,9 +133,9 @@ void MessageSoundfiler::processMessage(int inletIndex, PdMessage *message)
     delete buffer;
 
     // send message with sample length when all tables have been filled
-    PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(1);
-    outgoingMessage->initWithTimestampAndFloat(message->get_timestamp(), samplesPerChannel);
-    sendMessage(0, outgoingMessage);
+    pd::Message *outgoing_message = PD_MESSAGE_ON_STACK(1);
+    outgoing_message->from_timestamp_and_float(message->get_timestamp(), samplesPerChannel);
+    send_message(0, outgoing_message);
   }
   else if (message->is_symbol_str(0, "write"))
   {

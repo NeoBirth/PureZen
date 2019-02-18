@@ -23,7 +23,7 @@
 #include "RemoteMessageReceiver.h"
 
 RemoteMessageReceiver::RemoteMessageReceiver(int numMessageInlets, int numMessageOutlets, PdGraph *graph) :
-    MessageObject(numMessageInlets, numMessageOutlets, graph) {
+    message::Object(numMessageInlets, numMessageOutlets, graph) {
   name = NULL;
 }
 

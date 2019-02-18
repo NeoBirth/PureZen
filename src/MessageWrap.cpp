@@ -22,13 +22,13 @@
 
 #include "MessageWrap.h"
 
-MessageObject *MessageWrap::newObject(PdMessage *initMessage, PdGraph *graph) {
-  return new MessageWrap(initMessage, graph);
+message::Object *MessageWrap::new_object(pd::Message *init_message, PdGraph *graph) {
+  return new MessageWrap(init_message, graph);
 }
 
 // TODO(mhroth): This object is almost definitely NOT working correctly
-MessageWrap::MessageWrap(PdMessage *initMessage, PdGraph *graph) : MessageObject(2, 1, graph) {
-  switch (initMessage->get_num_elements()) {
+MessageWrap::MessageWrap(pd::Message *init_message, PdGraph *graph) : message::Object(2, 1, graph) {
+  switch (init_message->get_num_elements()) {
     case 0: {
       lower = 0.0f;
       upper = 1.0f;
@@ -36,12 +36,12 @@ MessageWrap::MessageWrap(PdMessage *initMessage, PdGraph *graph) : MessageObject
     }
     case 1: {
       lower = 0.0f;
-      upper = initMessage->is_float(0) ? initMessage->get_float(0) : 1.0f;
+      upper = init_message->is_float(0) ? init_message->get_float(0) : 1.0f;
       break;
     }
     case 2: {
-      lower = initMessage->is_float(0) ? initMessage->get_float(0) : 0.0f;
-      upper = initMessage->is_float(1) ? initMessage->get_float(1) : 1.0f;
+      lower = init_message->is_float(0) ? init_message->get_float(0) : 0.0f;
+      upper = init_message->is_float(1) ? init_message->get_float(1) : 1.0f;
       if (upper < lower) {
         float temp = upper;
         upper = lower;
@@ -59,8 +59,8 @@ MessageWrap::~MessageWrap() {
   // nothing to do
 }
 
-void MessageWrap::processMessage(int inletIndex, PdMessage *message) {
-  switch (inletIndex) {
+void MessageWrap::process_message(int inlet_index, pd::Message *message) {
+  switch (inlet_index) {
     case 0: {
       if (message->is_float(0)) {
         value = message->get_float(0);
@@ -74,9 +74,9 @@ void MessageWrap::processMessage(int inletIndex, PdMessage *message) {
             value = value + range;
           }
         }
-        PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(1);
-        outgoingMessage->initWithTimestampAndFloat(message->get_timestamp(), value);
-        sendMessage(0, outgoingMessage);
+        pd::Message *outgoing_message = PD_MESSAGE_ON_STACK(1);
+        outgoing_message->from_timestamp_and_float(message->get_timestamp(), value);
+        send_message(0, outgoing_message);
       }
       break;
     }  

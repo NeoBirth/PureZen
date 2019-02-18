@@ -29,15 +29,15 @@
 class MessageSpigot : public MessageObject {
 
   public:
-    static MessageObject *newObject(PdMessage *initMessage, PdGraph *graph);
-    MessageSpigot(PdMessage *initMessage, PdGraph *graph);
+    static MessageObject *new_object(PdMessage *init_message, PdGraph *graph);
+    MessageSpigot(PdMessage *init_message, PdGraph *graph);
     ~MessageSpigot();
 
     static const char *getObjectLabel();
     std::string toString();
 
   private:
-    void processMessage(int inletIndex, PdMessage *message);
+    void process_message(int inlet_index, PdMessage *message);
 
     float constant;
 };

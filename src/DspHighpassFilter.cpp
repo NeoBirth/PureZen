@@ -23,13 +23,13 @@
 #include "DspHighpassFilter.h"
 #include "PdGraph.h"
 
-MessageObject *DspHighpassFilter::newObject(PdMessage *initMessage, PdGraph *graph) {
-  return new DspHighpassFilter(initMessage, graph);
+message::Object *DspHighpassFilter::new_object(pd::Message *init_message, PdGraph *graph) {
+  return new DspHighpassFilter(init_message, graph);
 }
 
-DspHighpassFilter::DspHighpassFilter(PdMessage *initMessage, PdGraph *graph) : DspFilter(2, graph) {
+DspHighpassFilter::DspHighpassFilter(pd::Message *init_message, PdGraph *graph) : DspFilter(2, graph) {
   // by default, the filter is initialised completely open
-  calcFiltCoeff(initMessage->is_float(0) ? initMessage->get_float(0) : 0.0f);
+  calcFiltCoeff(init_message->is_float(0) ? init_message->get_float(0) : 0.0f);
 }
 
 DspHighpassFilter::~DspHighpassFilter() {
@@ -49,8 +49,8 @@ void DspHighpassFilter::calcFiltCoeff(float fc) {
   b[4] = 0.0f;
 }
 
-void DspHighpassFilter::processMessage(int inletIndex, PdMessage *message) {
-  switch (inletIndex) {
+void DspHighpassFilter::process_message(int inlet_index, pd::Message *message) {
+  switch (inlet_index) {
     case 0: {
       switch (message->get_type(0)) {
         case FLOAT: {

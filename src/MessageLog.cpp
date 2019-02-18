@@ -22,11 +22,11 @@
 
 #include "MessageLog.h"
 
-MessageObject *MessageLog::newObject(PdMessage *initMessage, PdGraph *graph) {
-  return new MessageLog(initMessage, graph);
+message::Object *MessageLog::new_object(pd::Message *init_message, PdGraph *graph) {
+  return new MessageLog(init_message, graph);
 }
 
-MessageLog::MessageLog(PdMessage *initMessage, PdGraph *graph) : MessageObject(1, 1, graph) {
+MessageLog::MessageLog(pd::Message *init_message, PdGraph *graph) : message::Object(1, 1, graph) {
   // nothing to do
 }
 
@@ -34,12 +34,12 @@ MessageLog::~MessageLog() {
   // nothing to do
 }
 
-void MessageLog::processMessage(int inletIndex, PdMessage *message) {
+void MessageLog::process_message(int inlet_index, pd::Message *message) {
   if (message->is_float(0)) {
-    PdMessage *outgoingMessage = PD_MESSAGE_ON_STACK(1);
+    pd::Message *outgoing_message = PD_MESSAGE_ON_STACK(1);
     float value = message->get_float(0);
     value = (value <= 0.0f) ? -1000.0f : logf(value);
-    outgoingMessage->initWithTimestampAndFloat(message->get_timestamp(), value);
-    sendMessage(0, outgoingMessage);    
+    outgoing_message->from_timestamp_and_float(message->get_timestamp(), value);
+    send_message(0, outgoing_message);    
   }
 }
