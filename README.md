@@ -1,4 +1,4 @@
-# PureZen
+![PureZen](https://raw.githubusercontent.com/NeoBirth/PureZen/master/purezen.png)
 
 [![Crate][crate-image]][crate-link]
 [![Docs][docs-image]][docs-link]
