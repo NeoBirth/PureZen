@@ -39,7 +39,10 @@
     unused_qualifications
 )]
 #![forbid(unsafe_code)]
-#![doc(html_root_url = "https://docs.rs/purezen/0.0.0")]
+#![doc(
+    html_logo_url = "https://raw.githubusercontent.com/NeoBirth/PureZen/master/purezen.png",
+    html_root_url = "https://docs.rs/purezen/0.0.1"
+)]
 
 #[cfg(any(feature = "std", test))]
 extern crate std;
