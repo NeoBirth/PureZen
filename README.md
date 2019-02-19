@@ -1,4 +1,4 @@
-# PureZen
+<img alt="PureZen" src="https://raw.githubusercontent.com/NeoBirth/PureZen/master/purezen.png" width="50%">
 
 [![Crate][crate-image]][crate-link]
 [![Docs][docs-image]][docs-link]
