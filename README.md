@@ -13,6 +13,8 @@ passing, and graph manipulation.
 Written in Rust with intent to target embedded (i.e. `no_std`) platforms.
 Adapted from [ZenGarden], which was written in C++.
 
+[Documentation][docs-link]
+
 ## Status
 
 Work is underway to translate ZenGarden from C++, and the basic structure of
@@ -24,33 +26,35 @@ to use.
 
 The following four types provide the main interface to **PureZen**:
 
-- `Context`
-- `Graph`
-- `Object`
-- `Message`
+- `pd::Context` (WIP): core type which owns all PureZen engine memory
+- `pd::Graph` (WIP): `message::Object` graphs (and sub-graphs)
+- [pd::Message]: control messages for sending commands and triggering sounds
+- [message::Object]: objects in a `pd::Graph` which send/receive messages
 
 The first three have to do with how the signal graph is organized.
 The latter represents discrete messages which are sent into, processed by,
 and out of the graph.
 
-A `Context` represents a unique and independent instance of Pure Data.
+A `pd::Context` represents a unique and independent instance of Pure Data.
 Think of it as Pure Data's console window. A context is defined by its
 block size, sample rate, and the number of input and output channels.
 Contexts are entirely independent and messages and objects cannot be exchanged
 between them.
 
 A graph is a collection of objects and the connections between them.
-A `Graph` is an `Object`, and thus a `Graph` can contain other `Graph`s
-(such as abstraction or subgraphs).
+A `pd::Graph` is a `message::Object`, and thus a `pd::Graph` can contain other
+`pd::Graph` objects (i.e. subgraphs).
 
-`Message` represents any Pd message, be it a bang or a list of assorted float,
-symbols, or bangs. Each `Message` is timestamped and contains at least one
-element, and may otherwise contain any number and any combination of
-primitives. **PureZen** messages are always lists of typed elementary types.
+`pd::Message` represents any Pd message, be it a bang or a list of assorted
+float, symbols, or bangs. Each `pd::Message` is timestamped and contains at
+least one element, and may otherwise contain any number and any combination of
+primitives.
+
+**PureZen** messages are always lists of typed elementary types.
 
 ### Graph Attachment
 
-Graph attachment is an important concept in **PureZen**.
+*NOTE: This feature is unlikely to be supported soon, but we do want to keep it!*
 
 Whenever any change in the signal graph takes place in Pd, the audio thread
 must wait until the reconfiguration is finished. For minor changes such as
@@ -99,6 +103,8 @@ Copyright © 2009-2019 NeoBirth Developers, Reality Jockey, Ltd.
 [gitter-link]: https://gitter.im/NeoBirth/PureZen
 [Pure Data]: https://puredata.info/
 [ZenGarden]: https://github.com/mhroth/ZenGarden
+[pd::Message]: https://docs.rs/purezen/latest/purezen/pd/struct.Message.html
+[message::Object]: https://docs.rs/purezen/latest/purezen/message/object/struct.Object.html
 [cc]: https://contributor-covenant.org
 [CODE_OF_CONDUCT.md]: https://github.com/NeoBirth/PureZen/blob/master/CODE_OF_CONDUCT.md
 [LGPL 3.0]: https://www.gnu.org/licenses/lgpl-3.0.en.html
