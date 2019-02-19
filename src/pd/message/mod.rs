@@ -18,6 +18,21 @@
 //
 
 //! Pure Data messages
+//!
+//! ## Translation Notes
+//!
+//! This file was translated from the following ZenGarden C++ sources:
+//!
+//! - `PdMessage.cpp`
+//! - `PdMessage.h`
+//!
+//! Original C++ classes/types were renamed/refactored as follows:
+//!
+//! - The `MessageAtom` class (from `PdMessage.h`) was renamed to `pd::message::Atom`.
+//! - `PdMessage` was renamed to `pd::Message`.
+//! - All `PdMessage::initWith*` initializers renamed to `Message::from_*`
+//! - Several `PdMessage` parse errors changed to `Result` instead of silently
+//!   ignoring them (but should we ignore them to match Pd / Zg behavior?)
 
 mod atom;
 

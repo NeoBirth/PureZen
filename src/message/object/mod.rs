@@ -17,7 +17,19 @@
 // along with PureZen.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-//! Message objects
+//! Message objects: core data type for Pure Data graphs
+//!
+//! ## Translation Notes
+//!
+//! This file was translated from the following ZenGarden C++ sources:
+//!
+//! - `MessageObject.cpp`
+//!
+//! The `MessageObject` class was renamed to `message::Object`.
+//!
+//! Where ZenGarden relied heavily on inheritance, PureZen is attempting to
+//! refactor such usages into composition, following the
+//! Entity-Component-System pattern.
 
 pub mod connection;
 mod coordinates;

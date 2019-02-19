@@ -18,6 +18,20 @@
 //
 
 //! Message Elements: Components of a Pure Data message
+//!
+//! ## Translation Notes
+//!
+//! This file was translated from the following ZenGarden C++ sources:
+//!
+//! - `MessageElement.cpp`
+//! - `MessageElementType.cpp`
+//!
+//! `MessageElement` renamed to `message::Element`. It seems extremely similar
+//! to `message::Atom` (i.e. the two types should probably be consolidated).
+//! For now `message::Atom` borrows from the Pure Data sources it's parsed
+//! from, whereas `message::Element` is an owned type.
+//!
+//! `MessageElementType` was renamed to `message::element::Type`
 
 use super::Symbol;
 use crate::pd;
