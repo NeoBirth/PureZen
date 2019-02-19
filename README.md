@@ -13,6 +13,13 @@ passing, and graph manipulation.
 Written in Rust with intent to target embedded (i.e. `no_std`) platforms.
 Adapted from [ZenGarden], which was written in C++.
 
+## Status
+
+Work is underway to translate ZenGarden from C++, and the basic structure of
+the Rust crate is in place. However, important core domain objects have not
+yet been translated (including anything DSP-related), so it is not ready
+to use.
+
 ## Concepts
 
 The following four types provide the main interface to **PureZen**:
