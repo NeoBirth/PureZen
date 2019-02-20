@@ -26,6 +26,26 @@
 //!
 //! [Pure Data]: https://puredata.info/
 //! [ZenGarden]: https://github.com/mhroth/ZenGarden
+//!
+//! ## Status
+//!
+//! Work is underway to translate ZenGarden from C++, and the basic structure of
+//! the Rust crate is in place. However, important core domain objects have not
+//! yet been translated (including anything DSP-related), so it is not ready
+//! to use.
+//!
+//! ## Concepts
+//!
+//! The following four types provide the main interface to **PureZen**:
+//!
+//! - [pd::Context]: core type which owns all PureZen engine memory
+//! - `pd::Graph` (WIP): `message::Object` graphs (and sub-graphs)
+//! - [pd::Message]: control messages for sending commands and triggering sounds
+//! - [message::Object]: objects in a `pd::Graph` which send/receive messages
+//!
+//! [pd::Context]: https://docs.rs/purezen/latest/purezen/pd/struct.Context.html
+//! [pd::Message]: https://docs.rs/purezen/latest/purezen/pd/struct.Message.html
+//! [message::Object]: https://docs.rs/purezen/latest/purezen/message/object/struct.Object.html
 
 #![no_std]
 #![cfg_attr(all(feature = "nightly", not(feature = "std")), feature(alloc))]
