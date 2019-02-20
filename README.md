@@ -1,4 +1,4 @@
-<img alt="PureZen" src="https://raw.githubusercontent.com/NeoBirth/PureZen/master/purezen.png" width="50%">
+<img alt="PureZen" src="https://raw.githubusercontent.com/NeoBirth/PureZen/master/purezen.png" width="60%">
 
 [![Crate][crate-image]][crate-link]
 [![Docs][docs-image]][docs-link]
@@ -26,7 +26,7 @@ to use.
 
 The following four types provide the main interface to **PureZen**:
 
-- `pd::Context` (WIP): core type which owns all PureZen engine memory
+- [pd::Context]: core type which owns all PureZen engine memory
 - `pd::Graph` (WIP): `message::Object` graphs (and sub-graphs)
 - [pd::Message]: control messages for sending commands and triggering sounds
 - [message::Object]: objects in a `pd::Graph` which send/receive messages
@@ -103,6 +103,7 @@ Copyright © 2009-2019 NeoBirth Developers, Reality Jockey, Ltd.
 [gitter-link]: https://gitter.im/NeoBirth/PureZen
 [Pure Data]: https://puredata.info/
 [ZenGarden]: https://github.com/mhroth/ZenGarden
+[pd::Context]: https://docs.rs/purezen/latest/purezen/pd/struct.Context.html
 [pd::Message]: https://docs.rs/purezen/latest/purezen/pd/struct.Message.html
 [message::Object]: https://docs.rs/purezen/latest/purezen/message/object/struct.Object.html
 [cc]: https://contributor-covenant.org
