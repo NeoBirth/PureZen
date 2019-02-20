@@ -41,7 +41,7 @@
 #![forbid(unsafe_code)]
 #![doc(
     html_logo_url = "https://raw.githubusercontent.com/NeoBirth/PureZen/master/purezen.png",
-    html_root_url = "https://docs.rs/purezen/0.0.1"
+    html_root_url = "https://docs.rs/purezen/0.0.2"
 )]
 
 #[cfg(any(feature = "std", test))]
