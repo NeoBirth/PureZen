@@ -31,16 +31,16 @@ message::Object *DspReceive::new_object(pd::Message *init_message, PdGraph *grap
 DspReceive::DspReceive(pd::Message *init_message, PdGraph *graph) : DspObject(1, 0, 0, 1, graph) {
   if (init_message->is_symbol(0)) {
     name = utils::copy_string(init_message->get_symbol(0));
-    dspBufferAtOutlet[0] = ALLOC_ALIGNED_BUFFER(graph->getBlockSize() * sizeof(float));
+    dspBufferAtOutlet[0] = ALLOC_ALIGNED_BUFFER(graph->get_block_size() * sizeof(float));
   } else {
     name = NULL;
-    graph->printErr("receive~ not initialised with a name.");
+    graph->print_err("receive~ not initialised with a name.");
   }
-  processFunction = &processSignal;
+  process_function = &processSignal;
 
   // this pointer contains the send buffer
   // default to zero buffer
-  dspBufferAtInlet[0] = graph->getBufferPool()->getZeroBuffer();
+  dspBufferAtInlet[0] = graph->get_buffer_pool()->get_zero_buffer();
 }
 
 DspReceive::~DspReceive() {
@@ -50,7 +50,7 @@ DspReceive::~DspReceive() {
 
 void DspReceive::process_message(int inlet_index, pd::Message *message) {
   if (message->has_format("ss") && message->is_symbol_str(0, "set")) {
-    graph->printErr("[receive~ %s]: message \"set %s\" is not supported.", name, message->get_symbol(1));
+    graph->print_err("[receive~ %s]: message \"set %s\" is not supported.", name, message->get_symbol(1));
   }
 }
 

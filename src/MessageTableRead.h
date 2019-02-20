@@ -34,12 +34,12 @@ class MessageTableRead : public MessageObject, public TableReceiverInterface {
     MessageTableRead(PdMessage *init_message, PdGraph *graph);
     ~MessageTableRead();
     
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
     object::Type get_object_type();
     
-    char *getName();
-    void setTable(MessageTable *table);
+    char *get_name();
+    void set_table(MessageTable *table);
     
   private:
     void process_message(int inlet_index, PdMessage *message);
@@ -48,7 +48,7 @@ class MessageTableRead : public MessageObject, public TableReceiverInterface {
     MessageTable *table;
 };
 
-inline const char *MessageTableRead::getObjectLabel() {
+inline const char *MessageTableRead::get_object_label() {
   return "tabread";
 }
 
@@ -57,7 +57,7 @@ inline object::Type MessageTableRead::get_object_type() {
 }
 
 inline std::string MessageTableRead::toString() {
-  return std::string(MessageTableRead::getObjectLabel()) + " " + name;
+  return std::string(MessageTableRead::get_object_label()) + " " + name;
 }
 
 #endif // _MESSAGE_TABLE_READ_H_

@@ -38,7 +38,7 @@ DspTableRead4::~DspTableRead4() {
   free(name);
 }
 
-void DspTableRead4::setTable(MessageTable *aTable) {
+void DspTableRead4::set_table(MessageTable *aTable) {
   table = aTable;
 }
 
@@ -49,7 +49,7 @@ void DspTableRead4::process_message(int inlet_index, pd::Message *message) {
         // change the table from which this object reads
         free(name);
         name = utils::copy_string(message->get_symbol(1));
-        table = graph->getTable(name);
+        table = graph->get_table(name);
       }
       break;
     }
@@ -72,8 +72,8 @@ void DspTableRead4::processDspWithIndex(int fromIndex, int toIndex) {
     #if __APPLE__
     //float zero = 0.0f;
     //float bufferLengthFloat = (float) (bufferLength-2);
-    //vDSP_vclip(inputBuffer+startSampleIndex, 1, &zero, &bufferLengthFloat,
-    //    inputBuffer+startSampleIndex, 1, endSampleIndex-startSampleIndex);
+    //vDSP_vclip(input_buffer+startSampleIndex, 1, &zero, &bufferLengthFloat,
+    //    input_buffer+startSampleIndex, 1, endSampleIndex-startSampleIndex);
     // NOTE(mhroth): is isn't clear what the clipping behaviour of vDSP_vlint is, but I
     // *think* that it is doing the right thing (i.e., clipping OOB indicies)
     int duration = toIndex - fromIndex;
@@ -81,10 +81,10 @@ void DspTableRead4::processDspWithIndex(int fromIndex, int toIndex) {
     vDSP_vlint(buffer, dspBufferAtOutlet[0]+fromIndex, 1, dspBufferAtOutlet[0]+fromIndex, 1,
         duration, bufferLength);
     #else
-    float *inputBuffer = dspBufferAtInlet[0];
+    float *input_buffer = dspBufferAtInlet[0];
     int maxIndex = bufferLength-1;
     for (int i = fromIndex; i < toIndex; i++) {
-      float xf = inputBuffer[i] + offset;
+      float xf = input_buffer[i] + offset;
       int xi = (int) xf;
       if (xi <= 0) {
         dspBufferAtOutlet[0][i] = buffer[0];

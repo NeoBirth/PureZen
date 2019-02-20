@@ -33,7 +33,7 @@ class MessageWrap : public MessageObject {
     MessageWrap(PdMessage *init_message, PdGraph *graph);
     ~MessageWrap();
   
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
  
   private:
@@ -42,12 +42,12 @@ class MessageWrap : public MessageObject {
     float lower,upper,range,value;
 }; 
 
-inline const char *MessageWrap::getObjectLabel() {
+inline const char *MessageWrap::get_object_label() {
   return "wrap";
 }
 
 inline std::string MessageWrap::toString() {
-  return MessageWrap::getObjectLabel();
+  return MessageWrap::get_object_label();
 }
 
 #endif // _MESSAGE_WRAP_H_

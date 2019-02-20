@@ -36,7 +36,7 @@ class DspNoise : public DspObject {
     DspNoise(PdGraph *graph);
     ~DspNoise();
   
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
   
   private:
@@ -46,10 +46,10 @@ class DspNoise : public DspObject {
 };
 
 inline std::string DspNoise::toString() {
-  return DspNoise::getObjectLabel();
+  return DspNoise::get_object_label();
 }
 
-inline const char *DspNoise::getObjectLabel() {
+inline const char *DspNoise::get_object_label() {
   return "noise~";
 }
 

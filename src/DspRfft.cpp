@@ -33,12 +33,12 @@ DspRfft::DspRfft(pd::Message *init_message, PdGraph *graph) : DspObject(0, 1, 0,
   #if __APPLE__
   log2n = lrintf(log2f((float) block_sizeInt));
   fftSetup = vDSP_create_fftsetup(log2n, kFFTRadix2);
-  zeroBuffer = graph->getBufferPool()->getZeroBuffer(); // cache the local zero buffer
+  zeroBuffer = graph->get_buffer_pool()->get_zero_buffer(); // cache the local zero buffer
   #else
-  graph->printErr("[rfft~] is not supported on this platform. It is only supported on Apple OS X and iOS platforms.");
+  graph->print_err("[rfft~] is not supported on this platform. It is only supported on Apple OS X and iOS platforms.");
   #endif // __APPLE__
   
-  processFunction = &processSignal;
+  process_function = &processSignal;
 }
 
 DspRfft::~DspRfft() {

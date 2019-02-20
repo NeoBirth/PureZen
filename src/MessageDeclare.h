@@ -38,7 +38,7 @@ class MessageDeclare : public MessageObject {
     MessageDeclare(PdMessage *init_message, PdGraph *graph);
     ~MessageDeclare();
     
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
     
   private:
@@ -46,12 +46,12 @@ class MessageDeclare : public MessageObject {
     char *argument;
 };
 
-inline const char *MessageDeclare::getObjectLabel() {
+inline const char *MessageDeclare::get_object_label() {
   return "declare";
 }
 
 inline std::string MessageDeclare::toString() {
-  return MessageDeclare::getObjectLabel();
+  return MessageDeclare::get_object_label();
 }
 
 #endif // _MESSAGE_DECLARE_H_

@@ -35,7 +35,7 @@ MessageToggle::~MessageToggle() {
   // nothing to do
 }
 
-const char *MessageToggle::getObjectLabel() {
+const char *MessageToggle::get_object_label() {
   return "toggle";
 }
 

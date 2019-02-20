@@ -34,8 +34,8 @@ DspPhasor::DspPhasor(pd::Message *init_message, PdGraph *graph) : DspObject(2, 2
   message->from_timestamp_and_float(0.0, init_message->is_float(0) ? init_message->get_float(0) : 0.0f);
   process_message(0, message);
 
-  processFunction = &processScalar;
-  processFunctionNoMessage = &processScalar;
+  process_function = &processScalar;
+  process_functionNoMessage = &processScalar;
 }
 
 DspPhasor::~DspPhasor() {
@@ -43,13 +43,13 @@ DspPhasor::~DspPhasor() {
 }
 
 string DspPhasor::toString() {
-  char str[snprintf(NULL, 0, "%s %g", getObjectLabel(), frequency)+1];
-  snprintf(str, sizeof(str), "%s %g", getObjectLabel(), frequency);
+  char str[snprintf(NULL, 0, "%s %g", get_object_label(), frequency)+1];
+  snprintf(str, sizeof(str), "%s %g", get_object_label(), frequency);
   return string(str);
 }
 
 void DspPhasor::onInletConnectionUpdate(unsigned int inlet_index) {
-  processFunction = incomingDspConnections[0].empty() ? &processScalar : &processSignal;
+  process_function = incomingDspConnections[0].empty() ? &processScalar : &processSignal;
 }
 
 void DspPhasor::process_message(int inlet_index, pd::Message *message) {
@@ -58,7 +58,7 @@ void DspPhasor::process_message(int inlet_index, pd::Message *message) {
       if (message->is_float(0)) {
         frequency = message->get_float(0);
         #if __SSE3__
-        float sampleStep = frequency * 65536.0f / graph->getSampleRate();
+        float sampleStep = frequency * 65536.0f / graph->get_sample_rate();
         short s = (short) sampleStep; // signed as step size may be negative as well!
         inc = _mm_set1_pi16(4*s);
         #endif // __SSE3__
@@ -81,11 +81,11 @@ void DspPhasor::processSignal(DspObject *dspObject, int fromIndex, int n4) {
   float *output = d->dspBufferAtOutlet[0];
   __m64 indicies = d->indicies;
   static __m128 constVec = _mm_set1_ps(SHORT_TO_FLOAT_RATIO);
-  static __m128 sampVec = _mm_set1_ps(65536.0f/d->graph->getSampleRate());
+  static __m128 sampVec = _mm_set1_ps(65536.0f/d->graph->get_sample_rate());
 
   while (n4) {
     // convert signal input to sample increments
-    // (short) (input * (65536.0f/d->graph->getSampleRate()))
+    // (short) (input * (65536.0f/d->graph->get_sample_rate()))
     __m64 inc = _mm_cvtps_pi16(_mm_mul_ps(_mm_load_ps(input),sampVec));
     
     // cumulative summation of increments

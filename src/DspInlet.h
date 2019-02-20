@@ -39,7 +39,7 @@ class DspInlet : public DspObject {
     DspInlet(PdGraph *graph);
     ~DspInlet();
   
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
     object::Type get_object_type();
   
@@ -49,9 +49,9 @@ class DspInlet : public DspObject {
     // [inlet~] does nothing with audio
     bool doesProcessAudio();
   
-    void setDspBufferAtInlet(float *buffer, unsigned int inlet_index);
+    void set_dsp_buffer_at_inlet(float *buffer, unsigned int inlet_index);
     bool canSetBufferAtOutlet(unsigned int outlet_index);
-    float *getDspBufferAtOutlet(int outlet_index);
+    float *get_dsp_buffer_at_outlet(int outlet_index);
 };
 
 inline bool DspInlet::canSetBufferAtOutlet(unsigned int outlet_index) {
@@ -63,10 +63,10 @@ inline bool DspInlet::doesProcessAudio() {
 }
 
 inline std::string DspInlet::toString() {
-  return DspInlet::getObjectLabel();
+  return DspInlet::get_object_label();
 }
 
-inline const char *DspInlet::getObjectLabel() {
+inline const char *DspInlet::get_object_label() {
   return "inlet~";
 }
 

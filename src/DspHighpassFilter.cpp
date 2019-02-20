@@ -38,10 +38,10 @@ DspHighpassFilter::~DspHighpassFilter() {
 
 // http://en.wikipedia.org/wiki/High-pass_filter
 void DspHighpassFilter::calcFiltCoeff(float fc) {
-  if (fc > 0.5f*graph->getSampleRate()) fc = 0.5f * graph->getSampleRate();
+  if (fc > 0.5f*graph->get_sample_rate()) fc = 0.5f * graph->get_sample_rate();
   else if (fc < 0.0f) fc = 10.0f;
 
-  float alpha = graph->getSampleRate() / ((2.0f*M_PI*fc) + graph->getSampleRate());
+  float alpha = graph->get_sample_rate() / ((2.0f*M_PI*fc) + graph->get_sample_rate());
   b[0] = alpha;
   b[1] = -alpha;
   b[2] = 0.0f;

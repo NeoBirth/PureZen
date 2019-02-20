@@ -34,7 +34,7 @@ class MessageMinimum : public MessageObject {
     MessageMinimum(PdMessage *init_message, PdGraph *graph);
     ~MessageMinimum();
 
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
 
   private:
@@ -44,12 +44,12 @@ class MessageMinimum : public MessageObject {
     float lastOutput;
 };
 
-inline const char *MessageMinimum::getObjectLabel() {
+inline const char *MessageMinimum::get_object_label() {
   return "min";
 }
 
 inline std::string MessageMinimum::toString() {
-  return MessageMinimum::getObjectLabel();
+  return MessageMinimum::get_object_label();
 }
 
 #endif // _MESSAGE_MINIMUM_H_

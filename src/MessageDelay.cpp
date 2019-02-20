@@ -38,7 +38,7 @@ MessageDelay::~MessageDelay() {
 
 void MessageDelay::cancelScheduledMessageIfExists() {
   if (scheduledMessage != NULL) {
-    graph->cancelMessage(this, 0, scheduledMessage);
+    graph->cancel_message(this, 0, scheduledMessage);
     scheduledMessage = NULL;
   }
 }

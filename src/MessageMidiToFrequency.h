@@ -33,19 +33,19 @@ class MessageMidiToFrequency : public MessageObject {
     MessageMidiToFrequency(PdMessage *init_message, PdGraph *graph);
     ~MessageMidiToFrequency();
 
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
 
   private:
     void process_message(int inlet_index, PdMessage *message);
 };
 
-inline const char *MessageMidiToFrequency::getObjectLabel() {
+inline const char *MessageMidiToFrequency::get_object_label() {
   return "mtof";
 }
 
 inline std::string MessageMidiToFrequency::toString() {
-  return MessageMidiToFrequency::getObjectLabel();
+  return MessageMidiToFrequency::get_object_label();
 }
 
 #endif // _MESSAGE_MIDITOFREQUENCY_H_

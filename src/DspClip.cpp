@@ -32,8 +32,8 @@ message::Object *DspClip::new_object(pd::Message *init_message, PdGraph *graph) 
 DspClip::DspClip(pd::Message *init_message, PdGraph *graph) : DspObject(3, 1, 0, 1, graph) {
   lowerBound = init_message->is_float(0) ? init_message->get_float(0) : -1.0f;
   upperBound = init_message->is_float(1) ? init_message->get_float(1) : 1.0f;
-  processFunction = &processScalar;
-  processFunctionNoMessage = &processScalar;
+  process_function = &processScalar;
+  process_functionNoMessage = &processScalar;
 }
 
 DspClip::~DspClip() {
@@ -41,8 +41,8 @@ DspClip::~DspClip() {
 }
 
 std::string DspClip::toString() {
-  char str[snprintf(NULL, 0, "%s %g %g", getObjectLabel(), lowerBound, upperBound)+1];
-  snprintf(str, sizeof(str), "%s %g %g", getObjectLabel(), lowerBound, upperBound);
+  char str[snprintf(NULL, 0, "%s %g %g", get_object_label(), lowerBound, upperBound)+1];
+  snprintf(str, sizeof(str), "%s %g %g", get_object_label(), lowerBound, upperBound);
   return str;
 }
 

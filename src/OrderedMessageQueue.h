@@ -27,17 +27,17 @@
 
 typedef std::pair<MessageObject *, std::pair<PdMessage *, unsigned int> > ObjectMessageConnection;
 
-class OrderedMessageQueue {
+class message::OrderedQueue {
   
   public:
-    OrderedMessageQueue();
-    ~OrderedMessageQueue();
+    message::OrderedQueue();
+    ~message::OrderedQueue();
     
     /** Inserts the message into the ordered queue based on its scheduled time. */
-    void insertMessage(MessageObject *messageObject, int outlet_index, PdMessage *message);
+    void insert_message(MessageObject *messageObject, int outlet_index, PdMessage *message);
   
     /** Removes the given message addressed to the given <code>MessageObject</code> from the queue. */
-    void removeMessage(MessageObject *messageObject, int outlet_index, PdMessage *message);
+    void remove_message(MessageObject *messageObject, int outlet_index, PdMessage *message);
   
     ObjectMessageConnection peek();
   

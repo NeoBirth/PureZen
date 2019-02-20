@@ -33,7 +33,7 @@ class MessagePrint : public MessageObject {
     MessagePrint(PdMessage *initString, PdGraph *graph);
     ~MessagePrint();
   
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
   
   private:
@@ -42,12 +42,12 @@ class MessagePrint : public MessageObject {
     char *name;
 };
 
-inline const char *MessagePrint::getObjectLabel() {
+inline const char *MessagePrint::get_object_label() {
   return "print";
 }
 
 inline std::string MessagePrint::toString() {
-  return std::string(MessagePrint::getObjectLabel()) + " " + name;
+  return std::string(MessagePrint::get_object_label()) + " " + name;
 }
 
 #endif // _MESSAGE_PRINT_H_

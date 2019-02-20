@@ -33,7 +33,7 @@ class DspAdd : public DspObject {
     DspAdd(PdMessage *init_message, PdGraph *graph);
     ~DspAdd();
   
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
   
     void onInletConnectionUpdate(unsigned int inlet_index);
@@ -46,7 +46,7 @@ class DspAdd : public DspObject {
     float constant;
 };
 
-inline const char *DspAdd::getObjectLabel() {
+inline const char *DspAdd::get_object_label() {
   return "+~";
 }
 

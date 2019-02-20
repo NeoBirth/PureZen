@@ -47,7 +47,7 @@ class BufferPool {
     /** Resizes all buffers in the pool (reserved and available). */
 //    void resizeBuffers(unsigned int newBufferSize);
   
-    float *getZeroBuffer() { return zeroBuffer; }
+    float *get_zero_buffer() { return zeroBuffer; }
   
     unsigned int getNumReservedBuffers() { return reserved.size(); }
     unsigned int getNumAvailableBuffers() { return pool.size(); }

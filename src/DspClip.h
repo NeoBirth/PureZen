@@ -32,7 +32,7 @@ class DspClip : public DspObject {
     DspClip(PdMessage *init_message, PdGraph *graph);
     ~DspClip();
 
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
 
   private:
@@ -43,7 +43,7 @@ class DspClip : public DspObject {
    float upperBound;
 };
 
-inline const char *DspClip::getObjectLabel() {
+inline const char *DspClip::get_object_label() {
   return "clip~";
 }
 

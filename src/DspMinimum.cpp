@@ -31,8 +31,8 @@ message::Object *DspMinimum::new_object(pd::Message *init_message, PdGraph *grap
 
 DspMinimum::DspMinimum(pd::Message *init_message, PdGraph *graph) : DspObject(2, 2, 0, 1, graph) {
   constant = init_message->is_float(0) ? init_message->get_float(0) : 0.0f;
-  processFunction = &processScalar;
-  processFunctionNoMessage = &processScalar;
+  process_function = &processScalar;
+  process_functionNoMessage = &processScalar;
 }
 
 DspMinimum::~DspMinimum() {
@@ -40,8 +40,8 @@ DspMinimum::~DspMinimum() {
 }
 
 string DspMinimum::toString() {
-  char str[snprintf(NULL, 0, "%s %g", getObjectLabel(), constant)+1];
-  snprintf(str, sizeof(str), "%s %g", getObjectLabel(), constant);
+  char str[snprintf(NULL, 0, "%s %g", get_object_label(), constant)+1];
+  snprintf(str, sizeof(str), "%s %g", get_object_label(), constant);
   return  string(str);
 }
 
@@ -52,7 +52,7 @@ void DspMinimum::process_message(int inlet_index, pd::Message *message) {
 }
 
 void DspMinimum::onInletConnectionUpdate(unsigned int inlet_index) {
-  processFunction = (!incomingDspConnections[0].empty() && !incomingDspConnections[1].empty())
+  process_function = (!incomingDspConnections[0].empty() && !incomingDspConnections[1].empty())
       ? &processSignal : &processScalar;
 }
 

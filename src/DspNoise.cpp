@@ -29,7 +29,7 @@ message::Object *DspNoise::new_object(pd::Message *init_message, PdGraph *graph)
 
 DspNoise::DspNoise(PdGraph *graph) : DspObject(1, 0, 0, 1, graph) {
   twister = new MTRand(); // use new seed
-  processFunction = &processSignal;
+  process_function = &processSignal;
 }
 
 DspNoise::~DspNoise() {

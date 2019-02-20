@@ -33,19 +33,19 @@ class MessageDbToRms : public MessageObject {
     MessageDbToRms(PdGraph *graph);
     ~MessageDbToRms();
 
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
 
   private:
     void process_message(int inlet_index, PdMessage *message);
 };
 
-inline const char *MessageDbToRms::getObjectLabel() {
+inline const char *MessageDbToRms::get_object_label() {
   return "dbtorms";
 }
 
 inline std::string MessageDbToRms::toString() {
-  return MessageDbToRms::getObjectLabel();
+  return MessageDbToRms::get_object_label();
 }
 
 #endif // _MESSAGE_DBTORMS_H_

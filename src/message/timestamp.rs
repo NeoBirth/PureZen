@@ -17,9 +17,19 @@
 // along with PureZen.  If not, see <http://www.gnu.org/licenses/>.
 //
 
+use core::{ops::Add, time::Duration};
+
 /// Message timestamps
 #[derive(Copy, Clone, Debug, Default, PartialEq, PartialOrd)]
 pub struct Timestamp(pub(crate) f64);
+
+impl Add<Duration> for Timestamp {
+    type Output = Timestamp;
+
+    fn add(self, other: Duration) -> Timestamp {
+        Timestamp(self.0 + (other.as_secs() as f64 * 1000.0) + f64::from(other.subsec_millis()))
+    }
+}
 
 impl From<f64> for Timestamp {
     fn from(ts: f64) -> Timestamp {

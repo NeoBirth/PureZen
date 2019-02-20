@@ -33,7 +33,7 @@ class DspCosine : public DspObject {
     DspCosine(PdMessage *init_message, PdGraph *graph);
     ~DspCosine();
 
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
 
   private:
@@ -45,10 +45,10 @@ class DspCosine : public DspObject {
 };
 
 inline std::string DspCosine::toString() {
-  return DspCosine::getObjectLabel();
+  return DspCosine::get_object_label();
 }
 
-inline const char *DspCosine::getObjectLabel() {
+inline const char *DspCosine::get_object_label() {
   return "cos~";
 }
 

@@ -33,7 +33,7 @@ class MessageArcTangent2 : public MessageObject {
     MessageArcTangent2(PdMessage *init_message, PdGraph *graph);
     ~MessageArcTangent2();
 
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
 
   private:
@@ -42,12 +42,12 @@ class MessageArcTangent2 : public MessageObject {
     float constant;
 };
 
-inline const char *MessageArcTangent2::getObjectLabel() {
+inline const char *MessageArcTangent2::get_object_label() {
   return "atan2";
 }
 
 inline std::string MessageArcTangent2::toString() {
-  return MessageArcTangent2::getObjectLabel();
+  return MessageArcTangent2::get_object_label();
 }
 
 #endif // _MESSAGE_ARCTANGENT2_H_

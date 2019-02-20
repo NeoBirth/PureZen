@@ -84,14 +84,14 @@ MessageMessageBox::MessageMessageBox(char *initString, PdGraph *graph) : message
 MessageMessageBox::~MessageMessageBox() {
   // delete the message list and all of the messages in it
   for (int i = 0; i < localMessageList.size(); i++) {
-    localMessageList.at(i)->freeMessage();
+    localMessageList.at(i)->free_message();
   }
   
   // delete the remote message list
   for (int i = 0; i < remoteMessageList.size(); i++) {
     MessageNamedDestination namedDestination = remoteMessageList.at(i);
     free(namedDestination.first);
-    namedDestination.second->freeMessage();
+    namedDestination.second->free_message();
   }
 }
 
@@ -137,6 +137,6 @@ void MessageMessageBox::process_message(int inlet_index, pd::Message *message) {
         outgoing_message->set_symbol(i, buffer);
       }
     }
-    graph->send_messageToNamedReceivers(resolvedName, outgoing_message);
+    graph->send_message_to_named_receivers(resolvedName, outgoing_message);
   }
 }

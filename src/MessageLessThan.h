@@ -34,7 +34,7 @@ class MessageLessThan : public MessageObject {
     MessageLessThan(float constant, PdGraph *graph);
     ~MessageLessThan();
 
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
 
   private:
@@ -45,7 +45,7 @@ class MessageLessThan : public MessageObject {
     float lastOutput;
 };
 
-inline const char *MessageLessThan::getObjectLabel() {
+inline const char *MessageLessThan::get_object_label() {
   return "<";
 }
 

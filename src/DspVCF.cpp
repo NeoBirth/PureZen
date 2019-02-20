@@ -29,7 +29,7 @@ message::Object *DspVCF::new_object(pd::Message *init_message, PdGraph *graph) {
 }
 
 DspVCF::DspVCF(pd::Message *init_message, PdGraph *graph) : DspObject(3, 3, 0, 2, graph) {
-  sample_rate = graph->getSampleRate();
+  sample_rate = graph->get_sample_rate();
   calculateFilterCoefficients(this->sample_rate/2.0f, 1.0f); // initialise the filter completely open
   tap_0 = tap_1 = 0.0f;
 }
@@ -38,7 +38,7 @@ DspVCF::~DspVCF() {
   // nothing to do
 }
 
-const char *DspVCF::getObjectLabel() {
+const char *DspVCF::get_object_label() {
   return "vcf~";
 }
 

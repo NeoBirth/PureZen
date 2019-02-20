@@ -32,15 +32,15 @@ message::Object *DspDelayRead::new_object(pd::Message *init_message, PdGraph *gr
 DspDelayRead::DspDelayRead(pd::Message *init_message, PdGraph *graph) : DelayReceiver(1, 0, 0, 1, graph) {
   if (init_message->is_symbol(0) && init_message->is_float(1)) {
     name = utils::copy_string(init_message->get_symbol(0));
-    delayInSamples = utils::millisecondsToSamples(init_message->get_float(1), graph->getSampleRate());
+    delayInSamples = utils::millisecondsToSamples(init_message->get_float(1), graph->get_sample_rate());
   } else {
-    graph->printErr("delread~ must be initialised in the format [delread~ name delay].");
+    graph->print_err("delread~ must be initialised in the format [delread~ name delay].");
     delayInSamples = 0.0f;
   }
-  processFunction = &processSignal;
+  process_function = &processSignal;
   
   // TODO(mhroth): implement process function for case of receiving messages
-//  processFunctionNoMessage = &processScalar;
+//  process_functionNoMessage = &processScalar;
 }
 
 DspDelayRead::~DspDelayRead() {
@@ -48,13 +48,13 @@ DspDelayRead::~DspDelayRead() {
 }
 
 void DspDelayRead::onInletConnectionUpdate(unsigned int inlet_index) {
-//  processFunction = (incoming_connections[0].size() > 0) ? &processScalar : &processSignal;
+//  process_function = (incoming_connections[0].size() > 0) ? &processScalar : &processSignal;
 }
 
 void DspDelayRead::process_message(int inlet_index, pd::Message *message) {
   if (inlet_index == 0 && message->is_float(0)) {
     // update the delay time
-    delayInSamples = utils::millisecondsToSamples(message->get_float(0), graph->getSampleRate());
+    delayInSamples = utils::millisecondsToSamples(message->get_float(0), graph->get_sample_rate());
   }
 }
 

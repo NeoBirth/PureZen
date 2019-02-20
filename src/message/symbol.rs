@@ -18,8 +18,7 @@
 //
 
 use core::ops::Deref;
-use heapless;
-use typenum::U56;
+use heapless::{self, consts::*};
 
 /// Maximum length of a `Symbol` in bytes.
 //

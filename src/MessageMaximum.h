@@ -33,7 +33,7 @@ class MessageMaximum : public MessageObject {
     MessageMaximum(PdMessage *init_message, PdGraph *graph);
     ~MessageMaximum();
 
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
 
   private:
@@ -43,12 +43,12 @@ class MessageMaximum : public MessageObject {
     float lastOutput;
 };
 
-inline const char *MessageMaximum::getObjectLabel() {
+inline const char *MessageMaximum::get_object_label() {
   return "max";
 }
 
 inline std::string MessageMaximum::toString() {
-  return MessageMaximum::getObjectLabel();
+  return MessageMaximum::get_object_label();
 }
 
 #endif // _MESSAGE_MAXIMUM_H_

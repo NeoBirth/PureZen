@@ -32,7 +32,7 @@ class DspDac : public DspObject {
     DspDac(PdGraph *graph);
     ~DspDac();
   
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
   
   private:
@@ -40,10 +40,10 @@ class DspDac : public DspObject {
 };
 
 inline std::string DspDac::toString() {
-  return DspDac::getObjectLabel();
+  return DspDac::get_object_label();
 }
 
-inline const char *DspDac::getObjectLabel() {
+inline const char *DspDac::get_object_label() {
   return "dac~";
 }
 

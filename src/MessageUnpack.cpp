@@ -43,11 +43,11 @@ MessageUnpack::MessageUnpack(pd::Message *init_message, PdGraph *graph) :
 }
 
 MessageUnpack::~MessageUnpack() {
-  templateMessage->freeMessage();
+  templateMessage->free_message();
 }
 
 string MessageUnpack::toString() {
-  std::string out = MessageUnpack::getObjectLabel();
+  std::string out = MessageUnpack::get_object_label();
   for (int i = 0; i < templateMessage->get_num_elements(); i++) {
     switch (templateMessage->get_type(i)) {
       case FLOAT: out += " f"; break;
@@ -102,7 +102,7 @@ void MessageUnpack::process_message(int inlet_index, pd::Message *message) {
         }
       }
     } else {
-      graph->printErr("unpack: type mismatch: %s expected but got %s.",
+      graph->print_err("unpack: type mismatch: %s expected but got %s.",
           utils::message_element_type_to_string(elementType),
           utils::message_element_type_to_string(message->get_type(i)));
     }

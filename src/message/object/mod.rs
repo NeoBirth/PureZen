@@ -195,21 +195,20 @@ impl Object {
     ///
     /// This function can be overridden in order to take some other action, such as additionally
     /// scheduling a new message as in the case of `MessageMetro`.
-    // TODO(tarcieri): probably can't hold `&mut allocator` and `&self` (borrowed from `allocator`)
+    // TODO(tarcieri): probably can't hold `&mut pd::Context` and `&self` (borrowed from context)
     // To resolve this, usages of `send_message` need to be converted from OOP patterns to ECS
     // which act on `object::Id` rather than references. For example, we can get the iterator for
     // all objects we want to send a message to, clone it, and then stop borrowing the source
-    pub fn send_message<'pd, A, N>(
+    pub fn send_message<'pd, N>(
         &self,
-        allocator: &mut A,
+        context: &mut pd::Context<'pd>,
         outlet_index: connection::Index,
         message: &pd::Message<'pd, N>,
     ) where
-        A: Allocator<Object>,
         N: ArrayLength<pd::message::Atom<'pd>>,
     {
         self.outgoing_connections
-            .send_message(allocator, outlet_index, message)
+            .send_message(context, outlet_index, message)
     }
 
     /// The message logic of an object

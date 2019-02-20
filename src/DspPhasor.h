@@ -34,7 +34,7 @@ class DspPhasor : public DspObject {
     ~DspPhasor();
 
     void onInletConnectionUpdate(unsigned int inlet_index);
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
 
   private:
@@ -50,7 +50,7 @@ class DspPhasor : public DspObject {
     #endif
 };
 
-inline const char *DspPhasor::getObjectLabel() {
+inline const char *DspPhasor::get_object_label() {
   return "phasor~";
 }
 

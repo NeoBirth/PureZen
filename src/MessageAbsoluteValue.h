@@ -33,7 +33,7 @@ class MessageAbsoluteValue : public MessageObject {
     MessageAbsoluteValue(PdMessage *init_message, PdGraph *graph);
     ~MessageAbsoluteValue();
 
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
 
   private:
@@ -41,10 +41,10 @@ class MessageAbsoluteValue : public MessageObject {
 };
 
 inline std::string MessageAbsoluteValue::toString() {
-  return MessageAbsoluteValue::getObjectLabel();
+  return MessageAbsoluteValue::get_object_label();
 }
 
-inline const char *MessageAbsoluteValue::getObjectLabel() {
+inline const char *MessageAbsoluteValue::get_object_label() {
   return "abs";
 }
 

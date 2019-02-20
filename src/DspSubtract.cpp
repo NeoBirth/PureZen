@@ -31,7 +31,7 @@ message::Object *DspSubtract::new_object(pd::Message *init_message, PdGraph *gra
 
 DspSubtract::DspSubtract(pd::Message *init_message, PdGraph *graph) : DspObject(2, 2, 0, 1, graph) {
   constant = init_message->is_float(0) ? init_message->get_float(0) : 0.0f;
-  processFunctionNoMessage = &processScalar;
+  process_functionNoMessage = &processScalar;
 }
 
 DspSubtract::~DspSubtract() {
@@ -40,13 +40,13 @@ DspSubtract::~DspSubtract() {
 
 string DspSubtract::toString() {
   const char *fmt = (constant == 0.0f) ? "%s" : "%s %g";
-  char str[snprintf(NULL, 0, fmt, getObjectLabel(), constant)+1];
-  snprintf(str, sizeof(str), fmt, getObjectLabel(), constant);
+  char str[snprintf(NULL, 0, fmt, get_object_label(), constant)+1];
+  snprintf(str, sizeof(str), fmt, get_object_label(), constant);
   return string(str);
 }
 
 void DspSubtract::onInletConnectionUpdate(unsigned int inlet_index) {
-  processFunction = (incomingDspConnections[0].size() > 0 && incomingDspConnections[1].size() > 0)
+  process_function = (incomingDspConnections[0].size() > 0 && incomingDspConnections[1].size() > 0)
       ? &processSignal : processScalar;
 }
 

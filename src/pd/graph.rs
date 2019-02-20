@@ -41,7 +41,7 @@
 // a PdGraph begins with zero inlets and zero outlets. These will be added as inlet/~ and outlet/~
 // objects are added to the graph
 PdGraph::PdGraph(pd::Message *init_message, PdGraph *parentGraph, pd::Context *context, int graphId, const char *graphName) :
-    DspObject(0, 0, 0, 0, (parentGraph == NULL) ? context->getBlockSize() : parentGraph->getBlockSize(), parentGraph) {
+    DspObject(0, 0, 0, 0, (parentGraph == NULL) ? context->get_block_size() : parentGraph->get_block_size(), parentGraph) {
   this->parentGraph = parentGraph; // == NULL if this is a root graph
   this->context = context;
   inletList = vector<message::Object *>();
@@ -52,7 +52,7 @@ PdGraph::PdGraph(pd::Message *init_message, PdGraph *parentGraph, pd::Context *c
   // all graphs start out unattached to any context, though they exist in a context
   isAttachedToContext = false;
   switched = true; // graphs are switched on by default
-  processFunction = &processGraph;
+  process_function = &processGraph;
 
   // initialise the graph arguments
   this->graphId = graphId;
@@ -66,7 +66,7 @@ PdGraph::PdGraph(pd::Message *init_message, PdGraph *parentGraph, pd::Context *c
 }
 
 PdGraph::~PdGraph() {
-  graphArguments->freeMessage();
+  graphArguments->free_message();
   delete declareList;
 
   // remove all implicit +~~ objects
@@ -74,7 +74,7 @@ PdGraph::~PdGraph() {
     DspObject *dspObject = *it;
 
     if (dspObject->get_graph() != this) break;
-    if (!strcmp(dspObject->toString().c_str(), DspImplicitAdd::getObjectLabel())) {
+    if (!strcmp(dspObject->toString().c_str(), DspImplicitAdd::get_object_label())) {
       delete dspObject;
     }
   }
@@ -220,58 +220,58 @@ void PdGraph::registerObject(message::Object *message_obj) {
   switch (message_obj->get_object_type()) {
     case MESSAGE_RECEIVE:
     case MESSAGE_NOTEIN: {
-      context->registerRemoteMessageReceiver(reinterpret_cast<RemoteMessageReceiver *>(message_obj));
+      context->register_remote_message_receiver(reinterpret_cast<RemoteMessageReceiver *>(message_obj));
       break;
     }
     case MESSAGE_TABLE: {
       // tables must be registered globally as a table, but can also receive remote messages
-      context->registerRemoteMessageReceiver(reinterpret_cast<RemoteMessageReceiver *>(message_obj));
-      context->registerTable((MessageTable *) message_obj);
+      context->register_remote_message_receiver(reinterpret_cast<RemoteMessageReceiver *>(message_obj));
+      context->register_table((MessageTable *) message_obj);
       break;
     }
     case MESSAGE_TABLE_READ: {
-      context->registerTableReceiver(reinterpret_cast<MessageTableRead *>(message_obj));
+      context->register_table_receiver(reinterpret_cast<MessageTableRead *>(message_obj));
       break;
     }
     case MESSAGE_TABLE_WRITE: {
-      context->registerTableReceiver(reinterpret_cast<MessageTableWrite *>(message_obj));
+      context->register_table_receiver(reinterpret_cast<MessageTableWrite *>(message_obj));
       break;
     }
     case DSP_CATCH: {
-      context->registerDspCatch((DspCatch *) message_obj);
+      context->register_dsp_catch((DspCatch *) message_obj);
       break;
     }
     case DSP_DELAY_READ:
     case DSP_VARIABLE_DELAY: {
-      context->registerDelayReceiver((DelayReceiver *) message_obj);
+      context->register_delay_receiver((DelayReceiver *) message_obj);
       break;
     }
     case DSP_DELAY_WRITE: {
-      context->registerDelayline((DspDelayWrite *) message_obj);
+      context->register_delay_line((DspDelayWrite *) message_obj);
       break;
     }
     case DSP_SEND: {
-      context->registerDspSend((DspSend *) message_obj);
+      context->register_dsp_send((DspSend *) message_obj);
       break;
     }
     case DSP_RECEIVE: {
-      context->registerDspReceive((DspReceive *) message_obj);
+      context->register_dsp_receive((DspReceive *) message_obj);
       break;
     }
     case DSP_TABLE_PLAY: {
-      context->registerTableReceiver((DspTablePlay *) message_obj);
+      context->register_table_receiver((DspTablePlay *) message_obj);
       break;
     }
     case DSP_TABLE_READ4: {
-      context->registerTableReceiver((DspTableRead4 *) message_obj);
+      context->register_table_receiver((DspTableRead4 *) message_obj);
       break;
     }
     case DSP_TABLE_READ: {
-      context->registerTableReceiver((DspTableRead *) message_obj);
+      context->register_table_receiver((DspTableRead *) message_obj);
       break;
     }
     case DSP_THROW: {
-      context->registerDspThrow((DspThrow *) message_obj);
+      context->register_dsp_throw((DspThrow *) message_obj);
       break;
     }
     default: {
@@ -285,35 +285,35 @@ void PdGraph::unregisterObject(message::Object *message_obj) {
   switch (message_obj->get_object_type()) {
     case MESSAGE_RECEIVE:
     case MESSAGE_NOTEIN: {
-      context->unregisterRemoteMessageReceiver((RemoteMessageReceiver *) message_obj);
+      context->unregister_remote_message_receiver((RemoteMessageReceiver *) message_obj);
       break;
     }
     case MESSAGE_TABLE_READ: {
-      context->unregisterTableReceiver((MessageTableRead *) message_obj);
+      context->unregister_table_receiver((MessageTableRead *) message_obj);
       break;
     }
     case MESSAGE_TABLE_WRITE: {
-      context->unregisterTableReceiver((MessageTableWrite *) message_obj);
+      context->unregister_table_receiver((MessageTableWrite *) message_obj);
       break;
     }
     case DSP_SEND: {
-      context->unregisterDspSend((DspSend *) message_obj);
+      context->unregister_dsp_send((DspSend *) message_obj);
       break;
     }
     case DSP_RECEIVE: {
-      context->unregisterDspReceive((DspReceive *) message_obj);
+      context->unregister_dsp_receive((DspReceive *) message_obj);
       break;
     }
     case DSP_TABLE_PLAY: {
-      context->unregisterTableReceiver((DspTablePlay *) message_obj);
+      context->unregister_table_receiver((DspTablePlay *) message_obj);
       break;
     }
     case DSP_TABLE_READ4: {
-      context->unregisterTableReceiver((DspTableRead4 *) message_obj);
+      context->unregister_table_receiver((DspTableRead4 *) message_obj);
       break;
     }
     case DSP_TABLE_READ: {
-      context->unregisterTableReceiver((DspTableRead *) message_obj);
+      context->unregister_table_receiver((DspTableRead *) message_obj);
       break;
     }
     default: {
@@ -325,7 +325,7 @@ void PdGraph::unregisterObject(message::Object *message_obj) {
 
 #pragma mark - Attach to Context
 
-void PdGraph::attachToContext(bool isAttached) {
+void PdGraph::attach_to_context(bool isAttached) {
   // ensure that this function is only run on attachement change
   if (isAttachedToContext != isAttached) {
     isAttachedToContext = isAttached;
@@ -339,7 +339,7 @@ void PdGraph::attachToContext(bool isAttached) {
       }
       if (message_obj->get_object_type() == object::Type::PURE_DATA) {
         PdGraph *pdGraph = (PdGraph *) message_obj;
-        pdGraph->attachToContext(isAttached);
+        pdGraph->attach_to_context(isAttached);
       }
     }
   }
@@ -389,12 +389,12 @@ pd::Message *PdGraph::schedule_message(message::Object *message_obj, int outlet_
   return context->schedule_message(message_obj, outlet_index, message);
 }
 
-void PdGraph::cancelMessage(message::Object *message_obj, int outlet_index, pd::Message *message) {
-  context->cancelMessage(message_obj, outlet_index, message);
+void PdGraph::cancel_message(message::Object *message_obj, int outlet_index, pd::Message *message) {
+  context->cancel_message(message_obj, outlet_index, message);
 }
 
-void PdGraph::send_messageToNamedReceivers(char *name, pd::Message *message) {
-  context->send_messageToNamedReceivers(name, message);
+void PdGraph::send_message_to_named_receivers(char *name, pd::Message *message) {
+  context->send_message_to_named_receivers(name, message);
 }
 
 
@@ -418,7 +418,7 @@ void PdGraph::processGraph(DspObject *dspObject, int fromIndex, int toIndex) {
     // execute all nodes which process audio
     for (list<DspObject *>::iterator it = d->dspNodeList.begin(); it != d->dspNodeList.end(); ++it) {
       DspObject *dspObject = *it;
-      dspObject->processFunction(dspObject, 0, d->block_sizeInt);
+      dspObject->process_function(dspObject, 0, d->block_sizeInt);
     }
   }
 }
@@ -429,7 +429,7 @@ void PdGraph::processGraph(DspObject *dspObject, int fromIndex, int toIndex) {
 void PdGraph::addConnection(message::Object *fromObject, int outlet_index, message::Object *toObject, int inlet_index) {
   // check to make sure that this connection can even work. Otherwise don't bother.
   if (outlet_index >= fromObject->get_num_outlets() || inlet_index >= toObject->get_num_inlets()) {
-    printErr("mismatched connnection. Attempt to make a connection from "
+    print_err("mismatched connnection. Attempt to make a connection from "
         "%s(%p):%i/%i to %s(%p):%i/%i. Connection ignored.",
         fromObject->toString().c_str(), fromObject, outlet_index, fromObject->get_num_outlets(),
         toObject->toString().c_str(), toObject, inlet_index, toObject->get_num_inlets());
@@ -444,7 +444,7 @@ void PdGraph::addConnection(message::Object *fromObject, int outlet_index, messa
   // In theory this function should check to see if a reordering is even necessary and then only make
   // the appropriate changes. Usually a complete reevaluation shouldn't be necessary, and otherwise
   // the use of a linked list to store the node list should make the reordering fast.
-  //  computeDeepLocalDspProcessOrder();
+  //  compute_deep_local_process_order();
 
   unlockContextIfAttached();
 }
@@ -525,8 +525,8 @@ void PdGraph::add_connection_from_object_to_inlet(message::Object *message_obj, 
         MessageInlet *messageInlet = reinterpret_cast<MessageInlet *>(inletObject);
         messageInlet->add_connection_from_object_to_inlet(message_obj, outlet_index, 0);
       } else {
-        printErr("Connection [%s]:%i is of type DSP and cannot be connected to inlet.",
-            message_obj->getObjectLabel(), outlet_index);
+        print_err("Connection [%s]:%i is of type DSP and cannot be connected to inlet.",
+            message_obj->get_object_label(), outlet_index);
       }
       break;
     }
@@ -536,8 +536,8 @@ void PdGraph::add_connection_from_object_to_inlet(message::Object *message_obj, 
         DspInlet *dspInlet = reinterpret_cast<DspInlet *>(inletObject);
         dspInlet->add_connection_from_object_to_inlet(message_obj, outlet_index, 0);
       } else {
-        printErr("Connection [%s]:%i is of type MESSAGE and cannot be connected to inlet~.",
-            message_obj->getObjectLabel(), outlet_index);
+        print_err("Connection [%s]:%i is of type MESSAGE and cannot be connected to inlet~.",
+            message_obj->get_object_label(), outlet_index);
       }
       break;
     }
@@ -575,11 +575,11 @@ void PdGraph::remove_connection_to_object_from_outlet(message::Object *message_o
 
 #pragma mark - Get/Set Inlet/Outlet Buffers
 
-void PdGraph::setDspBufferAtInlet(float *buffer, unsigned int inlet_index) {
+void PdGraph::set_dsp_buffer_at_inlet(float *buffer, unsigned int inlet_index) {
   message::Object *inletObject = inletList[inlet_index];
   if (inletObject->get_object_type() == DSP_INLET) {
     DspObject *dspInlet = reinterpret_cast<DspInlet *>(inletObject);
-    dspInlet->setDspBufferAtInlet(buffer, 0);
+    dspInlet->set_dsp_buffer_at_inlet(buffer, 0);
   }
 }
 
@@ -587,20 +587,20 @@ void PdGraph::setDspBufferAtOutlet(float *buffer, unsigned int outlet_index) {
   // nothing to do because DspOutlet objects do not allow setting outlet buffers
 }
 
-float *PdGraph::getDspBufferAtInlet(int inlet_index) {
+float *PdGraph::get_dsp_buffer_at_inlet(int inlet_index) {
   message::Object *inletObject = inletList[inlet_index];
   if (inletObject->get_object_type() == DSP_INLET) {
     DspObject *dspInlet = reinterpret_cast<DspInlet *>(inletObject);
-    return dspInlet->getDspBufferAtInlet(0);
+    return dspInlet->get_dsp_buffer_at_inlet(0);
   }
   return NULL; // if you've gotten this far, something's gone wrong
 }
 
-float *PdGraph::getDspBufferAtOutlet(int outlet_index) {
+float *PdGraph::get_dsp_buffer_at_outlet(int outlet_index) {
   message::Object *outletObject = outletList[outlet_index];
   if (outletObject->get_object_type() == DSP_OUTLET) {
     DspObject *dspOutlet = reinterpret_cast<DspInlet *>(outletObject);
-    return dspOutlet->getDspBufferAtOutlet(0);
+    return dspOutlet->get_dsp_buffer_at_outlet(0);
   }
   return NULL; // if you've gotten this far, something's gone wrong
 }
@@ -633,7 +633,7 @@ list<DspObject *> PdGraph::get_process_order() {
         default: break;
       }
     }
-    computeDeepLocalDspProcessOrder();
+    compute_deep_local_process_order();
     if (doesProcessAudio()) processOrder.push_back(this);
     return processOrder;
   }
@@ -650,7 +650,7 @@ bool PdGraph::is_leaf_node() {
   return true;
 }
 
-void PdGraph::computeDeepLocalDspProcessOrder() {
+void PdGraph::compute_deep_local_process_order() {
   lockContextIfAttached();
 
   /* clear/reset dspNodeList
@@ -674,7 +674,7 @@ void PdGraph::computeDeepLocalDspProcessOrder() {
   // remove all +~~ objects
   for (list<DspObject *>::iterator it = dspNodeList.begin(); it != dspNodeList.end(); ++it) {
     DspObject *dspObject = *it;
-    if (!strcmp(dspObject->toString().c_str(), DspImplicitAdd::getObjectLabel())) {
+    if (!strcmp(dspObject->toString().c_str(), DspImplicitAdd::get_object_label())) {
       delete dspObject;
     }
   }
@@ -692,13 +692,13 @@ void PdGraph::computeDeepLocalDspProcessOrder() {
   /*
   if (!dspNodeList.empty()) {
     // print dsp evaluation order for debugging, but only if there are any nodes to list
-    printStd("  - ordered evaluation list ---");
+    print_std("  - ordered evaluation list ---");
     list<DspObject *>::iterator it = dspNodeList.begin();
     list<DspObject *>::iterator end = dspNodeList.end();
     while (it != end) {
-      printStd((*it++)->toString().c_str());
+      print_std((*it++)->toString().c_str());
     }
-    printStd("\n");
+    print_std("\n");
   }
   */
 
@@ -707,7 +707,7 @@ void PdGraph::computeDeepLocalDspProcessOrder() {
 
 #pragma mark - Print
 
-void PdGraph::printErr(const char *msg, ...) {
+void PdGraph::print_err(const char *msg, ...) {
   int maxStringLength = 1024;
   char stringBuffer[maxStringLength];
   va_list ap;
@@ -715,10 +715,10 @@ void PdGraph::printErr(const char *msg, ...) {
   vsnprintf(stringBuffer, maxStringLength-1, msg, ap);
   va_end(ap);
 
-  context->printErr(stringBuffer);
+  context->print_err(stringBuffer);
 }
 
-void PdGraph::printStd(const char *msg, ...) {
+void PdGraph::print_std(const char *msg, ...) {
   int maxStringLength = 1024;
   char stringBuffer[maxStringLength];
   va_list ap;
@@ -726,46 +726,46 @@ void PdGraph::printStd(const char *msg, ...) {
   vsnprintf(stringBuffer, maxStringLength-1, msg, ap);
   va_end(ap);
 
-  context->printStd(stringBuffer);
+  context->print_std(stringBuffer);
 }
 
 #pragma mark - Get Attributes
 
 double PdGraph::getBlockIndex(pd::Message *message) {
   // sample_rate is in samples/second, but we need samples/millisecond
-  return (message->get_timestamp() - context->getBlockStartTimestamp()) * 0.001 * context->getSampleRate();
+  return (message->get_timestamp() - context->get_block_start_timestamp()) * 0.001 * context->get_sample_rate();
 }
 
-float PdGraph::getSampleRate() {
+float PdGraph::get_sample_rate() {
   // there is no such thing as a local sample rate. Return the sample rate of the context.
-  return context->getSampleRate();
+  return context->get_sample_rate();
 }
 
 int PdGraph::get_graphId() {
   return graphId;
 }
 
-float *PdGraph::getGlobalDspBufferAtInlet(int inlet_index) {
-  return context->getGlobalDspBufferAtInlet(inlet_index);
+float *PdGraph::get_global_dsp_buffer_at_inlet(int inlet_index) {
+  return context->get_global_dsp_buffer_at_inlet(inlet_index);
 }
 
-float *PdGraph::getGlobalDspBufferAtOutlet(int outlet_index) {
-  return context->getGlobalDspBufferAtOutlet(outlet_index);
+float *PdGraph::get_global_dsp_buffer_at_outlet(int outlet_index) {
+  return context->get_global_dsp_buffer_at_outlet(outlet_index);
 }
 
 pd::Message *PdGraph::getArguments() {
   return graphArguments;
 }
 
-int PdGraph::getNumInputChannels() {
-  return context->getNumInputChannels();
+int PdGraph::get_num_input_channels() {
+  return context->get_num_input_channels();
 }
 
-int PdGraph::getNumOutputChannels() {
-  return context->getNumOutputChannels();
+int PdGraph::get_num_output_channels() {
+  return context->get_num_output_channels();
 }
 
-int PdGraph::getBlockSize() {
+int PdGraph::get_block_size() {
   return block_sizeInt;
 }
 
@@ -773,8 +773,8 @@ bool PdGraph::isRootGraph() {
   return (parentGraph == NULL);
 }
 
-MessageTable *PdGraph::getTable(char *name) {
-  return context->getTable(name);
+MessageTable *PdGraph::get_table(char *name) {
+  return context->get_table(name);
 }
 
 connection::Type PdGraph::get_connection_type(int outlet_index) {
@@ -791,10 +791,10 @@ bool PdGraph::doesProcessAudio() {
 
 void PdGraph::setBlockSize(int block_size) {
   // only update blocksize if it is <= the parent's
-  if (block_size <= parentGraph->getBlockSize()) {
+  if (block_size <= parentGraph->get_block_size()) {
     // TODO(mhroth)
     block_sizeInt = block_size;
-    // update blockDurationMs, etc.
+    // update block_duration, etc.
     // notify all dsp objects and get them to resize their buffers accordingly
   }
 }
@@ -811,12 +811,12 @@ bool PdGraph::isSwitchedOn() {
   return switched;
 }
 
-void PdGraph::setValueForName(const char *name, float constant) {
-  context->setValueForName(name, constant);
+void PdGraph::set_value_for_name(const char *name, float constant) {
+  context->set_value_for_name(name, constant);
 }
 
-float PdGraph::getValueForName(const char *name) {
-  return context->getValueForName(name);
+float PdGraph::get_value_for_name(const char *name) {
+  return context->get_value_for_name(name);
 }
 
 unsigned int PdGraph::get_num_inlets() {
@@ -835,6 +835,6 @@ list<message::Object *> PdGraph::getNodeList() {
   return nodeList;
 }
 
-BufferPool *PdGraph::getBufferPool() {
-  return context->getBufferPool();
+BufferPool *PdGraph::get_buffer_pool() {
+  return context->get_buffer_pool();
 }

@@ -84,7 +84,7 @@
 #include "MessageRoute.h"
 #include "MessageSamplerate.h"
 #include "MessageSelect.h"
-#include "MessageSend.h"
+#include "message::Send.h"
 #include "MessageSine.h"
 #include "MessageSoundfiler.h"
 #include "MessageSpigot.h"
@@ -154,159 +154,159 @@ ObjectFactoryMap::ObjectFactoryMap() {
   // these objects represent the core set of supported objects
   
   // message objects
-  objectFactoryMap[string(MessageAbsoluteValue::getObjectLabel())] = &MessageAbsoluteValue::new_object;
-  objectFactoryMap[string(MessageAdd::getObjectLabel())] = &MessageAdd::new_object;
-  objectFactoryMap[string(MessageArcTangent::getObjectLabel())] = &MessageArcTangent::new_object;
-  objectFactoryMap[string(MessageArcTangent2::getObjectLabel())] = &MessageArcTangent2::new_object;
-  objectFactoryMap[string(MessageBang::getObjectLabel())] = &MessageBang::new_object;
-  objectFactoryMap[string("bng")] = &MessageBang::new_object;
-  objectFactoryMap[string("b")] = &MessageBang::new_object;
-  objectFactoryMap[string(MessageChange::getObjectLabel())] = &MessageChange::new_object;
-  objectFactoryMap[string(MessageClip::getObjectLabel())] = &MessageClip::new_object;
-  objectFactoryMap[string(MessageCosine::getObjectLabel())] = &MessageCosine::new_object;
-  objectFactoryMap[string(MessageCputime::getObjectLabel())] = &MessageCputime::new_object;
-  objectFactoryMap[string(MessageDbToPow::getObjectLabel())] = &MessageDbToPow::new_object;
-  objectFactoryMap[string(MessageDbToRms::getObjectLabel())] = &MessageDbToRms::new_object;
-  objectFactoryMap[string(MessageDeclare::getObjectLabel())] = &MessageDeclare::new_object;
-  objectFactoryMap[string(MessageDelay::getObjectLabel())] = &MessageDelay::new_object;
-  objectFactoryMap[string("del")] = &MessageDelay::new_object;
-  objectFactoryMap[string(MessageDiv::getObjectLabel())] = &MessageDiv::new_object;
-  objectFactoryMap[string(MessageDivide::getObjectLabel())] = &MessageDivide::new_object;
-  objectFactoryMap[string(MessageEqualsEquals::getObjectLabel())] = &MessageEqualsEquals::new_object;
-  objectFactoryMap[string(MessageExp::getObjectLabel())] = &MessageExp::new_object;
-  objectFactoryMap[string(MessageFloat::getObjectLabel())] = &MessageFloat::new_object;
-  objectFactoryMap[string("f")] = &MessageFloat::new_object;
-  objectFactoryMap[string("nbx")] = &MessageFloat::new_object; // number boxes are represented as float objects
-  objectFactoryMap[string("hsl")] = &MessageFloat::new_object; // horizontal and vertical sliders are
-  objectFactoryMap[string("vsl")] = &MessageFloat::new_object; // represened as float boxes
-  objectFactoryMap[string(MessageFrequencyToMidi::getObjectLabel())] = &MessageFrequencyToMidi::new_object;
-  objectFactoryMap[string(MessageGreaterThan::getObjectLabel())] = &MessageGreaterThan::new_object;
-  objectFactoryMap[string(MessageGreaterThanOrEqualTo::getObjectLabel())] = &MessageGreaterThanOrEqualTo::new_object;
-  objectFactoryMap[string(MessageInlet::getObjectLabel())] = &MessageInlet::new_object;
-  objectFactoryMap[string(MessageInteger::getObjectLabel())] = &MessageInteger::new_object;
-  objectFactoryMap[string("i")] = &MessageInteger::new_object;
-  objectFactoryMap[string(MessageLessThan::getObjectLabel())] = &MessageLessThan::new_object;
-  objectFactoryMap[string(MessageLessThanOrEqualTo::getObjectLabel())] = &MessageLessThanOrEqualTo::new_object;
-  objectFactoryMap[string(MessageLine::getObjectLabel())] = &MessageLine::new_object;
-  objectFactoryMap[string("list")] = &MessageListAppend::new_object; // MessageListAppend factory creates any kind of list object
-  objectFactoryMap[string(MessageLoadbang::getObjectLabel())] = &MessageLoadbang::new_object;
-  objectFactoryMap[string(MessageLog::getObjectLabel())] = &MessageLog::new_object;
-  objectFactoryMap[string(MessageLogicalAnd::getObjectLabel())] = &MessageLogicalAnd::new_object;
-  objectFactoryMap[string(MessageLogicalOr::getObjectLabel())] = &MessageLogicalOr::new_object;
-  objectFactoryMap[string(MessageMakefilename::getObjectLabel())] = &MessageMakefilename::new_object;
-  objectFactoryMap[string(MessageMaximum::getObjectLabel())] = &MessageMaximum::new_object;
-  objectFactoryMap[string(MessageMessageBox::getObjectLabel())] = &MessageMessageBox::new_object;
-  objectFactoryMap[string(MessageMetro::getObjectLabel())] = &MessageMetro::new_object;
-  objectFactoryMap[string(MessageMidiToFrequency::getObjectLabel())] = &MessageMidiToFrequency::new_object;
-  objectFactoryMap[string(MessageMinimum::getObjectLabel())] = &MessageMinimum::new_object;
-  objectFactoryMap[string(MessageModulus::getObjectLabel())] = &MessageModulus::new_object;
-  objectFactoryMap[string(MessageMoses::getObjectLabel())] = &MessageMoses::new_object;
-  objectFactoryMap[string(MessageMultiply::getObjectLabel())] = &MessageMultiply::new_object;
-  objectFactoryMap[string(MessageNotein::getObjectLabel())] = &MessageNotein::new_object;
-  objectFactoryMap[string(MessageNotEquals::getObjectLabel())] = &MessageNotEquals::new_object;
-  objectFactoryMap[string(MessageOpenPanel::getObjectLabel())] = &MessageOpenPanel::new_object;
-  objectFactoryMap[string(MessageOutlet::getObjectLabel())] = &MessageOutlet::new_object;
-  objectFactoryMap[string(MessagePack::getObjectLabel())] = &MessagePack::new_object;
-  objectFactoryMap[string(MessagePipe::getObjectLabel())] = &MessagePipe::new_object;
-  objectFactoryMap[string(MessagePow::getObjectLabel())] = &MessagePow::new_object;
-  objectFactoryMap[string(MessagePowToDb::getObjectLabel())] = &MessagePowToDb::new_object;
-  objectFactoryMap[string(MessagePrint::getObjectLabel())] = &MessagePrint::new_object;
-  objectFactoryMap[string(MessageRandom::getObjectLabel())] = &MessageRandom::new_object;
-  objectFactoryMap[string(MessageReceive::getObjectLabel())] = &MessageReceive::new_object;
-  objectFactoryMap[string("r")] = &MessageReceive::new_object;
-  objectFactoryMap[string(MessageRemainder::getObjectLabel())] = &MessageRemainder::new_object;
-  objectFactoryMap[string(MessageRmsToDb::getObjectLabel())] = &MessageRmsToDb::new_object;
-  objectFactoryMap[string(MessageRoute::getObjectLabel())] = &MessageRoute::new_object;
-  objectFactoryMap[string(MessageSamplerate::getObjectLabel())] = &MessageSamplerate::new_object;
-  objectFactoryMap[string(MessageSelect::getObjectLabel())] = &MessageSelect::new_object;
-  objectFactoryMap[string("sel")] = &MessageSelect::new_object;
-  objectFactoryMap[string(MessageSend::getObjectLabel())] = &MessageSend::new_object;
-  objectFactoryMap[string("s")] = &MessageSend::new_object;
-  objectFactoryMap[string(MessageSine::getObjectLabel())] = &MessageSine::new_object;
-  objectFactoryMap[string(MessageSoundfiler::getObjectLabel())] = &MessageSoundfiler::new_object;
-  objectFactoryMap[string(MessageSpigot::getObjectLabel())] = &MessageSpigot::new_object;
-  objectFactoryMap[string(MessageSqrt::getObjectLabel())] = &MessageSqrt::new_object;
-  objectFactoryMap[string(MessageStripNote::getObjectLabel())] = &MessageStripNote::new_object;
-  objectFactoryMap[string(MessageSubtract::getObjectLabel())] = &MessageSubtract::new_object;
-  objectFactoryMap[string(MessageSwap::getObjectLabel())] = &MessageSwap::new_object;
-  objectFactoryMap[string(MessageSwitch::getObjectLabel())] = &MessageSwitch::new_object;
-  objectFactoryMap[string(MessageSymbol::getObjectLabel())] = &MessageSymbol::new_object;
-  objectFactoryMap[string(MessageTable::getObjectLabel())] = &MessageTable::new_object;
-  objectFactoryMap[string(MessageTableRead::getObjectLabel())] = &MessageTableRead::new_object;
-  objectFactoryMap[string(MessageTableWrite::getObjectLabel())] = &MessageTableWrite::new_object;
-  objectFactoryMap[string(MessageTangent::getObjectLabel())] = &MessageTangent::new_object;
-  objectFactoryMap[string(MessageText::getObjectLabel())] = &MessageText::new_object;
-  objectFactoryMap[string(MessageTimer::getObjectLabel())] = &MessageTimer::new_object;
-  objectFactoryMap[string(MessageToggle::getObjectLabel())] = &MessageToggle::new_object;
-  objectFactoryMap[string("tgl")] = &MessageToggle::new_object;
-  objectFactoryMap[string(MessageTrigger::getObjectLabel())] = &MessageTrigger::new_object;
-  objectFactoryMap[string("t")] = &MessageTrigger::new_object;
-  objectFactoryMap[string(MessageUnpack::getObjectLabel())] = &MessageUnpack::new_object;
-  objectFactoryMap[string(MessageUntil::getObjectLabel())] = &MessageUntil::new_object;
-  objectFactoryMap[string(MessageValue::getObjectLabel())] = &MessageValue::new_object;
-  objectFactoryMap[string("v")] = &MessageValue::new_object;
-  objectFactoryMap[string(MessageWrap::getObjectLabel())] = &MessageWrap::new_object;
+  object_factory_map[string(MessageAbsoluteValue::get_object_label())] = &MessageAbsoluteValue::new_object;
+  object_factory_map[string(MessageAdd::get_object_label())] = &MessageAdd::new_object;
+  object_factory_map[string(MessageArcTangent::get_object_label())] = &MessageArcTangent::new_object;
+  object_factory_map[string(MessageArcTangent2::get_object_label())] = &MessageArcTangent2::new_object;
+  object_factory_map[string(MessageBang::get_object_label())] = &MessageBang::new_object;
+  object_factory_map[string("bng")] = &MessageBang::new_object;
+  object_factory_map[string("b")] = &MessageBang::new_object;
+  object_factory_map[string(MessageChange::get_object_label())] = &MessageChange::new_object;
+  object_factory_map[string(MessageClip::get_object_label())] = &MessageClip::new_object;
+  object_factory_map[string(MessageCosine::get_object_label())] = &MessageCosine::new_object;
+  object_factory_map[string(MessageCputime::get_object_label())] = &MessageCputime::new_object;
+  object_factory_map[string(MessageDbToPow::get_object_label())] = &MessageDbToPow::new_object;
+  object_factory_map[string(MessageDbToRms::get_object_label())] = &MessageDbToRms::new_object;
+  object_factory_map[string(MessageDeclare::get_object_label())] = &MessageDeclare::new_object;
+  object_factory_map[string(MessageDelay::get_object_label())] = &MessageDelay::new_object;
+  object_factory_map[string("del")] = &MessageDelay::new_object;
+  object_factory_map[string(MessageDiv::get_object_label())] = &MessageDiv::new_object;
+  object_factory_map[string(MessageDivide::get_object_label())] = &MessageDivide::new_object;
+  object_factory_map[string(MessageEqualsEquals::get_object_label())] = &MessageEqualsEquals::new_object;
+  object_factory_map[string(MessageExp::get_object_label())] = &MessageExp::new_object;
+  object_factory_map[string(MessageFloat::get_object_label())] = &MessageFloat::new_object;
+  object_factory_map[string("f")] = &MessageFloat::new_object;
+  object_factory_map[string("nbx")] = &MessageFloat::new_object; // number boxes are represented as float objects
+  object_factory_map[string("hsl")] = &MessageFloat::new_object; // horizontal and vertical sliders are
+  object_factory_map[string("vsl")] = &MessageFloat::new_object; // represened as float boxes
+  object_factory_map[string(MessageFrequencyToMidi::get_object_label())] = &MessageFrequencyToMidi::new_object;
+  object_factory_map[string(MessageGreaterThan::get_object_label())] = &MessageGreaterThan::new_object;
+  object_factory_map[string(MessageGreaterThanOrEqualTo::get_object_label())] = &MessageGreaterThanOrEqualTo::new_object;
+  object_factory_map[string(MessageInlet::get_object_label())] = &MessageInlet::new_object;
+  object_factory_map[string(MessageInteger::get_object_label())] = &MessageInteger::new_object;
+  object_factory_map[string("i")] = &MessageInteger::new_object;
+  object_factory_map[string(MessageLessThan::get_object_label())] = &MessageLessThan::new_object;
+  object_factory_map[string(MessageLessThanOrEqualTo::get_object_label())] = &MessageLessThanOrEqualTo::new_object;
+  object_factory_map[string(MessageLine::get_object_label())] = &MessageLine::new_object;
+  object_factory_map[string("list")] = &MessageListAppend::new_object; // MessageListAppend factory creates any kind of list object
+  object_factory_map[string(MessageLoadbang::get_object_label())] = &MessageLoadbang::new_object;
+  object_factory_map[string(MessageLog::get_object_label())] = &MessageLog::new_object;
+  object_factory_map[string(MessageLogicalAnd::get_object_label())] = &MessageLogicalAnd::new_object;
+  object_factory_map[string(MessageLogicalOr::get_object_label())] = &MessageLogicalOr::new_object;
+  object_factory_map[string(MessageMakefilename::get_object_label())] = &MessageMakefilename::new_object;
+  object_factory_map[string(MessageMaximum::get_object_label())] = &MessageMaximum::new_object;
+  object_factory_map[string(MessageMessageBox::get_object_label())] = &MessageMessageBox::new_object;
+  object_factory_map[string(MessageMetro::get_object_label())] = &MessageMetro::new_object;
+  object_factory_map[string(MessageMidiToFrequency::get_object_label())] = &MessageMidiToFrequency::new_object;
+  object_factory_map[string(MessageMinimum::get_object_label())] = &MessageMinimum::new_object;
+  object_factory_map[string(MessageModulus::get_object_label())] = &MessageModulus::new_object;
+  object_factory_map[string(MessageMoses::get_object_label())] = &MessageMoses::new_object;
+  object_factory_map[string(MessageMultiply::get_object_label())] = &MessageMultiply::new_object;
+  object_factory_map[string(MessageNotein::get_object_label())] = &MessageNotein::new_object;
+  object_factory_map[string(MessageNotEquals::get_object_label())] = &MessageNotEquals::new_object;
+  object_factory_map[string(MessageOpenPanel::get_object_label())] = &MessageOpenPanel::new_object;
+  object_factory_map[string(MessageOutlet::get_object_label())] = &MessageOutlet::new_object;
+  object_factory_map[string(MessagePack::get_object_label())] = &MessagePack::new_object;
+  object_factory_map[string(MessagePipe::get_object_label())] = &MessagePipe::new_object;
+  object_factory_map[string(MessagePow::get_object_label())] = &MessagePow::new_object;
+  object_factory_map[string(MessagePowToDb::get_object_label())] = &MessagePowToDb::new_object;
+  object_factory_map[string(MessagePrint::get_object_label())] = &MessagePrint::new_object;
+  object_factory_map[string(MessageRandom::get_object_label())] = &MessageRandom::new_object;
+  object_factory_map[string(MessageReceive::get_object_label())] = &MessageReceive::new_object;
+  object_factory_map[string("r")] = &MessageReceive::new_object;
+  object_factory_map[string(MessageRemainder::get_object_label())] = &MessageRemainder::new_object;
+  object_factory_map[string(MessageRmsToDb::get_object_label())] = &MessageRmsToDb::new_object;
+  object_factory_map[string(MessageRoute::get_object_label())] = &MessageRoute::new_object;
+  object_factory_map[string(MessageSamplerate::get_object_label())] = &MessageSamplerate::new_object;
+  object_factory_map[string(MessageSelect::get_object_label())] = &MessageSelect::new_object;
+  object_factory_map[string("sel")] = &MessageSelect::new_object;
+  object_factory_map[string(message::Send::get_object_label())] = &message::Send::new_object;
+  object_factory_map[string("s")] = &message::Send::new_object;
+  object_factory_map[string(MessageSine::get_object_label())] = &MessageSine::new_object;
+  object_factory_map[string(MessageSoundfiler::get_object_label())] = &MessageSoundfiler::new_object;
+  object_factory_map[string(MessageSpigot::get_object_label())] = &MessageSpigot::new_object;
+  object_factory_map[string(MessageSqrt::get_object_label())] = &MessageSqrt::new_object;
+  object_factory_map[string(MessageStripNote::get_object_label())] = &MessageStripNote::new_object;
+  object_factory_map[string(MessageSubtract::get_object_label())] = &MessageSubtract::new_object;
+  object_factory_map[string(MessageSwap::get_object_label())] = &MessageSwap::new_object;
+  object_factory_map[string(MessageSwitch::get_object_label())] = &MessageSwitch::new_object;
+  object_factory_map[string(MessageSymbol::get_object_label())] = &MessageSymbol::new_object;
+  object_factory_map[string(MessageTable::get_object_label())] = &MessageTable::new_object;
+  object_factory_map[string(MessageTableRead::get_object_label())] = &MessageTableRead::new_object;
+  object_factory_map[string(MessageTableWrite::get_object_label())] = &MessageTableWrite::new_object;
+  object_factory_map[string(MessageTangent::get_object_label())] = &MessageTangent::new_object;
+  object_factory_map[string(MessageText::get_object_label())] = &MessageText::new_object;
+  object_factory_map[string(MessageTimer::get_object_label())] = &MessageTimer::new_object;
+  object_factory_map[string(MessageToggle::get_object_label())] = &MessageToggle::new_object;
+  object_factory_map[string("tgl")] = &MessageToggle::new_object;
+  object_factory_map[string(MessageTrigger::get_object_label())] = &MessageTrigger::new_object;
+  object_factory_map[string("t")] = &MessageTrigger::new_object;
+  object_factory_map[string(MessageUnpack::get_object_label())] = &MessageUnpack::new_object;
+  object_factory_map[string(MessageUntil::get_object_label())] = &MessageUntil::new_object;
+  object_factory_map[string(MessageValue::get_object_label())] = &MessageValue::new_object;
+  object_factory_map[string("v")] = &MessageValue::new_object;
+  object_factory_map[string(MessageWrap::get_object_label())] = &MessageWrap::new_object;
   
   // dsp objects
-  objectFactoryMap[string(DspAdc::getObjectLabel())] = &DspAdc::new_object;
-  objectFactoryMap[string(DspAdd::getObjectLabel())] = &DspAdd::new_object;
-  objectFactoryMap[string(DspBandpassFilter::getObjectLabel())] = &DspBandpassFilter::new_object;
-  objectFactoryMap[string(DspBang::getObjectLabel())] = &DspBang::new_object;
-  objectFactoryMap[string(DspCatch::getObjectLabel())] = &DspCatch::new_object;
-  objectFactoryMap[string(DspClip::getObjectLabel())] = &DspClip::new_object;
-  objectFactoryMap[string(DspCosine::getObjectLabel())] = &DspCosine::new_object;
-  objectFactoryMap[string(DspDac::getObjectLabel())] = &DspDac::new_object;
-  objectFactoryMap[string(DspDelayRead::getObjectLabel())] = &DspDelayRead::new_object;
-  objectFactoryMap[string(DspDelayWrite::getObjectLabel())] = &DspDelayWrite::new_object;
-  objectFactoryMap[string(DspDivide::getObjectLabel())] = &DspDivide::new_object;
-  objectFactoryMap[string(DspEnvelope::getObjectLabel())] = &DspEnvelope::new_object;
-  objectFactoryMap[string(DspHighpassFilter::getObjectLabel())] = &DspHighpassFilter::new_object;
-  objectFactoryMap[string(DspInlet::getObjectLabel())] = &DspInlet::new_object;
-  objectFactoryMap[string(DspLine::getObjectLabel())] = &DspLine::new_object;
-  objectFactoryMap[string(DspLog::getObjectLabel())] = &DspLog::new_object;
-  objectFactoryMap[string(DspLowpassFilter::getObjectLabel())] = &DspLowpassFilter::new_object;
-  objectFactoryMap[string(DspMinimum::getObjectLabel())] = &DspMinimum::new_object;
-  objectFactoryMap[string(DspMultiply::getObjectLabel())] = &DspMultiply::new_object;
-  objectFactoryMap[string(DspNoise::getObjectLabel())] = &DspNoise::new_object;
-  objectFactoryMap[string(DspOsc::getObjectLabel())] = &DspOsc::new_object;
-  objectFactoryMap[string(DspOutlet::getObjectLabel())] = &DspOutlet::new_object;
-  objectFactoryMap[string(DspPhasor::getObjectLabel())] = &DspPhasor::new_object;
-  objectFactoryMap[string(DspPrint::getObjectLabel())] = &DspPrint::new_object;
-  objectFactoryMap[string(DspReceive::getObjectLabel())] = &DspReceive::new_object;
-  objectFactoryMap[string("r~")] = &DspReceive::new_object;
-  objectFactoryMap[string(DspReciprocalSqrt::getObjectLabel())] = &DspReciprocalSqrt::new_object;
-  objectFactoryMap[string("q8_rsqrt~")] = &DspReciprocalSqrt::new_object;
-  objectFactoryMap[string(DspRfft::getObjectLabel())] = &DspRfft::new_object;
-  objectFactoryMap[string(DspRifft::getObjectLabel())] = &DspRifft::new_object;
-  objectFactoryMap[string(DspSend::getObjectLabel())] = &DspSend::new_object;
-  objectFactoryMap[string("s~")] = &DspSend::new_object;
-  objectFactoryMap[string(DspSignal::getObjectLabel())] = &DspSignal::new_object;
-  objectFactoryMap[string(DspSnapshot::getObjectLabel())] = &DspSnapshot::new_object;
-  objectFactoryMap[string(DspSqrt::getObjectLabel())] = &DspSqrt::new_object;
-  objectFactoryMap[string("q8_sqrt~")] = &DspSqrt::new_object;
-  objectFactoryMap[string(DspSubtract::getObjectLabel())] = &DspSubtract::new_object;
-  objectFactoryMap[string(DspTablePlay::getObjectLabel())] = &DspTablePlay::new_object;
-  objectFactoryMap[string(DspTableRead::getObjectLabel())] = &DspTableRead::new_object;
-  objectFactoryMap[string(DspTableRead4::getObjectLabel())] = &DspTableRead4::new_object;
-  objectFactoryMap[string(DspThrow::getObjectLabel())] = &DspThrow::new_object;
-  objectFactoryMap[string(DspVariableDelay::getObjectLabel())] = &DspVariableDelay::new_object;
-  objectFactoryMap[string(DspVariableLine::getObjectLabel())] = &DspVariableLine::new_object;
-  objectFactoryMap[string(DspWrap::getObjectLabel())] = &DspWrap::new_object;
+  object_factory_map[string(DspAdc::get_object_label())] = &DspAdc::new_object;
+  object_factory_map[string(DspAdd::get_object_label())] = &DspAdd::new_object;
+  object_factory_map[string(DspBandpassFilter::get_object_label())] = &DspBandpassFilter::new_object;
+  object_factory_map[string(DspBang::get_object_label())] = &DspBang::new_object;
+  object_factory_map[string(DspCatch::get_object_label())] = &DspCatch::new_object;
+  object_factory_map[string(DspClip::get_object_label())] = &DspClip::new_object;
+  object_factory_map[string(DspCosine::get_object_label())] = &DspCosine::new_object;
+  object_factory_map[string(DspDac::get_object_label())] = &DspDac::new_object;
+  object_factory_map[string(DspDelayRead::get_object_label())] = &DspDelayRead::new_object;
+  object_factory_map[string(DspDelayWrite::get_object_label())] = &DspDelayWrite::new_object;
+  object_factory_map[string(DspDivide::get_object_label())] = &DspDivide::new_object;
+  object_factory_map[string(DspEnvelope::get_object_label())] = &DspEnvelope::new_object;
+  object_factory_map[string(DspHighpassFilter::get_object_label())] = &DspHighpassFilter::new_object;
+  object_factory_map[string(DspInlet::get_object_label())] = &DspInlet::new_object;
+  object_factory_map[string(DspLine::get_object_label())] = &DspLine::new_object;
+  object_factory_map[string(DspLog::get_object_label())] = &DspLog::new_object;
+  object_factory_map[string(DspLowpassFilter::get_object_label())] = &DspLowpassFilter::new_object;
+  object_factory_map[string(DspMinimum::get_object_label())] = &DspMinimum::new_object;
+  object_factory_map[string(DspMultiply::get_object_label())] = &DspMultiply::new_object;
+  object_factory_map[string(DspNoise::get_object_label())] = &DspNoise::new_object;
+  object_factory_map[string(DspOsc::get_object_label())] = &DspOsc::new_object;
+  object_factory_map[string(DspOutlet::get_object_label())] = &DspOutlet::new_object;
+  object_factory_map[string(DspPhasor::get_object_label())] = &DspPhasor::new_object;
+  object_factory_map[string(DspPrint::get_object_label())] = &DspPrint::new_object;
+  object_factory_map[string(DspReceive::get_object_label())] = &DspReceive::new_object;
+  object_factory_map[string("r~")] = &DspReceive::new_object;
+  object_factory_map[string(DspReciprocalSqrt::get_object_label())] = &DspReciprocalSqrt::new_object;
+  object_factory_map[string("q8_rsqrt~")] = &DspReciprocalSqrt::new_object;
+  object_factory_map[string(DspRfft::get_object_label())] = &DspRfft::new_object;
+  object_factory_map[string(DspRifft::get_object_label())] = &DspRifft::new_object;
+  object_factory_map[string(DspSend::get_object_label())] = &DspSend::new_object;
+  object_factory_map[string("s~")] = &DspSend::new_object;
+  object_factory_map[string(DspSignal::get_object_label())] = &DspSignal::new_object;
+  object_factory_map[string(DspSnapshot::get_object_label())] = &DspSnapshot::new_object;
+  object_factory_map[string(DspSqrt::get_object_label())] = &DspSqrt::new_object;
+  object_factory_map[string("q8_sqrt~")] = &DspSqrt::new_object;
+  object_factory_map[string(DspSubtract::get_object_label())] = &DspSubtract::new_object;
+  object_factory_map[string(DspTablePlay::get_object_label())] = &DspTablePlay::new_object;
+  object_factory_map[string(DspTableRead::get_object_label())] = &DspTableRead::new_object;
+  object_factory_map[string(DspTableRead4::get_object_label())] = &DspTableRead4::new_object;
+  object_factory_map[string(DspThrow::get_object_label())] = &DspThrow::new_object;
+  object_factory_map[string(DspVariableDelay::get_object_label())] = &DspVariableDelay::new_object;
+  object_factory_map[string(DspVariableLine::get_object_label())] = &DspVariableLine::new_object;
+  object_factory_map[string(DspWrap::get_object_label())] = &DspWrap::new_object;
 }
 
 ObjectFactoryMap::~ObjectFactoryMap() {
   // nothing to do
 }
 
-void ObjectFactoryMap::registerExternalObject(const char *objectLabel, message::Object *(*new_object)(pd::Message *, PdGraph *)) {
-  objectFactoryMap[string(objectLabel)] = new_object;
+void ObjectFactoryMap::register_external_object(const char *object_label, message::Object *(*new_object)(pd::Message *, PdGraph *)) {
+  object_factory_map[string(object_label)] = new_object;
 }
 
-void ObjectFactoryMap::unregisterExternalObject(const char *objectLabel) {
-  objectFactoryMap.erase(string(objectLabel));
+void ObjectFactoryMap::unregister_external_object(const char *object_label) {
+  object_factory_map.erase(string(object_label));
 }
 
-message::Object *ObjectFactoryMap::new_object(const char *objectLabel, pd::Message *init_message, PdGraph *graph) {
-  message::Object *(*new_object)(pd::Message *, PdGraph *) = objectFactoryMap[string(objectLabel)];
+message::Object *ObjectFactoryMap::new_object(const char *object_label, pd::Message *init_message, PdGraph *graph) {
+  message::Object *(*new_object)(pd::Message *, PdGraph *) = object_factory_map[string(object_label)];
   return (new_object != NULL) ? new_object(init_message, graph) : NULL;
 }

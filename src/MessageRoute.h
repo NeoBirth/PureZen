@@ -33,7 +33,7 @@ class MessageRoute : public MessageObject {
     MessageRoute(PdMessage *init_message, PdGraph *graph);
     ~MessageRoute();
   
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
     
   private:
@@ -42,12 +42,12 @@ class MessageRoute : public MessageObject {
     PdMessage *routeMessage;
 };
 
-inline const char *MessageRoute::getObjectLabel() {
+inline const char *MessageRoute::get_object_label() {
   return "route";
 }
 
 inline std::string MessageRoute::toString() {
-  return MessageRoute::getObjectLabel();
+  return MessageRoute::get_object_label();
 }
 
 #endif // _MESSAGE_ROUTE_H_

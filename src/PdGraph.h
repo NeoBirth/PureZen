@@ -24,7 +24,7 @@
 #define _PD_GRAPH_H_
 
 #include "DspObject.h"
-#include "OrderedMessageQueue.h"
+#include "message::OrderedQueue.h"
 
 class BufferPool;
 class DeclareList;
@@ -37,7 +37,7 @@ class DspThrow;
 class LetInterface;
 class MessageObject;
 class MessageReceive;
-class MessageSend;
+class message::Send;
 class MessageTable;
 class pd::Context;
 
@@ -55,13 +55,13 @@ class PdGraph : public DspObject {
     PdMessage *schedule_message(MessageObject *messageObject, int outlet_index, PdMessage *message);
 
     /** Cancel a scheduled <code>PdMessage</code> according to its id. */
-    void cancelMessage(MessageObject *messageObject, int outlet_index, PdMessage *message);
+    void cancel_message(MessageObject *messageObject, int outlet_index, PdMessage *message);
 
     /*
      * Messages arriving at <code>PdGraph</code>s are processed immediately (passed on to inlet
      * objects, unlike with super-<code>DspObject</code> objects.
      */
-    void receiveMessage(int inlet_index, PdMessage *message);
+    void receive_message(int inlet_index, PdMessage *message);
 
 
 #pragma mark - Add/Remove Connection
@@ -82,17 +82,17 @@ class PdGraph : public DspObject {
 #pragma mark - Get/Set Buffers
 
     bool canSetBufferAtOutlet(unsigned int outlet_index) { return false; }
-    void setDspBufferAtInlet(float *buffer, unsigned int inlet_index);
+    void set_dsp_buffer_at_inlet(float *buffer, unsigned int inlet_index);
     void setDspBufferAtOutlet(float *buffer, unsigned int outlet_index);
-    float *getDspBufferAtInlet(int inlet_index);
-    float *getDspBufferAtOutlet(int outlet_index);
+    float *get_dsp_buffer_at_inlet(int inlet_index);
+    float *get_dsp_buffer_at_outlet(int outlet_index);
 
 
 #pragma mark -
 
-    static const char *getObjectLabel() { return "pd"; }
+    static const char *get_object_label() { return "pd"; }
     object::Type get_object_type() { return object::Type::PURE_DATA; }
-    string toString() { return name.empty() ? string(getObjectLabel()) : name; }
+    string toString() { return name.empty() ? string(get_object_label()) : name; }
 
     connection::Type get_connection_type(int outlet_index);
 
@@ -108,7 +108,7 @@ class PdGraph : public DspObject {
     void setBlockSize(int block_size);
 
     /** Get the current block size of this subgraph. */
-    int getBlockSize();
+    int get_block_size();
 
     /** Returns <code>true</code> of this graph has no parents, code>false</code> otherwise. */
     bool isRootGraph();
@@ -126,16 +126,16 @@ class PdGraph : public DspObject {
     PdMessage *getArguments();
 
     /** Returns the global sample rate. */
-    float getSampleRate();
+    float get_sample_rate();
 
     /** Returns the global dsp buffer at the given inlet. Exclusively used by <code>DspAdc</code>. */
-    float *getGlobalDspBufferAtInlet(int inlet_index);
+    float *get_global_dsp_buffer_at_inlet(int inlet_index);
 
     /** Returns the global dsp buffer at the given outlet. Exclusively used by <code>DspDac</code>. */
-    float *getGlobalDspBufferAtOutlet(int outlet_index);
+    float *get_global_dsp_buffer_at_outlet(int outlet_index);
 
-    int getNumInputChannels();
-    int getNumOutputChannels();
+    int get_num_input_channels();
+    int get_num_output_channels();
 
     /** A convenience function to determine when in a block a message occurs. */
     double getBlockIndex(PdMessage *message);
@@ -162,7 +162,7 @@ class PdGraph : public DspObject {
     void sendMessageToNamedReceivers(char *name, PdMessage *message);
 
     /** Gets the named (global) table object. */
-    MessageTable *getTable(char *name);
+    MessageTable *get_table(char *name);
 
     /** Add an object to the graph, taking care of any special object registration. */
     void addObject(float canvasX, float canvasY, MessageObject *node);
@@ -200,8 +200,8 @@ class PdGraph : public DspObject {
 
     /** Used with MessageValue for keeping track of global variables. */
     // TODO(mhroth): these are not yet fully implemented
-    void setValueForName(const char *name, float constant);
-    float getValueForName(const char *name);
+    void set_value_for_name(const char *name, float constant);
+    float get_value_for_name(const char *name);
 
     unsigned int getNumInlets();
     unsigned int getNumOutlets();
@@ -221,7 +221,7 @@ class PdGraph : public DspObject {
     /** Unlocks the context if this graph is attached. */
     void unlockContextIfAttached();
 
-    BufferPool *getBufferPool();
+    BufferPool *get_buffer_pool();
 
     /** Set the graph name. */
     void setName(string newName) { name = newName; }
@@ -230,7 +230,7 @@ class PdGraph : public DspObject {
     static void processGraph(DspObject *dspObject, int fromIndex, int toIndex);
 
     /** Create a new object based on its initialisation string. */
-    MessageObject *new_object(char *objectType, char *objectLabel, PdMessage *init_message, PdGraph *graph);
+    MessageObject *new_object(char *objectType, char *object_label, PdMessage *init_message, PdGraph *graph);
 
     /**
      * Registers the object with all relevant global lists.

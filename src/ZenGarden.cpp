@@ -39,12 +39,12 @@ void zg_remove_graph(pd::Context *context, PdGraph *graph) {
 
 ZGObject *zg_graph_add_new_object(PdGraph *graph, const char *objectString, float coordinates.x, float coordinates.y) {
   char *objectStringCopy = utils::copy_string(objectString);
-  char *objectLabel = strtok(objectStringCopy, " ;");
+  char *object_label = strtok(objectStringCopy, " ;");
   char *initString = strtok(NULL, ";");
   char resolutionBuffer[256];
   pd::Message *init_message = PD_MESSAGE_ON_STACK(32);
   init_message->from_string_and_args(32, initString, graph->getArguments(), resolutionBuffer, 256);
-  message::Object *message_obj = graph->getContext()->new_object(objectLabel, init_message, graph);
+  message::Object *message_obj = graph->getContext()->new_object(object_label, init_message, graph);
   free(objectStringCopy);
 
   if (message_obj != NULL) {
@@ -111,7 +111,7 @@ ZGConnectionPair *zg_object_get_connections_at_outlet(ZGObject *object, unsigned
 }
 
 const char *zg_object_get_label(ZGObject *object) {
-  return object->getObjectLabel();
+  return object->get_object_label();
 }
 
 void zg_object_send_message(message::Object *object, unsigned int inlet_index, ZGMessage *message) {
@@ -140,9 +140,9 @@ char *zg_object_to_string(ZGObject *object) {
 #pragma mark - Context
 
 ZGContext *zg_context_new(int num_input_channels, int num_output_channels, int block_size, float sample_rate,
-      void *(*callbackFunction)(ZGCallbackFunction, void *, void *), void *userData) {
+      void *(*callback_function)(ZGCallbackFunction, void *, void *), void *userData) {
   return new pd::Context(num_input_channels, num_output_channels, block_size, sample_rate,
-      callbackFunction, userData);
+      callback_function, userData);
 }
 
 void zg_context_delete(ZGContext *context) {
@@ -153,7 +153,7 @@ ZGGraph *zg_context_new_empty_graph(pd::Context *context) {
   pd::Message *init_message = PD_MESSAGE_ON_STACK(0); // create an empty message to use for initialisation
   init_message->from_timestamp(0.0, 0);
   // the new graph has no parent graph and is created in the given context with a unique id
-  PdGraph *graph = new PdGraph(init_message, NULL, context, context->getNextGraphId(), "zg_free");
+  PdGraph *graph = new PdGraph(init_message, NULL, context, context->get_next_graph_id(), "zg_free");
   return graph;
 }
 
@@ -172,18 +172,18 @@ ZGGraph *zg_context_new_graph_from_string(pd::Context *context, const char *netl
   return graph;
 }
 
-void zg_context_process(pd::Context *context, float *inputBuffers, float *outputBuffers) {
-  context->process(inputBuffers, outputBuffers);
+void zg_context_process(pd::Context *context, float *input_buffers, float *output_buffers) {
+  context->process(input_buffers, output_buffers);
 }
 
-void zg_context_process_s(ZGContext *context, short *inputBuffers, short *outputBuffers) {
-  const int num_input_channels = context->getNumInputChannels();
-  const int num_output_channels = context->getNumOutputChannels();
-  const int block_size = context->getBlockSize();
-  const int inputBufferLength = num_input_channels*block_size;
-  const int outputBufferLength = num_output_channels*block_size;
-  float finputBuffers[inputBufferLength];
-  float foutputBuffers[outputBufferLength];
+void zg_context_process_s(ZGContext *context, short *input_buffers, short *output_buffers) {
+  const int num_input_channels = context->get_num_input_channels();
+  const int num_output_channels = context->get_num_output_channels();
+  const int block_size = context->get_block_size();
+  const int input_bufferLength = num_input_channels*block_size;
+  const int output_bufferLength = num_output_channels*block_size;
+  float finput_buffers[input_bufferLength];
+  float foutput_buffers[output_bufferLength];
 
   #if __APPLE__
   // convert short to float, and uninterleave the samples into the float buffer
@@ -191,91 +191,91 @@ void zg_context_process_s(ZGContext *context, short *inputBuffers, short *output
   switch (num_input_channels) {
     default: { // input channels > 2
       for (int i = 2; i < num_input_channels; ++i) {
-        vDSP_vflt16(inputBuffers+i, num_input_channels, finputBuffers+i*block_size, 1, block_size);
+        vDSP_vflt16(input_buffers+i, num_input_channels, finput_buffers+i*block_size, 1, block_size);
       } // allow fallthrough
     }
-    case 2: vDSP_vflt16(inputBuffers+1, num_input_channels, finputBuffers+block_size, 1, block_size);
-    case 1: vDSP_vflt16(inputBuffers, num_input_channels, finputBuffers, 1, block_size);
+    case 2: vDSP_vflt16(input_buffers+1, num_input_channels, finput_buffers+block_size, 1, block_size);
+    case 1: vDSP_vflt16(input_buffers, num_input_channels, finput_buffers, 1, block_size);
     case 0: break;
   }
 
   // convert samples to range of [-1,+1]
   float a = 0.000030517578125f; // == 2^-15
-  vDSP_vsmul(finputBuffers, 1, &a, finputBuffers, 1, inputBufferLength);
+  vDSP_vsmul(finput_buffers, 1, &a, finput_buffers, 1, input_bufferLength);
 
   // process the samples
-  context->process(finputBuffers, foutputBuffers);
+  context->process(finput_buffers, foutput_buffers);
 
   // clip the output to [-1,+1]
   float min = -1.0f;
   float max = 1.0f;
-  vDSP_vclip(foutputBuffers, 1, &min, &max, foutputBuffers, 1, outputBufferLength);
+  vDSP_vclip(foutput_buffers, 1, &min, &max, foutput_buffers, 1, output_bufferLength);
 
   // scale the floating-point samples to short range
   a = 32767.0f;
-  vDSP_vsmul(foutputBuffers, 1, &a, foutputBuffers, 1, outputBufferLength);
+  vDSP_vsmul(foutput_buffers, 1, &a, foutput_buffers, 1, output_bufferLength);
 
   // convert float to short and interleave into short buffer
   // allow fallthrough in all cases
   switch (num_output_channels) {
     default: { // output channels > 2
       for (int i = 2; i < num_output_channels; ++i) {
-        vDSP_vfix16(foutputBuffers+i*block_size, num_output_channels, outputBuffers+i, 1, block_size);
+        vDSP_vfix16(foutput_buffers+i*block_size, num_output_channels, output_buffers+i, 1, block_size);
       } // allow fallthrough
     }
-    case 2: vDSP_vfix16(foutputBuffers+block_size, 1, outputBuffers+1, num_output_channels, block_size);
-    case 1: vDSP_vfix16(foutputBuffers, 1, outputBuffers, num_output_channels, block_size);
+    case 2: vDSP_vfix16(foutput_buffers+block_size, 1, output_buffers+1, num_output_channels, block_size);
+    case 1: vDSP_vfix16(foutput_buffers, 1, output_buffers, num_output_channels, block_size);
     case 0: break;
   }
   #else
-  // uninterleave and short->float the samples in inputBuffers to finputBuffers
+  // uninterleave and short->float the samples in input_buffers to finput_buffers
   switch (num_input_channels) {
     default: {
       for (int k = 2; k < num_input_channels; k++) {
-        for (int i = k, j = k*block_size; i < inputBufferLength; i+=num_input_channels, j++) {
-          finputBuffers[j] = ((float) inputBuffers[i]) / 32768.0f;
+        for (int i = k, j = k*block_size; i < input_bufferLength; i+=num_input_channels, j++) {
+          finput_buffers[j] = ((float) input_buffers[i]) / 32768.0f;
         }
       } // allow fallthrough
     }
     case 2: {
-      for (int i = 1, j = block_size; i < inputBufferLength; i+=num_input_channels, j++) {
-        finputBuffers[j] = ((float) inputBuffers[i]) / 32768.0f;
+      for (int i = 1, j = block_size; i < input_bufferLength; i+=num_input_channels, j++) {
+        finput_buffers[j] = ((float) input_buffers[i]) / 32768.0f;
       }  // allow fallthrough
     }
     case 1: {
-      for (int i = 0, j = 0; i < inputBufferLength; i+=num_input_channels, j++) {
-        finputBuffers[j] = ((float) inputBuffers[i]) / 32768.0f;
+      for (int i = 0, j = 0; i < input_bufferLength; i+=num_input_channels, j++) {
+        finput_buffers[j] = ((float) input_buffers[i]) / 32768.0f;
       } // allow fallthrough
     }
     case 0: break;
   }
 
   // process the context
-  context->process(finputBuffers, foutputBuffers);
+  context->process(finput_buffers, foutput_buffers);
 
   // clip the output to [-1,1]
-  for (int i = 0; i < outputBufferLength; i++) {
-    float f = foutputBuffers[i];
-    foutputBuffers[i] = (f < -1.0) ? -1.0f : (f > 1.0f) ? 1.0f : f;
+  for (int i = 0; i < output_bufferLength; i++) {
+    float f = foutput_buffers[i];
+    foutput_buffers[i] = (f < -1.0) ? -1.0f : (f > 1.0f) ? 1.0f : f;
   }
 
-  // interleave and float->short the samples in finputBuffers to cinputBuffers
+  // interleave and float->short the samples in finput_buffers to cinput_buffers
   switch (num_output_channels) {
     default: {
       for (int k = 2; k < num_output_channels; k++) {
-        for (int i = k, j = k*block_size; i < outputBufferLength; i+=num_output_channels, j++) {
-          outputBuffers[i] = (short) (foutputBuffers[j] * 32767.0f);
+        for (int i = k, j = k*block_size; i < output_bufferLength; i+=num_output_channels, j++) {
+          output_buffers[i] = (short) (foutput_buffers[j] * 32767.0f);
         }
       } // allow fallthrough
     }
     case 2: {
-      for (int i = 1, j = block_size; i < outputBufferLength; i+=num_output_channels, j++) {
-        outputBuffers[i] = (short) (foutputBuffers[j] * 32767.0f);
+      for (int i = 1, j = block_size; i < output_bufferLength; i+=num_output_channels, j++) {
+        output_buffers[i] = (short) (foutput_buffers[j] * 32767.0f);
       } // allow fallthrough
     }
     case 1: {
-      for (int i = 0, j = 0; i < outputBufferLength; i+=num_output_channels, j++) {
-        outputBuffers[i] = (short) (foutputBuffers[j] * 32767.0f);
+      for (int i = 0, j = 0; i < output_bufferLength; i+=num_output_channels, j++) {
+        output_buffers[i] = (short) (foutput_buffers[j] * 32767.0f);
       } // allow fallthrough
     }
     case 0: break;
@@ -284,7 +284,7 @@ void zg_context_process_s(ZGContext *context, short *inputBuffers, short *output
 }
 
 void *zg_context_get_userinfo(pd::Context *context) {
-  return context->callbackUserData;
+  return context->callback_user_data;
 }
 
 ZGGraph *zg_context_get_graphs(ZGContext *context, unsigned int *n) {
@@ -293,13 +293,13 @@ ZGGraph *zg_context_get_graphs(ZGContext *context, unsigned int *n) {
   return NULL;
 }
 
-void zg_context_register_external_object(ZGContext *context, const char *objectLabel,
+void zg_context_register_external_object(ZGContext *context, const char *object_label,
     ZGObject *(*factory)(ZGMessage *message, ZGGraph *graph)) {
-  context->registerExternalObject(objectLabel, factory);
+  context->register_external_object(object_label, factory);
 }
 
-void zg_context_unregister_external_object(ZGContext *context, const char *objectLabel) {
-  context->unregisterExternalObject(objectLabel);
+void zg_context_unregister_external_object(ZGContext *context, const char *object_label) {
+  context->unregister_external_object(object_label);
 }
 
 
@@ -312,52 +312,52 @@ ZGObject *zg_context_get_table_for_name(ZGObject *table, const char *name) {
 
 #pragma mark - Context Un/Register External Receivers
 
-void zg_context_register_receiver(ZGContext *context, const char *receiverName) {
-  context->registerExternalReceiver(receiverName);
+void zg_context_register_receiver(ZGContext *context, const char *receiver_name) {
+  context->register_external_receiver(receiver_name);
 }
 
-void zg_context_unregister_receiver(ZGContext *context, const char *receiverName) {
-  context->unregisterExternalReceiver(receiverName);
+void zg_context_unregister_receiver(ZGContext *context, const char *receiver_name) {
+  context->unregister_external_receiver(receiver_name);
 }
 
 
 #pragma mark - Context Send Message
 
 /** Send a message to the named receiver. */
-void zg_context_send_message(ZGContext *context, const char *receiverName, ZGMessage *message) {
-  context->scheduleExternalMessage(receiverName, message);
+void zg_context_send_message(ZGContext *context, const char *receiver_name, ZGMessage *message) {
+  context->schedule_external_message(receiver_name, message);
 }
 
-void zg_context_send_message_from_string(ZGContext *context, const char *receiverName,
+void zg_context_send_message_from_string(ZGContext *context, const char *receiver_name,
     double timestamp, const char *initString) {
-  context->scheduleExternalMessage(receiverName, timestamp, initString);
+  context->schedule_external_message(receiver_name, timestamp, initString);
 }
 
-void zg_context_send_messageV(pd::Context *context, const char *receiverName, double timestamp,
+void zg_context_send_messageV(pd::Context *context, const char *receiver_name, double timestamp,
     const char *messageFormat, ...) {
   va_list ap;
   va_start(ap, messageFormat);
-  context->scheduleExternalMessageV(receiverName, 0.0, messageFormat, ap);
+  context->schedule_external_message_v(receiver_name, 0.0, messageFormat, ap);
   va_end(ap); // release the va_list
 }
 
-void zg_context_send_message_at_blockindex(pd::Context *context, const char *receiverName, double blockIndex,
+void zg_context_send_message_at_blockindex(pd::Context *context, const char *receiver_name, double blockIndex,
     const char *messageFormat, ...) {
   va_list ap;
   va_start(ap, messageFormat);
-  double timestamp = context->getBlockStartTimestamp();
-  if (blockIndex >= 0.0 && blockIndex <= (double) (context->getBlockSize()-1)) {
-    timestamp += blockIndex / context->getSampleRate();
+  double timestamp = context->get_block_start_timestamp();
+  if (blockIndex >= 0.0 && blockIndex <= (double) (context->get_block_size()-1)) {
+    timestamp += blockIndex / context->get_sample_rate();
   }
-  context->scheduleExternalMessageV(receiverName, timestamp, messageFormat, ap);
+  context->schedule_external_message_v(receiver_name, timestamp, messageFormat, ap);
   va_end(ap);
 }
 
 void zg_context_send_midinote(pd::Context *context, int channel, int noteNumber, int velocity, double blockIndex) {
-  char receiverName[snprintf(NULL, 0, "zg_notein_%i", channel)+1];
-  snprintf(receiverName, sizeof(receiverName), "zg_notein_%i", channel);
+  char receiver_name[snprintf(NULL, 0, "zg_notein_%i", channel)+1];
+  snprintf(receiver_name, sizeof(receiver_name), "zg_notein_%i", channel);
 
-  zg_context_send_message_at_blockindex(context, receiverName, blockIndex, "fff",
+  zg_context_send_message_at_blockindex(context, receiver_name, blockIndex, "fff",
       (float) noteNumber, (float) velocity, (float) channel);
 
   // all message are also sent to the omni listener
@@ -369,11 +369,11 @@ void zg_context_send_midinote(pd::Context *context, int channel, int noteNumber,
 #pragma mark - Graph
 
 void zg_graph_attach(ZGGraph *graph) {
-  graph->getContext()->attachGraph(graph);
+  graph->getContext()->attach_graph(graph);
 }
 
 void zg_graph_unattach(ZGGraph *graph) {
-  graph->getContext()->unattachGraph(graph);
+  graph->getContext()->unattach_graph(graph);
 }
 
 void zg_graph_add_connection(ZGGraph *graph, ZGObject *fromObject, int outlet_index, ZGObject *toObject, int inlet_index) {
@@ -445,7 +445,7 @@ ZGMessage *zg_message_new_from_string(double timetamp, const char *initString) {
 }
 
 void zg_message_delete(pd::Message *message) {
-  message->freeMessage(); // also frees any symbols on the heap
+  message->free_message(); // also frees any symbols on the heap
 }
 
 void zg_message_set_float(pd::Message *message, unsigned int index, float f) {
@@ -490,10 +490,10 @@ char *zg_message_to_string(ZGMessage *message) {
   return message->toString();
 }
 
-void zg_context_register_memorymapped_abstraction(ZGContext *context, const char *objectLabel, const char *abstraction) {
-  context->getAbstractionDataBase()->addAbstraction(objectLabel, abstraction);
+void zg_context_register_memorymapped_abstraction(ZGContext *context, const char *object_label, const char *abstraction) {
+  context->get_abstraction_database()->addAbstraction(object_label, abstraction);
 }
 
-void zg_context_unregister_memorymapped_abstraction(ZGContext *context, const char *objectLabel) {
-  context->getAbstractionDataBase()->removeAbstraction(objectLabel);
+void zg_context_unregister_memorymapped_abstraction(ZGContext *context, const char *object_label) {
+  context->get_abstraction_database()->removeAbstraction(object_label);
 }

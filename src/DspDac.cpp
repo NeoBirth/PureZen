@@ -28,16 +28,16 @@ message::Object *DspDac::new_object(pd::Message *init_message, PdGraph *graph) {
   return new DspDac(graph);
 }
 
-DspDac::DspDac(PdGraph *graph) : DspObject(0, graph->getNumOutputChannels(), 0, 0, graph) {
+DspDac::DspDac(PdGraph *graph) : DspObject(0, graph->get_num_output_channels(), 0, 0, graph) {
   // cache pointers to global output buffers in dspBufferAtOutlet
-  int numInlets = graph->getNumOutputChannels();
+  int numInlets = graph->get_num_output_channels();
   if (numInlets > 2) dspBufferAtOutlet[2] = (float *) calloc(numInlets-2, sizeof(float *));
   
   for (int i = 0; i < numInlets; i++) {
-    setDspBufferAtOutlet(graph->getGlobalDspBufferAtOutlet(i), i);
+    setDspBufferAtOutlet(graph->get_global_dsp_buffer_at_outlet(i), i);
   }
   
-  processFunction = &processSignal;
+  process_function = &processSignal;
 }
 
 DspDac::~DspDac() {
@@ -50,7 +50,7 @@ void DspDac::processSignal(DspObject *dspObject, int fromIndex, int toIndex) {
     default: {
       /* TODO(mhroth): fit this into the new buffer reference architecture
       for (int i = 2; i < numDspInlets; i++) {
-        float *globalOutputBuffer = graph->getGlobalDspBufferAtOutlet(i);
+        float *globalOutputBuffer = graph->get_global_dsp_buffer_at_outlet(i);
         ArrayArithmetic::add(globalOutputBuffer, localDspBufferAtInlet[i], globalOutputBuffer, 0, block_sizeInt);
       }
       */

@@ -27,7 +27,7 @@ message::Object *DspAdc::new_object(pd::Message *init_message, PdGraph *graph) {
   return new DspAdc(graph);
 }
 
-DspAdc::DspAdc(PdGraph *graph) : DspObject(0, 0, 0, graph->getNumInputChannels(), graph) {
+DspAdc::DspAdc(PdGraph *graph) : DspObject(0, 0, 0, graph->get_num_input_channels(), graph) {
   // nothing to do
 }
 
@@ -35,6 +35,6 @@ DspAdc::~DspAdc() {
   // nothing to do
 }
 
-float *DspAdc::getDspBufferAtOutlet(int outlet_index) {
-  return graph->getGlobalDspBufferAtInlet(outlet_index);
+float *DspAdc::get_dsp_buffer_at_outlet(int outlet_index) {
+  return graph->get_global_dsp_buffer_at_inlet(outlet_index);
 }

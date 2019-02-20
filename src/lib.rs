@@ -45,6 +45,7 @@
 )]
 
 #[cfg(any(feature = "std", test))]
+#[macro_use]
 extern crate std;
 
 #[macro_use]
@@ -53,6 +54,7 @@ extern crate failure_derive;
 // TODO: remove `pub` on modules which are not part of the public API
 pub mod allocator;
 mod error;
+mod list;
 pub mod message;
 pub mod pd;
 #[cfg(feature = "alloc")]

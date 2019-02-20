@@ -35,7 +35,7 @@ class MessageMessageBox : public MessageObject {
     MessageMessageBox(char *initString, PdGraph *graph);
     ~MessageMessageBox();
   
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
   
   private:
@@ -45,12 +45,12 @@ class MessageMessageBox : public MessageObject {
     vector<MessageNamedDestination> remoteMessageList;
 };
 
-inline const char *MessageMessageBox::getObjectLabel() {
+inline const char *MessageMessageBox::get_object_label() {
   return "msg";
 }
 
 inline std::string MessageMessageBox::toString() {
-  return MessageMessageBox::getObjectLabel();
+  return MessageMessageBox::get_object_label();
 }
 
 #endif // _MESSAGE_MESSAGE_BOX_H_

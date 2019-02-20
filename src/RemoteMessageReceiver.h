@@ -35,7 +35,7 @@ class RemoteMessageReceiver : public MessageObject {
     RemoteMessageReceiver(int numMessageInlets, int numMessageOutlets, PdGraph *graph);
     virtual ~RemoteMessageReceiver();
   
-    char *getName();
+    char *get_name();
   
   protected:
     // This class provides the name variable, but subclasses are responsible for managing it.

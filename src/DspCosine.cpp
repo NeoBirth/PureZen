@@ -33,8 +33,8 @@ message::Object *DspCosine::new_object(pd::Message *init_message, PdGraph *graph
 }
 
 DspCosine::DspCosine(pd::Message *init_message, PdGraph *graph) : DspObject(0, 1, 0, 1, graph) {
-  this->sample_rate = graph->getSampleRate();
-  processFunction = &procesSignal;
+  this->sample_rate = graph->get_sample_rate();
+  process_function = &procesSignal;
   #if !__APPLE__ // only create the lookup table if it is really needed
   refCount++;
   if (cos_table == NULL) {

@@ -39,21 +39,21 @@ void DspPrint::process_message(int inlet_index, pd::Message *message) {
   if (message->is_bang(0)) {
     int bufferMaxIndex = block_sizeInt - 1;
     int totalLength = snprintf(NULL, 0, "%s:\n", name);
-    float *inputBuffer = dspBufferAtInlet[0];
+    float *input_buffer = dspBufferAtInlet[0];
     for (int i = 0; i < bufferMaxIndex; i++) {
-      totalLength += snprintf(NULL, 0, "%g ", inputBuffer[i]);
+      totalLength += snprintf(NULL, 0, "%g ", input_buffer[i]);
     }
-    totalLength += snprintf(NULL, 0, "%g", inputBuffer[bufferMaxIndex]);
+    totalLength += snprintf(NULL, 0, "%g", input_buffer[bufferMaxIndex]);
     
     char buffer[totalLength];
     
     int pos = snprintf(buffer, totalLength, "%s:\n", name);
     for (int i = 0; i < bufferMaxIndex; i++) {
-      pos += snprintf(buffer + pos, totalLength, "%g ", inputBuffer[i]);
+      pos += snprintf(buffer + pos, totalLength, "%g ", input_buffer[i]);
     }
-    snprintf(buffer + pos, totalLength, "%g", inputBuffer[bufferMaxIndex]);
+    snprintf(buffer + pos, totalLength, "%g", input_buffer[bufferMaxIndex]);
     
-    graph->printStd(buffer);
+    graph->print_std(buffer);
   }
 }
 

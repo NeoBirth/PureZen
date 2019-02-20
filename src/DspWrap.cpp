@@ -28,7 +28,7 @@ message::Object *DspWrap::new_object(pd::Message *init_message, PdGraph *graph) 
 }
 
 DspWrap::DspWrap(pd::Message *init_message, PdGraph *graph) : DspObject(0, 1, 0, 1, graph) {
-  processFunction = &processSignal;
+  process_function = &processSignal;
 }
 
 DspWrap::~DspWrap() {

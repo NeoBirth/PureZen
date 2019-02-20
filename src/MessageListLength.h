@@ -32,19 +32,19 @@ class MessageListLength : public MessageObject {
     MessageListLength(PdMessage *init_message, PdGraph *graph);
     ~MessageListLength();
   
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
     
   private:
     void process_message(int inlet_index, PdMessage *message);
 };
 
-inline const char *MessageListLength::getObjectLabel() {
+inline const char *MessageListLength::get_object_label() {
   return "list length";
 }
 
 inline std::string MessageListLength::toString() {
-  return MessageListLength::getObjectLabel();
+  return MessageListLength::get_object_label();
 }
 
 #endif // _MESSAGE_LIST_LENGTH_H_

@@ -34,7 +34,7 @@ MessageSelect::MessageSelect(pd::Message *init_message, PdGraph *graph) :
 }
 
 MessageSelect::~MessageSelect() {
-  selectorMessage->freeMessage();
+  selectorMessage->free_message();
 }
 
 void MessageSelect::process_message(int inlet_index, pd::Message *message) {
@@ -58,7 +58,7 @@ void MessageSelect::process_message(int inlet_index, pd::Message *message) {
     }
     case 1: {
       // TODO(mhroth): be able to set the selector
-      graph->printErr("select currently does not support setting the selector via the right inlet.\n");
+      graph->print_err("select currently does not support setting the selector via the right inlet.\n");
       break;
     }
     default: {

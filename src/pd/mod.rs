@@ -19,6 +19,66 @@
 
 //! Pure Data (Pd)-related types
 
+mod context;
 pub(crate) mod message;
 
-pub use self::message::Message;
+pub use self::{context::Context, message::Message};
+
+use crate::allocator::Allocated;
+use heapless::ArrayLength;
+
+/// TODO(tarcieri): Placeholder until the C++ `PdGraph` is translated
+#[derive(Debug)]
+pub struct Graph {
+    id: self::graph::Id,
+}
+
+impl Graph {
+    /// TODO(tarcieri): actually implement this
+    pub fn send_message_to_named_receivers<'pd, N>(
+        &mut self,
+        _name: &str,
+        _message: &Message<'pd, N>,
+    ) where
+        N: ArrayLength<message::Atom<'pd>>,
+    {
+        panic!("unimplemented");
+    }
+
+    /// TODO(tarcieri): actually implement this
+    pub fn process_function(&mut self, _graph: &Self, _v1: usize, _v2: usize) {
+        panic!("unimplemented");
+    }
+}
+
+/// Trait implemented by all types that can be used by this allocator
+impl Allocated for Graph {
+    type Id = self::graph::Id;
+
+    fn id(&self) -> self::graph::Id {
+        self.id
+    }
+}
+
+/// TODO(tarcieri): Placeholder for graph IDs
+pub mod graph {
+    use crate::allocator;
+
+    /// TODO(tarcieri): Placeholder for graph IDs
+    #[derive(Copy, Clone, Debug, Default, Eq, PartialEq, PartialOrd, Ord)]
+    pub struct Id(pub usize);
+
+    impl From<usize> for Id {
+        fn from(n: usize) -> Id {
+            Id(n)
+        }
+    }
+
+    impl From<Id> for usize {
+        fn from(id: Id) -> usize {
+            id.0
+        }
+    }
+
+    impl allocator::Index for Id {}
+}

@@ -60,28 +60,28 @@ void MessageSoundfiler::process_message(int inlet_index, pd::Message *message)
     }
     if (message->get_num_elements() - currentElementIndex - 2 < 0)
     {
-      graph->printErr("[soundfiler]: parameters are incorrect");
+      graph->print_err("[soundfiler]: parameters are incorrect");
       return;
     }
     soundfilePath = message->get_symbol(currentElementIndex++);
     tabName = message->get_symbol(currentElementIndex++);
-    if ((table = graph->getTable(tabName)) == NULL)
+    if ((table = graph->get_table(tabName)) == NULL)
     {
-      graph->printErr("[soundfiler]: table '%s' cannot be found", tabName);
+      graph->print_err("[soundfiler]: table '%s' cannot be found", tabName);
       return;
     }
     SF_INFO sfInfo;
     char *fullPath = graph->resolveFullPath(soundfilePath);
     if (fullPath == NULL)
     {
-      graph->printErr("[soundfiler]: file '%s' cannot be found.", soundfilePath);
+      graph->print_err("[soundfiler]: file '%s' cannot be found.", soundfilePath);
       return;
     }
 
     SNDFILE *sndFile = sf_open(fullPath, SFM_READ, &sfInfo);
     if (sndFile == NULL)
     {
-      graph->printErr("[soundfiler]: file %s cannot be opened.", fullPath);
+      graph->print_err("[soundfiler]: file %s cannot be opened.", fullPath);
       free(fullPath);
       return; // there was an error reading the file. Move on with life.
     }
@@ -116,7 +116,7 @@ void MessageSoundfiler::process_message(int inlet_index, pd::Message *message)
       // extract the second channel (if it exists and if there is a table to write it to)
       if (sfInfo.channels > 1 &&
           (tabName = message->get_symbol(currentElementIndex++)) != NULL &&
-          (table = graph->getTable(tabName)) != NULL)
+          (table = graph->get_table(tabName)) != NULL)
       {
         tableLength = samplesPerChannel;
         tableBuffer = shouldResizeTable ? table->resizeBuffer(samplesPerChannel) :
@@ -140,7 +140,7 @@ void MessageSoundfiler::process_message(int inlet_index, pd::Message *message)
   else if (message->is_symbol_str(0, "write"))
   {
     //Not implemented yet
-    graph->printErr("[soundfiler]: The 'write' command is not supported yet.");
+    graph->print_err("[soundfiler]: The 'write' command is not supported yet.");
   }
 }
 

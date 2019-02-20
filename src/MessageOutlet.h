@@ -33,22 +33,22 @@ class MessageOutlet : public MessageObject {
     MessageOutlet(PdMessage *init_message, PdGraph *graph);
     ~MessageOutlet();
     
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
   
     object::Type get_object_type();
   
     bool isLeafNode();
   
-    void receiveMessage(int inlet_index, PdMessage *message);
+    void receive_message(int inlet_index, PdMessage *message);
 };
 
-inline const char *MessageOutlet::getObjectLabel() {
+inline const char *MessageOutlet::get_object_label() {
   return "outlet";
 }
 
 inline std::string MessageOutlet::toString() {
-  return MessageOutlet::getObjectLabel();
+  return MessageOutlet::get_object_label();
 }
 
 #endif // _MESSAGE_OUTLET_H_

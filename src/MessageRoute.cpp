@@ -32,7 +32,7 @@ MessageRoute::MessageRoute(pd::Message *init_message, PdGraph *graph) :
 }
 
 MessageRoute::~MessageRoute() {
-  routeMessage->freeMessage();
+  routeMessage->free_message();
 }
 
 void MessageRoute::process_message(int inlet_index, pd::Message *message) {

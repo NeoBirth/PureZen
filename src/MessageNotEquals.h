@@ -33,7 +33,7 @@ class MessageNotEquals : public MessageObject {
     MessageNotEquals(PdMessage *init_message, PdGraph *graph);
     ~MessageNotEquals();
 
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
 
   private:
@@ -43,7 +43,7 @@ class MessageNotEquals : public MessageObject {
     float lastOutput;
 };
 
-inline const char *MessageNotEquals::getObjectLabel() {
+inline const char *MessageNotEquals::get_object_label() {
   return "!=";
 }
 

@@ -32,7 +32,7 @@ class DspDivide : public DspObject {
     DspDivide(PdMessage *init_message, PdGraph *graph);
     ~DspDivide();
 
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
 
   private:
@@ -45,7 +45,7 @@ class DspDivide : public DspObject {
     float constant;
 };
 
-inline const char *DspDivide::getObjectLabel() {
+inline const char *DspDivide::get_object_label() {
   return "/~";
 }
 

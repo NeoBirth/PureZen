@@ -28,7 +28,7 @@ message::Object *DspLowpassFilter::new_object(pd::Message *init_message, PdGraph
 }
 
 DspLowpassFilter::DspLowpassFilter(pd::Message *init_message, PdGraph *graph) : DspFilter(2, graph) {
-  calcFiltCoeff(init_message->is_float(0) ? init_message->get_float(0) : graph->getSampleRate()/2.0f);
+  calcFiltCoeff(init_message->is_float(0) ? init_message->get_float(0) : graph->get_sample_rate()/2.0f);
 }
 
 DspLowpassFilter::~DspLowpassFilter() {
@@ -37,11 +37,11 @@ DspLowpassFilter::~DspLowpassFilter() {
 
 // http://en.wikipedia.org/wiki/Low_pass_filter
 void DspLowpassFilter::calcFiltCoeff(float fc) {
-  if (fc > 0.5f * graph->getSampleRate()) fc = 0.5f * graph->getSampleRate();
+  if (fc > 0.5f * graph->get_sample_rate()) fc = 0.5f * graph->get_sample_rate();
   else if (fc < 0.0f) fc = 0.0f;
 
   float wc = 2.0f*M_PI*fc;
-  float alpha = wc / (wc + graph->getSampleRate());
+  float alpha = wc / (wc + graph->get_sample_rate());
   b[0] = alpha;
   b[1] = 0.0f;
   b[2] = 0.0f;

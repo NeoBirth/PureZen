@@ -40,11 +40,11 @@ class DspCatch : public DspObject {
 
     list<DspObject *> getProcessOrder();
   
-    void addThrow(DspThrow *dspThrow);
+    void add_throw(DspThrow *dspThrow);
     void removeThrow(DspThrow *dspThrow);
   
-    const char *getName() { return name; }
-    static const char *getObjectLabel() { return "catch~"; }
+    const char *get_name() { return name; }
+    static const char *get_object_label() { return "catch~"; }
     object::Type get_object_type() { return DSP_CATCH; }
     string toString();
   
@@ -54,7 +54,7 @@ class DspCatch : public DspObject {
     static void processMany(DspObject *dspObject, int fromIndex, int toIndex);
     
     char *name;
-    list<DspThrow *> throwList; // list of associated throw~ objects
+    list<DspThrow *> throw_list; // list of associated throw~ objects
 };
 
 #endif // _DSP_CATCH_H_

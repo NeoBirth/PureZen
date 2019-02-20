@@ -31,7 +31,7 @@ message::Object *DspDelayWrite::new_object(pd::Message *init_message, PdGraph *g
 DspDelayWrite::DspDelayWrite(pd::Message *init_message, PdGraph *graph) : DspObject(0, 1, 0, 0, graph) {
   if (init_message->is_symbol(0) && init_message->is_float(1)) {
     bufferLength = (int) ceilf(utils::millisecondsToSamples(init_message->get_float(1), 
-        graph->getSampleRate())); 
+        graph->get_sample_rate())); 
     if (bufferLength % block_sizeInt != 0) {
       bufferLength = ((bufferLength/block_sizeInt)+2) * block_sizeInt;
     } else {
@@ -44,12 +44,12 @@ DspDelayWrite::DspDelayWrite(pd::Message *init_message, PdGraph *graph) : DspObj
     memset(dspBufferAtOutlet[0], 0, numBufferLengthBytes); // zero the delay buffer
     name = utils::copy_string(init_message->get_symbol(0));
   } else {
-    graph->printErr("ERROR: delwrite~ must be initialised as [delwrite~ name delay].");
+    graph->print_err("ERROR: delwrite~ must be initialised as [delwrite~ name delay].");
     headIndex = 0;
     bufferLength = 0;
     name = NULL;
   }
-  processFunction = &processSignal;
+  process_function = &processSignal;
 }
 
 DspDelayWrite::~DspDelayWrite() {

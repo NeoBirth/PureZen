@@ -33,7 +33,7 @@ class MessageNotein : public RemoteMessageReceiver {
     MessageNotein(PdMessage *init_message, PdGraph *graph);
     ~MessageNotein();
     
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
     object::Type get_object_type();
   
@@ -47,12 +47,12 @@ class MessageNotein : public RemoteMessageReceiver {
     int channel;
 };
 
-inline const char *MessageNotein::getObjectLabel() {
+inline const char *MessageNotein::get_object_label() {
   return "notein";
 }
 
 inline std::string MessageNotein::toString() {
-  return MessageNotein::getObjectLabel();
+  return MessageNotein::get_object_label();
 }
 
 inline object::Type MessageNotein::get_object_type() {

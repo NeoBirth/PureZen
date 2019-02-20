@@ -40,11 +40,11 @@ MessageTrigger::MessageTrigger(pd::Message *init_message, PdGraph *graph) :
 }
 
 MessageTrigger::~MessageTrigger() {
-  castMessage->freeMessage();
+  castMessage->free_message();
 }
 
 string MessageTrigger::toString() {
-  std::string out = MessageTrigger::getObjectLabel();
+  std::string out = MessageTrigger::get_object_label();
   for (int i = 0; i < castMessage->get_num_elements(); i++) {
     switch (castMessage->get_type(i)) {
       case FLOAT: out += " f"; break;
@@ -93,7 +93,7 @@ void MessageTrigger::process_message(int inlet_index, pd::Message *message) {
       case SYMBOL: {
         switch (castMessage->get_type(i)) {
           case FLOAT: {
-            graph->printErr("error : trigger: can only convert 's' to 'b' or 'a'");
+            graph->print_err("error : trigger: can only convert 's' to 'b' or 'a'");
             break;
           }
           case ANYTHING: {
@@ -102,7 +102,7 @@ void MessageTrigger::process_message(int inlet_index, pd::Message *message) {
             break;
           }
           case SYMBOL: {
-            graph->printErr("error : trigger: can only convert 's' to 'b' or 'a'");
+            graph->print_err("error : trigger: can only convert 's' to 'b' or 'a'");
             break;
           }
           case BANG: {

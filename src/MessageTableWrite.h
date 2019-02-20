@@ -34,12 +34,12 @@ class MessageTableWrite : public MessageObject, public TableReceiverInterface {
     MessageTableWrite(PdMessage *init_message, PdGraph *graph);
     ~MessageTableWrite();
     
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
     object::Type get_object_type();
     
-    char *getName();
-    void setTable(MessageTable *table);
+    char *get_name();
+    void set_table(MessageTable *table);
     bool shouldDistributeMessageToInlets();
     
   private:
@@ -50,7 +50,7 @@ class MessageTableWrite : public MessageObject, public TableReceiverInterface {
     int index;
 };
 
-inline const char *MessageTableWrite::getObjectLabel() {
+inline const char *MessageTableWrite::get_object_label() {
   return "tabwrite";
 }
 
@@ -59,7 +59,7 @@ inline object::Type MessageTableWrite::get_object_type() {
 }
 
 inline std::string MessageTableWrite::toString() {
-  return std::string(MessageTableWrite::getObjectLabel()) + " " + name;
+  return std::string(MessageTableWrite::get_object_label()) + " " + name;
 }
 
 #endif // _MESSAGE_TABLE_WRITE_H_

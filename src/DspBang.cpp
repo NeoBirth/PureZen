@@ -28,8 +28,8 @@ message::Object *DspBang::new_object(pd::Message *init_message, PdGraph *graph) 
 }
 
 DspBang::DspBang(pd::Message *init_message, PdGraph *graph) : DspObject(1, 0, 1, 0, graph) {
-  processFunction = &processDsp;
-  processFunctionNoMessage = &processDsp;
+  process_function = &processDsp;
+  process_functionNoMessage = &processDsp;
 }
 
 DspBang::~DspBang() {

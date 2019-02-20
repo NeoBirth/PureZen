@@ -37,12 +37,12 @@ class DspTableRead4 : public DspObject, public TableReceiverInterface {
     DspTableRead4(PdMessage *init_message, PdGraph *graph);
     ~DspTableRead4();
   
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
     object::Type get_object_type();
   
-    char *getName();
-    void setTable(MessageTable *table);
+    char *get_name();
+    void set_table(MessageTable *table);
   
   private:
     void process_message(int inlet_index, PdMessage *message);
@@ -54,10 +54,10 @@ class DspTableRead4 : public DspObject, public TableReceiverInterface {
 };
 
 inline std::string DspTableRead4::toString() {
-  return DspTableRead4::getObjectLabel();
+  return DspTableRead4::get_object_label();
 }
 
-inline const char *DspTableRead4::getObjectLabel() {
+inline const char *DspTableRead4::get_object_label() {
   return "tabread4~";
 }
 
@@ -65,7 +65,7 @@ inline object::Type DspTableRead4::get_object_type() {
   return DSP_TABLE_READ4;
 }
 
-inline char *DspTableRead4::getName() {
+inline char *DspTableRead4::get_name() {
   return name;
 }
 

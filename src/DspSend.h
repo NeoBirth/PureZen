@@ -33,8 +33,8 @@ class DspSend : public DspObject {
     DspSend(PdMessage *init_message, PdGraph *graph);
     ~DspSend();
     
-    const char *getName();
-    static const char *getObjectLabel();
+    const char *get_name();
+    static const char *get_object_label();
     std::string toString();
   
     object::Type get_object_type();
@@ -46,14 +46,14 @@ class DspSend : public DspObject {
 };
 
 inline std::string DspSend::toString() {
-  return string(DspSend::getObjectLabel()) + " " + string(name);
+  return string(DspSend::get_object_label()) + " " + string(name);
 }
 
-inline const char *DspSend::getName() {
+inline const char *DspSend::get_name() {
   return name;
 }
 
-inline const char *DspSend::getObjectLabel() {
+inline const char *DspSend::get_object_label() {
   return "send~";
 }
 

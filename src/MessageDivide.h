@@ -33,7 +33,7 @@ class MessageDivide : public MessageObject {
     MessageDivide(PdMessage *init_message, PdGraph *graph);
     ~MessageDivide();
 
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
 
   private:
@@ -43,7 +43,7 @@ class MessageDivide : public MessageObject {
     float last;
 };
 
-inline const char *MessageDivide::getObjectLabel() {
+inline const char *MessageDivide::get_object_label() {
   return "/";
 }
 

@@ -34,8 +34,8 @@ DspVariableLine::DspVariableLine(pd::Message *init_message, PdGraph *graph) : Ds
   slope = 0.0f;
   lastOutputSample = 0.0f;
 
-  processFunction = &processSignal;
-  processFunctionNoMessage = &processSignal;
+  process_function = &processSignal;
+  process_functionNoMessage = &processSignal;
 }
 
 DspVariableLine::~DspVariableLine() {
@@ -79,7 +79,7 @@ void DspVariableLine::process_message(int inlet_index, pd::Message *message) {
     case 1:
     case 2:
     default: {
-      graph->printErr("vline~ does not respond to messages on 2nd and 3rd inlets. "
+      graph->print_err("vline~ does not respond to messages on 2nd and 3rd inlets. "
           "All messages must be sent to left-most inlet.");
       break;
     }
@@ -100,7 +100,7 @@ void DspVariableLine::clearAllMessagesFrom(list<pd::Message *>::iterator it) {
   list<pd::Message *>::iterator itCopy = it;
   while (it != messageList.end()) {
     pd::Message *message = *it++;
-    graph->cancelMessage(this, 0, message);
+    graph->cancel_message(this, 0, message);
   }
 
   messageList.erase(itCopy, messageList.end());
@@ -113,7 +113,7 @@ void DspVariableLine::updatePathWithMessage(pd::Message *message) {
     slope = 0.0f;
   } else {
     target = message->get_float(0);
-    numSamplesToTarget = utils::millisecondsToSamples(message->get_float(1), graph->getSampleRate());
+    numSamplesToTarget = utils::millisecondsToSamples(message->get_float(1), graph->get_sample_rate());
     if (numSamplesToTarget == 0.0f) {
       lastOutputSample = target;
       slope = 0.0f;

@@ -33,19 +33,19 @@ class MessageSoundfiler : public MessageObject {
     MessageSoundfiler(PdMessage *init_message, PdGraph *pdGraph);
     ~MessageSoundfiler();
   
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
     
   private:
     void process_message(int inlet_index, PdMessage *message);
 };
 
-inline const char *MessageSoundfiler::getObjectLabel() {
+inline const char *MessageSoundfiler::get_object_label() {
   return "soundfiler";
 }
 
 inline std::string MessageSoundfiler::toString() {
-  return MessageSoundfiler::getObjectLabel();
+  return MessageSoundfiler::get_object_label();
 }
 
 #endif // _MESSAGE_SOUNDFILER_H_

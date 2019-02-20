@@ -33,7 +33,7 @@ class MessageUnpack : public MessageObject {
     MessageUnpack(PdMessage *init_message, PdGraph *graph);
     ~MessageUnpack();
 
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
 
   private:
@@ -42,7 +42,7 @@ class MessageUnpack : public MessageObject {
     PdMessage *templateMessage;
 };
 
-inline const char *MessageUnpack::getObjectLabel() {
+inline const char *MessageUnpack::get_object_label() {
   return "unpack";
 }
 

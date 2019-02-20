@@ -33,19 +33,19 @@ class MessageFrequencyToMidi : public MessageObject {
     MessageFrequencyToMidi(PdGraph *graph);
     ~MessageFrequencyToMidi();
 
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
 
   private:
     void process_message(int inlet_index, PdMessage *message);
 };
 
-inline const char *MessageFrequencyToMidi::getObjectLabel() {
+inline const char *MessageFrequencyToMidi::get_object_label() {
   return "ftom";
 }
 
 inline std::string MessageFrequencyToMidi::toString() {
-  return MessageFrequencyToMidi::getObjectLabel();
+  return MessageFrequencyToMidi::get_object_label();
 }
 
 #endif // _MESSAGE_FREQUENCYTOMIDI_H_

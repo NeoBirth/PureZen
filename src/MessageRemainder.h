@@ -34,7 +34,7 @@ class MessageRemainder : public MessageObject {
     MessageRemainder(float constant, PdGraph *graph);
     ~MessageRemainder();
 
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
 
   private:
@@ -44,7 +44,7 @@ class MessageRemainder : public MessageObject {
     int constant;
 };
 
-inline const char *MessageRemainder::getObjectLabel() {
+inline const char *MessageRemainder::get_object_label() {
   return "%";
 }
 

@@ -33,7 +33,7 @@ class MessageValue : public MessageObject {
     MessageValue(PdMessage *init_message, PdGraph *graph);
     ~MessageValue();
     
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
     
   private:
@@ -43,10 +43,10 @@ class MessageValue : public MessageObject {
 };
 
 inline std::string MessageValue::toString() {
-  return string(MessageValue::getObjectLabel()) + " " + name;
+  return string(MessageValue::get_object_label()) + " " + name;
 }
 
-inline const char *MessageValue::getObjectLabel() {
+inline const char *MessageValue::get_object_label() {
   return "value";
 }
 

@@ -31,6 +31,6 @@ RemoteMessageReceiver::~RemoteMessageReceiver() {
   // nothing to do. Subclass is responsible for freeing name.
 }
 
-char *RemoteMessageReceiver::getName() {
+char *RemoteMessageReceiver::get_name() {
   return name;
 }

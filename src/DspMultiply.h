@@ -32,7 +32,7 @@ class DspMultiply : public DspObject {
     DspMultiply(PdMessage *init_message, PdGraph *graph);
     ~DspMultiply();
   
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
   
 
@@ -47,7 +47,7 @@ class DspMultiply : public DspObject {
     float constant;
 };
 
-inline const char *DspMultiply::getObjectLabel() {
+inline const char *DspMultiply::get_object_label() {
   return "*~";
 }
 

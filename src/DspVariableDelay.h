@@ -38,7 +38,7 @@ class DspVariableDelay : public DelayReceiver {
     DspVariableDelay(PdMessage *init_message, PdGraph *graph);
     ~DspVariableDelay();
   
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
   
     object::Type get_object_type();
@@ -50,10 +50,10 @@ class DspVariableDelay : public DelayReceiver {
 };
 
 inline std::string DspVariableDelay::toString() {
-  return std::string(DspVariableDelay::getObjectLabel()) + " " + name;
+  return std::string(DspVariableDelay::get_object_label()) + " " + name;
 }
 
-inline const char *DspVariableDelay::getObjectLabel() {
+inline const char *DspVariableDelay::get_object_label() {
   return "vd~";
 }
   

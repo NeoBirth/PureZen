@@ -36,7 +36,7 @@ class MessageRandom : public MessageObject {
     MessageRandom(PdMessage *init_message, PdGraph *graph);
     ~MessageRandom();
 
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
 
     bool shouldDistributeMessageToInlets() { return false; }
@@ -49,12 +49,12 @@ class MessageRandom : public MessageObject {
     MTRand *twister;
 };
 
-inline const char *MessageRandom::getObjectLabel() {
+inline const char *MessageRandom::get_object_label() {
   return "random";
 }
 
 inline std::string MessageRandom::toString() {
-  return MessageRandom::getObjectLabel();
+  return MessageRandom::get_object_label();
 }
 
 #endif // _MESSAGE_RANDOM_H_

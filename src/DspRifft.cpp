@@ -33,7 +33,7 @@ DspRifft::DspRifft(pd::Message *init_message, PdGraph *graph) : DspObject(0, 2, 
   log2n = lrintf(log2f((float) block_sizeInt));
   fftSetup = vDSP_create_fftsetup(log2n, kFFTRadix2);
   #else
-  graph->printErr("[rifft~] is not supported on this platform. It is only supported on Apple OS X and iOS platforms.");
+  graph->print_err("[rifft~] is not supported on this platform. It is only supported on Apple OS X and iOS platforms.");
   #endif // __APPLE__
 }
 

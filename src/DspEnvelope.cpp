@@ -53,18 +53,18 @@ DspEnvelope::DspEnvelope(pd::Message *init_message, PdGraph *graph) : DspObject(
   // a message. With more logic, a block size larger than the window size could be accomodated. But
   // I am too lazy to consider this option at the moment. Thus, currently the window size and interval
   // must be at least as large as the block size.
-  if (windowSize < graph->getBlockSize()) {
-    graph->printErr("env~ window size must be at least as large as the block size. %i reset to %i.",
-        windowSize, graph->getBlockSize());
-    windowSize = graph->getBlockSize();
+  if (windowSize < graph->get_block_size()) {
+    graph->print_err("env~ window size must be at least as large as the block size. %i reset to %i.",
+        windowSize, graph->get_block_size());
+    windowSize = graph->get_block_size();
   }
-  if (windowInterval < graph->getBlockSize()) {
-    graph->printErr("env~ window interval must be at least as large as the block size. %i reset to %i.",
-        windowInterval, graph->getBlockSize());
-    windowInterval = graph->getBlockSize();
+  if (windowInterval < graph->get_block_size()) {
+    graph->print_err("env~ window interval must be at least as large as the block size. %i reset to %i.",
+        windowInterval, graph->get_block_size());
+    windowInterval = graph->get_block_size();
   }
   
-  processFunction = &processSignal;
+  process_function = &processSignal;
   
   initBuffers();
 }
@@ -75,22 +75,22 @@ DspEnvelope::~DspEnvelope() {
 }
 
 string DspEnvelope::toString() {
-  char str[snprintf(NULL, 0, "%s %i %i", getObjectLabel(), windowSize, windowInterval)+1];
-  snprintf(str, sizeof(str), "%s %i %i", getObjectLabel(), windowSize, windowInterval);
+  char str[snprintf(NULL, 0, "%s %i %i", get_object_label(), windowSize, windowInterval)+1];
+  snprintf(str, sizeof(str), "%s %i %i", get_object_label(), windowSize, windowInterval);
   return string(str);
 }
 
 void DspEnvelope::setWindowInterval(int newInterval) {
-  int i = newInterval % graph->getBlockSize();
+  int i = newInterval % graph->get_block_size();
   if (i == 0) {
     // windowInterval is a multiple of block_size. Awesome :)
     this->windowInterval = newInterval;
-  } else if (i <= graph->getBlockSize()/2) {
+  } else if (i <= graph->get_block_size()/2) {
     // windowInterval is closer to the smaller multiple of block_size
-    this->windowInterval = (newInterval/graph->getBlockSize())*graph->getBlockSize();
+    this->windowInterval = (newInterval/graph->get_block_size())*graph->get_block_size();
   } else {
     // windowInterval is closer to the larger multiple of block_size
-    this->windowInterval = ((newInterval/graph->getBlockSize())+1)*graph->getBlockSize();
+    this->windowInterval = ((newInterval/graph->get_block_size())+1)*graph->get_block_size();
   }
 }
 
@@ -98,8 +98,8 @@ void DspEnvelope::initBuffers() {
   // ensure that the buffer is big enough to take the number of whole blocks needed to fill it
   numSamplesReceived = 0;
   numSamplesReceivedSinceLastInterval = 0;
-  int numBlocksPerWindow = (windowSize % graph->getBlockSize() == 0) ? (windowSize/graph->getBlockSize()) : (windowSize/graph->getBlockSize()) + 1;
-  int bufferSize = numBlocksPerWindow * graph->getBlockSize();
+  int numBlocksPerWindow = (windowSize % graph->get_block_size() == 0) ? (windowSize/graph->get_block_size()) : (windowSize/graph->get_block_size()) + 1;
+  int bufferSize = numBlocksPerWindow * graph->get_block_size();
   signalBuffer = (float *) malloc(bufferSize * sizeof(float));
   hanningCoefficients = (float *) malloc(bufferSize * sizeof(float));
   float N_1 = (float) (windowSize - 1); // (N == windowSize) - 1

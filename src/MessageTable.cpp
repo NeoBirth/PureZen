@@ -40,7 +40,7 @@ MessageTable::MessageTable(pd::Message *init_message, PdGraph *graph) : RemoteMe
     name = NULL;
     buffer = NULL;
     bufferLength = 0;
-    graph->printErr("Object \"table\" must be initialised with a name.");
+    graph->print_err("Object \"table\" must be initialised with a name.");
   }
 }
 

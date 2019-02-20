@@ -33,7 +33,7 @@ class MessageMultiply : public MessageObject {
     MessageMultiply(PdMessage *init_message, PdGraph *graph);
     ~MessageMultiply();
 
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
 
   private:
@@ -43,7 +43,7 @@ class MessageMultiply : public MessageObject {
     float last;
 };
 
-inline const char *MessageMultiply::getObjectLabel() {
+inline const char *MessageMultiply::get_object_label() {
   return "*";
 }
 

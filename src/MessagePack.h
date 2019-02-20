@@ -33,7 +33,7 @@ class MessagePack : public MessageObject {
     MessagePack(PdMessage *init_message, PdGraph *graph);
     ~MessagePack();
   
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
     
   private:
@@ -45,7 +45,7 @@ class MessagePack : public MessageObject {
     PdMessage *outgoing_message;
 };
 
-inline const char *MessagePack::getObjectLabel() {
+inline const char *MessagePack::get_object_label() {
   return "pack";
 }
 

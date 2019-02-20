@@ -38,7 +38,7 @@ MessageSamplerate::~MessageSamplerate() {
 void MessageSamplerate::MessageSamplerate::process_message(int inlet_index, pd::Message *message) {
   if (message->is_bang(0)) {
     pd::Message *outgoing_message = PD_MESSAGE_ON_STACK(1);
-    outgoing_message->from_timestamp_and_float(message->get_timestamp(), graph->getSampleRate());
+    outgoing_message->from_timestamp_and_float(message->get_timestamp(), graph->get_sample_rate());
     send_message(0, outgoing_message);
   }
 }

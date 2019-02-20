@@ -38,11 +38,11 @@ MessagePack::MessagePack(pd::Message *init_message, PdGraph *graph) :
 }
 
 MessagePack::~MessagePack() {
-  outgoing_message->freeMessage();
+  outgoing_message->free_message();
 }
 
 string MessagePack::toString() {
-  std::string out = MessagePack::getObjectLabel();
+  std::string out = MessagePack::get_object_label();
   for (int i = 0; i < outgoing_message->get_num_elements(); i++) {
     switch (outgoing_message->get_type(i)) {
       case FLOAT: out += " f"; break;
@@ -63,7 +63,7 @@ void MessagePack::process_message(int inlet_index, pd::Message *message) {
         outgoing_message->set_float(inlet_index, message->get_float(0));
         onBangAtInlet(inlet_index, message->get_timestamp());
       } else {
-        graph->printErr("pack: type mismatch: %s expected but got %s at inlet %i.\n",
+        graph->print_err("pack: type mismatch: %s expected but got %s at inlet %i.\n",
             utils::message_element_type_to_string(outgoing_message->get_type(inlet_index)),
             utils::message_element_type_to_string(message->get_type(0)),
             inlet_index + 1);
@@ -80,7 +80,7 @@ void MessagePack::process_message(int inlet_index, pd::Message *message) {
         outgoing_message->set_symbol(inlet_index, utils::copy_string(message->get_symbol(0)));
         onBangAtInlet(inlet_index, message->get_timestamp());
       } else {
-        graph->printErr("pack: type mismatch: %s expected but got %s at inlet %i.\n",
+        graph->print_err("pack: type mismatch: %s expected but got %s at inlet %i.\n",
             utils::message_element_type_to_string(outgoing_message->get_type(inlet_index)),
             utils::message_element_type_to_string(message->get_type(0)),
             inlet_index + 1);

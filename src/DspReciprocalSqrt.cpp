@@ -30,7 +30,7 @@ message::Object *DspReciprocalSqrt::new_object(pd::Message *init_message, PdGrap
 }
 
 DspReciprocalSqrt::DspReciprocalSqrt(pd::Message *init_message, PdGraph *graph) : DspObject(0, 1, 0, 1, graph) {
-  processFunction = &processSignal;
+  process_function = &processSignal;
 }
 
 DspReciprocalSqrt::~DspReciprocalSqrt() {

@@ -39,19 +39,19 @@ class MessageListTrim : public MessageObject {
     MessageListTrim(PdMessage *init_message, PdGraph *graph);
     ~MessageListTrim();
     
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
     
   private:
     void process_message(int inlet_index, PdMessage *message);
 };
 
-inline const char *MessageListTrim::getObjectLabel() {
+inline const char *MessageListTrim::get_object_label() {
   return "list trim";
 }
 
 inline std::string MessageListTrim::toString() {
-  return MessageListTrim::getObjectLabel();
+  return MessageListTrim::get_object_label();
 }
 
 #endif // _MESSAGE_LIST_TRIM_H_

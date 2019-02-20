@@ -33,7 +33,7 @@ class MessageDiv : public MessageObject {
     MessageDiv(PdMessage *init_message, PdGraph *graph);
     ~MessageDiv();
     
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
     
   private:
@@ -42,12 +42,12 @@ class MessageDiv : public MessageObject {
     float constant; // should always be positive
 };
 
-inline const char *MessageDiv::getObjectLabel() {
+inline const char *MessageDiv::get_object_label() {
   return "div";
 }
 
 inline std::string MessageDiv::toString() {
-  return MessageDiv::getObjectLabel();
+  return MessageDiv::get_object_label();
 }
 
 #endif // _MESSAGE_DIVIDE_H_

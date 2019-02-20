@@ -40,8 +40,8 @@ class DelayReceiver : public DspObject {
     DelayReceiver(int numMessageInlets, int numDspInlets, int numMessageOutlets, int numDspOutlets, PdGraph *graph);
     virtual ~DelayReceiver();
   
-    const char *getName();
-    void setDelayline(DspDelayWrite *delayline);
+    const char *get_name();
+    void set_delay_line(DspDelayWrite *delayline);
     
   protected:
     char *name;

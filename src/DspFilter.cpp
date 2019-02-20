@@ -28,8 +28,8 @@ class PdGraph;
 DspFilter::DspFilter(int numMessageInlets, PdGraph *graph) : DspObject(numMessageInlets, 1, 0, 1, graph) {
   x1 = x2 = y1 = y2 = 0.0f;
 
-  processFunction = &processFilter;
-  processFunctionNoMessage = &processFilter;
+  process_function = &processFilter;
+  process_functionNoMessage = &processFilter;
 }
 
 DspFilter::~DspFilter() {

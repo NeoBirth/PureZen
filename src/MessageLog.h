@@ -33,19 +33,19 @@ class MessageLog : public MessageObject {
     MessageLog(PdMessage *init_message, PdGraph *graph);
     ~MessageLog();
 
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
   
   private:
     void process_message(int inlet_index, PdMessage *message);
 };
 
-inline const char *MessageLog::getObjectLabel() {
+inline const char *MessageLog::get_object_label() {
   return "log";
 }
 
 inline std::string MessageLog::toString() {
-  return MessageLog::getObjectLabel();
+  return MessageLog::get_object_label();
 }
 
 #endif // _MESSAGE_LOG_H_

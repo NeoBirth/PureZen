@@ -33,7 +33,7 @@ class DspLine : public DspObject {
     DspLine(PdMessage *init_message, PdGraph *graph);
     ~DspLine();
   
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
   
   private:
@@ -46,12 +46,12 @@ class DspLine : public DspObject {
     float lastOutputSample;
 };
 
-inline const char *DspLine::getObjectLabel() {
+inline const char *DspLine::get_object_label() {
   return "line~";
 }
 
 inline std::string DspLine::toString() {
-  return DspLine::getObjectLabel();
+  return DspLine::get_object_label();
 }
 
 #endif // _DSP_LINE_H_

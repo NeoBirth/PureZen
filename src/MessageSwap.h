@@ -33,7 +33,7 @@ class MessageSwap : public MessageObject {
     MessageSwap(PdMessage *init_message, PdGraph *graph);
     ~MessageSwap();
 
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
 
   private:
@@ -43,12 +43,12 @@ class MessageSwap : public MessageObject {
     float right;
 };
 
-inline const char *MessageSwap::getObjectLabel() {
+inline const char *MessageSwap::get_object_label() {
   return "swap";
 }
 
 inline std::string MessageSwap::toString() {
-  return MessageSwap::getObjectLabel();
+  return MessageSwap::get_object_label();
 }
 
 #endif // _MESSAGE_SWAP_H_

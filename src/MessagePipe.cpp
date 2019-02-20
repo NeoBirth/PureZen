@@ -58,7 +58,7 @@ void MessagePipe::process_message(int inlet_index, pd::Message *message) {
               // list will be changed while iterating over it. Leads to badness.
               (*it)->set_timestamp(message->get_timestamp());
               message::Object::send_message(0, *it);
-              graph->cancelMessage(this, 0, *it); // cancel the scheduled message and free it from memory
+              graph->cancel_message(this, 0, *it); // cancel the scheduled message and free it from memory
             }
             scheduledMessagesList.clear();
             break;
@@ -66,7 +66,7 @@ void MessagePipe::process_message(int inlet_index, pd::Message *message) {
             // cancel all scheduled messages
             for(list<pd::Message *>::iterator it = scheduledMessagesList.begin();
                 it != scheduledMessagesList.end(); it++) {
-              graph->cancelMessage(this, 0, *it);
+              graph->cancel_message(this, 0, *it);
             }
             scheduledMessagesList.clear();
             break;

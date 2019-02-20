@@ -30,12 +30,12 @@ message::Object *DspSend::new_object(pd::Message *init_message, PdGraph *graph) 
 DspSend::DspSend(pd::Message *init_message, PdGraph *graph) : DspObject(0, 1, 0, 0, graph) {
   if (init_message->is_symbol(0)) {
     name = utils::copy_string(init_message->get_symbol(0));
-    dspBufferAtOutlet[0] = ALLOC_ALIGNED_BUFFER(graph->getBlockSize()*sizeof(float));
+    dspBufferAtOutlet[0] = ALLOC_ALIGNED_BUFFER(graph->get_block_size()*sizeof(float));
   } else {
     name = NULL;
-    graph->printErr("send~ not initialised with a name.");
+    graph->print_err("send~ not initialised with a name.");
   }
-  processFunction = &processSignal;
+  process_function = &processSignal;
 }
 
 DspSend::~DspSend() {

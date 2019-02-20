@@ -33,19 +33,19 @@ class MessageCosine : public MessageObject {
     MessageCosine(PdMessage *init_message, PdGraph *graph);
     ~MessageCosine();
 
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
 
   private:
     void process_message(int inlet_index, PdMessage *message);
 };
 
-inline const char *MessageCosine::getObjectLabel() {
+inline const char *MessageCosine::get_object_label() {
   return "cos";
 }
 
 inline std::string MessageCosine::toString() {
-  return MessageCosine::getObjectLabel();
+  return MessageCosine::get_object_label();
 }
 
 #endif // _MESSAGE_COSINE_H_
