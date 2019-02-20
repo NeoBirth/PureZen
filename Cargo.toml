@@ -1,6 +1,6 @@
 [package]
 name        = "purezen"
-version     = "0.0.1" # Also update html_root_url in lib.rs when bumping this
+version     = "0.0.2" # Also update html_root_url in lib.rs when bumping this
 authors     = ["Tony Arcieri <bascule@gmail.com>", "Martin Roth <mhroth@rjdj.me>"]
 license     = "LGPL-3.0"
 edition     = "2018"
