@@ -63,7 +63,7 @@ MessageListAppend::MessageListAppend(pd::Message *init_message, PdGraph *graph) 
 }
 
 MessageListAppend::~MessageListAppend() {
-  appendMessage->freeMessage();
+  appendMessage->free_message();
 }
 
 bool MessageListAppend::should_distribute_message_to_inlets() {
@@ -93,12 +93,12 @@ void MessageListAppend::process_message(int inlet_index, pd::Message *message) {
     case 1: {
       if (message->is_bang(0)) {
         // bangs are considered a list of size zero
-        appendMessage->freeMessage();
+        appendMessage->free_message();
         pd::Message *message = PD_MESSAGE_ON_STACK(0);
         message->from_timestamp(0.0, 0);
         appendMessage = message->clone_on_heap();
       } else {
-        appendMessage->freeMessage();
+        appendMessage->free_message();
         appendMessage = message->clone_on_heap();
       }
       break;

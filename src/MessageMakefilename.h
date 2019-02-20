@@ -33,7 +33,7 @@ class MessageMakefilename : public MessageObject {
     MessageMakefilename(PdMessage *init_message, PdGraph *graph);
     ~MessageMakefilename();
     
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
     
   private:
@@ -42,12 +42,12 @@ class MessageMakefilename : public MessageObject {
     char *format;
 };
 
-inline const char *MessageMakefilename::getObjectLabel() {
+inline const char *MessageMakefilename::get_object_label() {
   return "makefilename";
 }
 
 inline std::string MessageMakefilename::toString() {
-  return MessageMakefilename::getObjectLabel();
+  return MessageMakefilename::get_object_label();
 }
 
 #endif // _MESSAGE_MAKEFILENAME_H_

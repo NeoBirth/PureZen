@@ -32,7 +32,7 @@ class MessageListSplit : public MessageObject {
     MessageListSplit(PdMessage *init_message, PdGraph *graph);
     ~MessageListSplit();
 
-  static const char *getObjectLabel();
+  static const char *get_object_label();
   std::string toString();
 
   private:
@@ -41,12 +41,12 @@ class MessageListSplit : public MessageObject {
     int splitIndex;
 };
 
-inline const char *MessageListSplit::getObjectLabel() {
+inline const char *MessageListSplit::get_object_label() {
   return "list split";
 }
 
 inline std::string MessageListSplit::toString() {
-  return MessageListSplit::getObjectLabel();
+  return MessageListSplit::get_object_label();
 }
 
 #endif // _MESSAGE_LIST_SPLIT_H_

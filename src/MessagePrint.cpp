@@ -42,9 +42,9 @@ MessagePrint::~MessagePrint() {
 void MessagePrint::process_message(int inlet_index, pd::Message *message) {
   char *out = message->toString();
   if (name != NULL) {
-    graph->printStd("[@ %.3fms] %s: %s", message->get_timestamp(), name, out);
+    graph->print_std("[@ %.3fms] %s: %s", message->get_timestamp(), name, out);
   } else {
-    graph->printStd("[@ %.3fms] %s", message->get_timestamp(), out);
+    graph->print_std("[@ %.3fms] %s", message->get_timestamp(), out);
   }
   free(out);
 }

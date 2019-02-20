@@ -33,7 +33,7 @@ class MessageGreaterThanOrEqualTo : public MessageObject {
     MessageGreaterThanOrEqualTo(PdMessage *init_message, PdGraph *graph);
     ~MessageGreaterThanOrEqualTo();
 
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
 
   private:
@@ -44,7 +44,7 @@ class MessageGreaterThanOrEqualTo : public MessageObject {
     float lastOutput;
 };
 
-inline const char *MessageGreaterThanOrEqualTo::getObjectLabel() {
+inline const char *MessageGreaterThanOrEqualTo::get_object_label() {
   return ">=";
 }
 

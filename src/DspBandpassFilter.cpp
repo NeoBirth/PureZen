@@ -28,7 +28,7 @@ message::Object *DspBandpassFilter::new_object(pd::Message *init_message, PdGrap
 }
 
 DspBandpassFilter::DspBandpassFilter(pd::Message *init_message, PdGraph *graph) : DspFilter(3, graph) {
-  fc = init_message->is_float(0) ? init_message->get_float(0) : graph->getSampleRate()/2.0f;
+  fc = init_message->is_float(0) ? init_message->get_float(0) : graph->get_sample_rate()/2.0f;
   q = init_message->is_float(1) ? init_message->get_float(1) : 1.0f;
   calcFiltCoeff(fc, q);
 }
@@ -39,11 +39,11 @@ DspBandpassFilter::~DspBandpassFilter() {
 
 // http://www.musicdsp.org/files/Audio-EQ-Cookbook.txt
 void DspBandpassFilter::calcFiltCoeff(float fc, float q) {
-  if (fc > 0.5f * graph->getSampleRate()) fc = 0.5f * graph->getSampleRate();
+  if (fc > 0.5f * graph->get_sample_rate()) fc = 0.5f * graph->get_sample_rate();
   else if (fc < 0.0f) fc = 0.0f;
   if (q < 0.0f) q = 0.0f;
 
-  float wc = 2.0f*M_PI*fc/graph->getSampleRate();
+  float wc = 2.0f*M_PI*fc/graph->get_sample_rate();
   float alpha = sinf(wc)/(2.0f*q);
 
   b[0] = alpha/(1.0f+alpha);

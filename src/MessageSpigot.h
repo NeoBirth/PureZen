@@ -33,7 +33,7 @@ class MessageSpigot : public MessageObject {
     MessageSpigot(PdMessage *init_message, PdGraph *graph);
     ~MessageSpigot();
 
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
 
   private:
@@ -42,12 +42,12 @@ class MessageSpigot : public MessageObject {
     float constant;
 };
 
-inline const char *MessageSpigot::getObjectLabel() {
+inline const char *MessageSpigot::get_object_label() {
   return "spigot";
 }
 
 inline std::string MessageSpigot::toString() {
-  return MessageSpigot::getObjectLabel();
+  return MessageSpigot::get_object_label();
 }
 
 #endif // _MESSAGE_SPIGOT_H_

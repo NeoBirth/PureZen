@@ -38,8 +38,8 @@ MessageMetro::~MessageMetro() {
 }
 
 string MessageMetro::toString() {
-  char str[snprintf(NULL, 0, "%s %g", getObjectLabel(), intervalInMs)+1];
-  snprintf(str, sizeof(str), "%s %g", getObjectLabel(), intervalInMs);
+  char str[snprintf(NULL, 0, "%s %g", get_object_label(), intervalInMs)+1];
+  snprintf(str, sizeof(str), "%s %g", get_object_label(), intervalInMs);
   return string(str);
 }
 
@@ -103,7 +103,7 @@ void MessageMetro::startMetro(double timestamp) {
 
 void MessageMetro::stopMetro() {
   if (pendingMessage != NULL) {
-    graph->cancelMessage(this, 0, pendingMessage);
+    graph->cancel_message(this, 0, pendingMessage);
     pendingMessage = NULL;
   }
 }

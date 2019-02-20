@@ -28,8 +28,8 @@ message::Object *DspSnapshot::new_object(pd::Message *init_message, PdGraph *gra
 }
 
 DspSnapshot::DspSnapshot(pd::Message *init_message, PdGraph *graph) : DspObject(1, 1, 1, 0, graph) {
-  processFunction = &processNull;
-  processFunctionNoMessage = &processNull;
+  process_function = &processNull;
+  process_functionNoMessage = &processNull;
 }
 
 DspSnapshot::~DspSnapshot() {
@@ -43,7 +43,7 @@ connection::Type DspSnapshot::get_connection_type(int outlet_index) {
 void DspSnapshot::process_message(int inlet_index, pd::Message *message) {
   switch (message->get_type(0)) {
     case SYMBOL: {
-      graph->printErr("[snapshot~] does not support the \"%s\" message.", message->get_symbol(0));
+      graph->print_err("[snapshot~] does not support the \"%s\" message.", message->get_symbol(0));
       break;
     }
     case BANG: {

@@ -21,7 +21,12 @@
 
 pub mod element;
 pub mod object;
+mod queue;
+pub mod send;
 mod symbol;
 mod timestamp;
 
-pub use self::{element::Element, object::Object, symbol::Symbol, timestamp::Timestamp};
+pub use self::{
+    element::Element, object::Object, queue::OrderedQueue, send::Send, symbol::Symbol,
+    timestamp::Timestamp,
+};

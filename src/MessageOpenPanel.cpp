@@ -36,7 +36,7 @@ MessageOpenPanel::~MessageOpenPanel() {
 }
 
 void MessageOpenPanel::process_message(int inlet_index, pd::Message *message) {
-  graph->printErr("Object \"openpanel\" has not yet been implemented. It does nothing.");
+  graph->print_err("Object \"openpanel\" has not yet been implemented. It does nothing.");
   switch (message->get_type(0)) {
     case BANG: {
       break;

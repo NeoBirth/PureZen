@@ -46,21 +46,21 @@ list<DspObject *> DspInlet::get_process_orderFromInlet() {
   return DspObject::get_process_order();
 }
 
-void DspInlet::setDspBufferAtInlet(float *buffer, unsigned int inlet_index) {
-  DspObject::setDspBufferAtInlet(buffer, inlet_index);
+void DspInlet::set_dsp_buffer_at_inlet(float *buffer, unsigned int inlet_index) {
+  DspObject::set_dsp_buffer_at_inlet(buffer, inlet_index);
   
   // additionally reserve this buffer in order to account for outgoing connections
-  graph->getBufferPool()->reserveBuffer(buffer, outgoingDspConnections[0].size());
+  graph->get_buffer_pool()->reserveBuffer(buffer, outgoingDspConnections[0].size());
   
   // when the dsp buffer updates at a given inlet, inform all receiving objects
   for (list<Connection>::iterator it = outgoingDspConnections[0].begin();
       it != outgoingDspConnections[0].end(); ++it) {
     Connection letPair = *it;
     DspObject *dspObject = reinterpret_cast<DspObject *>(letPair.first);
-    dspObject->setDspBufferAtInlet(dspBufferAtInlet[0], letPair.second);
+    dspObject->set_dsp_buffer_at_inlet(dspBufferAtInlet[0], letPair.second);
   }
 }
 
-float *DspInlet::getDspBufferAtOutlet(int outlet_index) {
-  return (dspBufferAtInlet[0] == NULL) ? graph->getBufferPool()->getZeroBuffer() : dspBufferAtInlet[0];
+float *DspInlet::get_dsp_buffer_at_outlet(int outlet_index) {
+  return (dspBufferAtInlet[0] == NULL) ? graph->get_buffer_pool()->get_zero_buffer() : dspBufferAtInlet[0];
 }

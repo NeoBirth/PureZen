@@ -33,7 +33,7 @@ class MessageListAppend : public MessageObject {
     MessageListAppend(PdMessage *init_message, PdGraph *graph);
     ~MessageListAppend();
     
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
   
     bool shouldDistributeMessageToInlets();
@@ -44,12 +44,12 @@ class MessageListAppend : public MessageObject {
     PdMessage *appendMessage;
 };
 
-inline const char *MessageListAppend::getObjectLabel() {
+inline const char *MessageListAppend::get_object_label() {
   return "list append";
 }
 
 inline std::string MessageListAppend::toString() {
-  return MessageListAppend::getObjectLabel();
+  return MessageListAppend::get_object_label();
 }
 
 #endif // _MESSAGE_LIST_APPEND_H_

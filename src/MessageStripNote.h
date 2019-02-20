@@ -33,19 +33,19 @@ class MessageStripNote : public MessageObject {
     MessageStripNote(PdMessage *init_message, PdGraph *graph);
     ~MessageStripNote();
     
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
     
   private:
     void process_message(int inlet_index, PdMessage *message);
 };
 
-inline const char *MessageStripNote::getObjectLabel() {
+inline const char *MessageStripNote::get_object_label() {
   return "stripnote";
 }
 
 inline std::string MessageStripNote::toString() {
-  return MessageStripNote::getObjectLabel();
+  return MessageStripNote::get_object_label();
 }
 
 #endif // _MESSAGE_STRIP_NOTE_H_

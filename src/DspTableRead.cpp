@@ -38,7 +38,7 @@ DspTableRead::~DspTableRead() {
   free(name);
 }
 
-void DspTableRead::setTable(MessageTable *aTable) {
+void DspTableRead::set_table(MessageTable *aTable) {
   table = aTable;
 }
 
@@ -49,7 +49,7 @@ void DspTableRead::process_message(int inlet_index, pd::Message *message) {
         // change the table from which this object reads
         free(name);
         name = utils::copy_string(message->get_symbol(1));
-        table = graph->getTable(name);
+        table = graph->get_table(name);
       }
       break;
     }
@@ -86,9 +86,9 @@ void DspTableRead::processDspWithIndex(int fromIndex, int toIndex) {
     // select the indicies
     vDSP_vindex(buffer, outBuff, 1, outBuff, 1, duration);
     #else
-    float *inputBuffer = dspBufferAtInlet[0];
+    float *input_buffer = dspBufferAtInlet[0];
     for (int i = fromIndex; i < toIndex; i++) {
-      int x = (int) (inputBuffer[i] + offset);
+      int x = (int) (input_buffer[i] + offset);
       if (x <= 0) {
         dspBufferAtOutlet[0][i] = buffer[0];
       } else if (x >= bufferLength) {

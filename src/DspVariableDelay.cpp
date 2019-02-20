@@ -32,9 +32,9 @@ message::Object *DspVariableDelay::new_object(pd::Message *init_message, PdGraph
 DspVariableDelay::DspVariableDelay(pd::Message *init_message, PdGraph *graph) : DelayReceiver(0, 1, 0, 1, graph) {
   if (init_message->is_symbol(0)) {
     name = utils::copy_string(init_message->get_symbol(0));
-    sample_rate = graph->getSampleRate();
+    sample_rate = graph->get_sample_rate();
   } else {
-    graph->printErr("vd~ requires the name of a delayline. None given.");
+    graph->print_err("vd~ requires the name of a delayline. None given.");
     name = NULL;
   }
 }

@@ -36,7 +36,7 @@ class DspLowpassFilter : public DspFilter {
     DspLowpassFilter(PdMessage *init_message, PdGraph *graph);
     ~DspLowpassFilter();
   
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
   
     void process_message(int inlet_index, PdMessage *message);
@@ -45,12 +45,12 @@ class DspLowpassFilter : public DspFilter {
     void calcFiltCoeff(float cutoffFrequency);
 };
 
-inline const char *DspLowpassFilter::getObjectLabel() {
+inline const char *DspLowpassFilter::get_object_label() {
   return "lop~";
 }
 
 inline std::string DspLowpassFilter::toString() {
-  return DspLowpassFilter::getObjectLabel();
+  return DspLowpassFilter::get_object_label();
 }
 
 #endif // _DSP_LOW_PASS_FILTER_H_

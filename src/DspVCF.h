@@ -33,7 +33,7 @@ class DspVCF : public DspObject {
     DspVCF(PdMessage *init_message, PdGraph *graph);
     ~DspVCF();
   
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
     
   private:
@@ -54,7 +54,7 @@ class DspVCF : public DspObject {
 };
 
 inline std::string DspVCF::toString() {
-  return DspVCF::getObjectLabel();
+  return DspVCF::get_object_label();
 }
 
 #endif // _DSP_VCF_H_

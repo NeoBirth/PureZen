@@ -36,11 +36,11 @@ MessageTableRead::~MessageTableRead() {
   free(name);
 }
 
-char *MessageTableRead::getName() {
+char *MessageTableRead::get_name() {
   return name;
 }
 
-void MessageTableRead::setTable(MessageTable *aTable) {
+void MessageTableRead::set_table(MessageTable *aTable) {
   table = aTable;
 }
 
@@ -63,7 +63,7 @@ void MessageTableRead::process_message(int inlet_index, pd::Message *message) {
       if (message->is_symbol_str(0, "set") && message->is_symbol(1)) {
         free(name);
         name = utils::copy_string(message->get_symbol(1));
-        table = graph->getTable(name);
+        table = graph->get_table(name);
       }
       break;
     }

@@ -116,7 +116,7 @@ void MessageLine::process_message(int inlet_index, pd::Message *message) {
 
 void MessageLine::cancelPendingMessage() {
   if (pendingMessage != NULL) {
-    graph->cancelMessage(this, 0, pendingMessage);
+    graph->cancel_message(this, 0, pendingMessage);
     pendingMessage = NULL;
   }
 }

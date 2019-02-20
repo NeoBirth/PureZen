@@ -36,13 +36,13 @@ class ObjectFactoryMap {
     ObjectFactoryMap();
     ~ObjectFactoryMap();
   
-    void registerExternalObject(const char *objectLabel, MessageObject *(*new_object)(PdMessage *, PdGraph *));
-    void unregisterExternalObject(const char *objectLabel);
+    void register_external_object(const char *object_label, MessageObject *(*new_object)(PdMessage *, PdGraph *));
+    void unregister_external_object(const char *object_label);
   
     MessageObject *new_object(const char *objectLable, PdMessage *init_message, PdGraph *graph);
   
   private:
-    map<string, MessageObject *(*)(PdMessage *, PdGraph *)> objectFactoryMap;
+    map<string, MessageObject *(*)(PdMessage *, PdGraph *)> object_factory_map;
 };
 
 #endif // _OBJECT_FACTORY_MAP_H_

@@ -33,7 +33,7 @@ class DspSignal : public DspObject {
     DspSignal(PdMessage *init_message, PdGraph *graph);
     ~DspSignal();
   
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
   
   private:
@@ -43,7 +43,7 @@ class DspSignal : public DspObject {
     float constant;
 };
 
-inline const char *DspSignal::getObjectLabel() {
+inline const char *DspSignal::get_object_label() {
   return "sig~";
 }
 

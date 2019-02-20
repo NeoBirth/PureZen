@@ -38,7 +38,7 @@ class DspDelayRead : public DelayReceiver {
     DspDelayRead(PdMessage *initString, PdGraph *graph);
     ~DspDelayRead();
   
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
     object::Type get_object_type();
   
@@ -52,10 +52,10 @@ class DspDelayRead : public DelayReceiver {
 };
 
 inline std::string DspDelayRead::toString() {
-  return DspDelayRead::getObjectLabel();
+  return DspDelayRead::get_object_label();
 }
 
-inline const char *DspDelayRead::getObjectLabel() {
+inline const char *DspDelayRead::get_object_label() {
   return "delread~";
 }
 

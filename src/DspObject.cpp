@@ -31,7 +31,7 @@
 
 DspObject::DspObject(int numMessageInlets, int numDspInlets, int numMessageOutlets, int numDspOutlets, PdGraph *graph) :
     message::Object(numMessageInlets, numMessageOutlets, graph) {
-  init(numDspInlets, numDspOutlets, graph->getBlockSize());
+  init(numDspInlets, numDspOutlets, graph->get_block_size());
 }
 
 DspObject::DspObject(int numMessageInlets, int numDspInlets, int numMessageOutlets, int numDspOutlets, int block_size, PdGraph *graph) : 
@@ -41,8 +41,8 @@ DspObject::DspObject(int numMessageInlets, int numDspInlets, int numMessageOutle
 
 void DspObject::init(int numDspInlets, int numDspOutlets, int block_size) {
   block_sizeInt = block_size;
-  processFunction = &processFunctionDefaultNoMessage;
-  processFunctionNoMessage = &processFunctionDefaultNoMessage;
+  process_function = &process_functionDefaultNoMessage;
+  process_functionNoMessage = &process_functionDefaultNoMessage;
   
   // initialise the incoming dsp connections list
   incomingDspConnections = vector<list<Connection> >(numDspInlets);
@@ -74,12 +74,12 @@ connection::Type DspObject::get_connection_type(int outlet_index) {
   return DSP;
 }
 
-float *DspObject::getDspBufferAtInlet(int inlet_index) {
+float *DspObject::get_dsp_buffer_at_inlet(int inlet_index) {
   return (inlet_index < 2)
       ? dspBufferAtInlet[inlet_index] : ((float **) dspBufferAtInlet[2])[inlet_index-2];
 }
 
-float *DspObject::getDspBufferAtOutlet(int outlet_index) {
+float *DspObject::get_dsp_buffer_at_outlet(int outlet_index) {
   if (outlet_index < 2) return dspBufferAtOutlet[outlet_index];
   else return ((float **) dspBufferAtOutlet[2])[outlet_index-2];
 }
@@ -160,7 +160,7 @@ void DspObject::remove_connection_to_object_from_outlet(message::Object *message
   }
 }
 
-void DspObject::setDspBufferAtInlet(float *buffer, unsigned int inlet_index) {
+void DspObject::set_dsp_buffer_at_inlet(float *buffer, unsigned int inlet_index) {
   if (inlet_index < 2) dspBufferAtInlet[inlet_index] = buffer;
   else ((float **) dspBufferAtInlet[2])[inlet_index-2] = buffer;
 }
@@ -177,7 +177,7 @@ void DspObject::clearMessageQueue() {
   while (!messageQueue.empty()) {
     MessageConnection messageConnection = messageQueue.front();
     pd::Message *message = messageConnection.first;
-    message->freeMessage();
+    message->free_message();
     messageQueue.pop();
   }
 }
@@ -192,18 +192,18 @@ void DspObject::receive_message(int inlet_index, pd::Message *message) {
     
     // only process the message if the process function is set to the default no-message function.
     // If it is set to anything else, then it is assumed that messages should not be processed.
-    if (processFunction == processFunctionNoMessage) processFunction = &processFunctionMessage;
+    if (process_function == process_functionNoMessage) process_function = &process_functionMessage;
   }
 }
 
 
 #pragma mark - processDsp
 
-void DspObject::processFunctionDefaultNoMessage(DspObject *dspObject, int fromIndex, int toIndex) {
+void DspObject::process_functionDefaultNoMessage(DspObject *dspObject, int fromIndex, int toIndex) {
   dspObject->processDspWithIndex(fromIndex, toIndex);
 }
 
-void DspObject::processFunctionMessage(DspObject *dspObject, int fromIndex, int toIndex) {
+void DspObject::process_functionMessage(DspObject *dspObject, int fromIndex, int toIndex) {
   double blockIndexOfLastMessage = 0.0; // reset the block index of the last received message
   do { // there is at least one message
     MessageConnection messageConnection = dspObject->messageQueue.front();
@@ -211,21 +211,21 @@ void DspObject::processFunctionMessage(DspObject *dspObject, int fromIndex, int 
     unsigned int inlet_index = messageConnection.second;
     
     double blockIndexOfCurrentMessage = dspObject->graph->getBlockIndex(message);
-    dspObject->processFunctionNoMessage(dspObject,
+    dspObject->process_functionNoMessage(dspObject,
         ceil(blockIndexOfLastMessage), ceil(blockIndexOfCurrentMessage));
     dspObject->process_message(inlet_index, message);
-    message->freeMessage(); // free the message from the head, the message has been consumed.
+    message->free_message(); // free the message from the head, the message has been consumed.
     dspObject->messageQueue.pop();
     
     blockIndexOfLastMessage = blockIndexOfCurrentMessage;
   } while (!dspObject->messageQueue.empty());
-  dspObject->processFunctionNoMessage(dspObject, ceil(blockIndexOfLastMessage), toIndex);
+  dspObject->process_functionNoMessage(dspObject, ceil(blockIndexOfLastMessage), toIndex);
   
   // because messages are received much less often than on a per-block basis, once messages are
   // processed in this block, return to the default process function which assumes that no messages
   // are present. This improves performance because the messageQueue must not be checked for
   // any pending messages. It is assumed that there aren't any.
-  dspObject->processFunction = dspObject->processFunctionNoMessage;
+  dspObject->process_function = dspObject->process_functionNoMessage;
 }
 
 void DspObject::processDspWithIndex(double fromIndex, double toIndex) {
@@ -269,13 +269,13 @@ list<DspObject *> DspObject::get_process_order() {
       }
     }
     
-    BufferPool *bufferPool = graph->getBufferPool();
+    BufferPool *buffer_pool = graph->get_buffer_pool();
     pd::Message *dspAddInitMessage = PD_MESSAGE_ON_STACK(1);
     dspAddInitMessage->from_timestamp_and_float(0, 0.0f);
     for (int i = 0; i < incomingDspConnections.size(); i++) {
       switch (incomingDspConnections[i].size()) {
         case 0: {
-          setDspBufferAtInlet(bufferPool->getZeroBuffer(), i);
+          set_dsp_buffer_at_inlet(buffer_pool->get_zero_buffer(), i);
           break;
         }
         case 1: {
@@ -284,8 +284,8 @@ list<DspObject *> DspObject::get_process_order() {
           
           // configure the input buffers
           DspObject *dspObject = reinterpret_cast<DspObject *>(obj_let_pair.first);
-          float *buffer = dspObject->getDspBufferAtOutlet(obj_let_pair.second);
-          setDspBufferAtInlet(buffer, i);
+          float *buffer = dspObject->get_dsp_buffer_at_outlet(obj_let_pair.second);
+          set_dsp_buffer_at_inlet(buffer, i);
           // NOTE(mhroth): inlet buffer is released once all inlet buffers have been resolved
           // This is so that a buffer at an earlier inlet is not used when resolving buffers
           // while in the get_process_order() function of a following inlet.
@@ -318,23 +318,23 @@ list<DspObject *> DspObject::get_process_order() {
             processList.splice(processList.end(), parentProcessList);
             
             DspImplicitAdd *dspAdd = new DspImplicitAdd(dspAddInitMessage, get_graph());
-            float *buffer = reinterpret_cast<DspObject *>(leftOlPair.first)->getDspBufferAtOutlet(leftOlPair.second);
-            dspAdd->setDspBufferAtInlet(buffer, 0);
-            bufferPool->releaseBuffer(buffer);
+            float *buffer = reinterpret_cast<DspObject *>(leftOlPair.first)->get_dsp_buffer_at_outlet(leftOlPair.second);
+            dspAdd->set_dsp_buffer_at_inlet(buffer, 0);
+            buffer_pool->releaseBuffer(buffer);
             
-            buffer = reinterpret_cast<DspObject *>(rightOlPair.first)->getDspBufferAtOutlet(rightOlPair.second);
-            dspAdd->setDspBufferAtInlet(buffer, 1);
-            bufferPool->releaseBuffer(buffer);
+            buffer = reinterpret_cast<DspObject *>(rightOlPair.first)->get_dsp_buffer_at_outlet(rightOlPair.second);
+            dspAdd->set_dsp_buffer_at_inlet(buffer, 1);
+            buffer_pool->releaseBuffer(buffer);
             
             // assign the output buffer of the +~~
-            dspAdd->setDspBufferAtOutlet(bufferPool->getBuffer(1), 0);
+            dspAdd->setDspBufferAtOutlet(buffer_pool->getBuffer(1), 0);
             
             processList.push_back(dspAdd);
             leftOlPair = Connection::new(dspAdd, 0);
           }
           
-          float *buffer = reinterpret_cast<DspObject *>(leftOlPair.first)->getDspBufferAtOutlet(leftOlPair.second);
-          setDspBufferAtInlet(buffer, i);
+          float *buffer = reinterpret_cast<DspObject *>(leftOlPair.first)->get_dsp_buffer_at_outlet(leftOlPair.second);
+          set_dsp_buffer_at_inlet(buffer, i);
           // inlet buffer is released once all inlet buffers have been resolved
           break;
         }
@@ -343,14 +343,14 @@ list<DspObject *> DspObject::get_process_order() {
     
     // release the inlet buffers only after everything has been set up
     for (int i = 0; i < getNumDspInlets(); i++) {
-      float *buffer = getDspBufferAtInlet(i);
-      bufferPool->releaseBuffer(buffer);
+      float *buffer = get_dsp_buffer_at_inlet(i);
+      buffer_pool->releaseBuffer(buffer);
     }
     
     // set the outlet buffers
     for (int i = 0; i < getNumDspOutlets(); i++) {
       if (canSetBufferAtOutlet(i)) {
-        float *buffer = bufferPool->getBuffer(outgoingDspConnections[i].size());
+        float *buffer = buffer_pool->getBuffer(outgoingDspConnections[i].size());
         setDspBufferAtOutlet(buffer, i);
       }
     }

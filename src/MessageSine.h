@@ -33,19 +33,19 @@ class MessageSine : public MessageObject {
     MessageSine(PdMessage *init_message, PdGraph *graph);
     ~MessageSine();
 
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
 
   private:
     void process_message(int inlet_index, PdMessage *message);
 };
 
-inline const char *MessageSine::getObjectLabel() {
+inline const char *MessageSine::get_object_label() {
   return "sin";
 }
 
 inline std::string MessageSine::toString() {
-  return MessageSine::getObjectLabel();
+  return MessageSine::get_object_label();
 }
 
 #endif // _MESSAGE_SINE_H_

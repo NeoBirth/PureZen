@@ -33,7 +33,7 @@ class MessageLogicalAnd : public MessageObject {
     MessageLogicalAnd(PdMessage *init_message, PdGraph *graph);
     ~MessageLogicalAnd();
   
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
     
   private:
@@ -43,12 +43,12 @@ class MessageLogicalAnd : public MessageObject {
     float right;
 };
 
-inline const char *MessageLogicalAnd::getObjectLabel() {
+inline const char *MessageLogicalAnd::get_object_label() {
   return "&&";
 }
 
 inline std::string MessageLogicalAnd::toString() {
-  return MessageLogicalAnd::getObjectLabel();
+  return MessageLogicalAnd::get_object_label();
 }
 
 #endif // _MESSAGE_LOGICAL_AND_H_

@@ -32,7 +32,7 @@ class MessagePipe : public MessageObject {
     MessagePipe(PdMessage *init_message, PdGraph *pdGraph);
     ~MessagePipe();
   
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
   
     bool shouldDistributeMessageToInlets();
@@ -48,12 +48,12 @@ class MessagePipe : public MessageObject {
     list<PdMessage *> scheduledMessagesList;
 };
 
-inline const char *MessagePipe::getObjectLabel() {
+inline const char *MessagePipe::get_object_label() {
   return "pipe";
 }
 
 inline std::string MessagePipe::toString() {
-  return MessagePipe::getObjectLabel();
+  return MessagePipe::get_object_label();
 }
 
 #endif // _MESSAGE_PIPE_H_

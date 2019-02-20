@@ -33,19 +33,19 @@ class MessageOpenPanel : public MessageObject {
     MessageOpenPanel(PdMessage *init_message, PdGraph *graph);
     ~MessageOpenPanel();
     
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
     
   private:
   void process_message(int inlet_index, PdMessage *message);
 };
 
-inline const char *MessageOpenPanel::getObjectLabel() {
+inline const char *MessageOpenPanel::get_object_label() {
   return "openpanel";
 }
 
 inline std::string MessageOpenPanel::toString() {
-  return MessageOpenPanel::getObjectLabel();
+  return MessageOpenPanel::get_object_label();
 }
 
 #endif // _MESSAGE_OPENPANEL_H_

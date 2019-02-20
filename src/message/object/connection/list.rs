@@ -21,14 +21,11 @@
 
 use super::Connection;
 use crate::{
-    allocator::Allocator,
     error::{Error, ErrorKind},
-    message::Object,
     pd,
 };
 use core::slice;
-use heapless::{self, ArrayLength};
-use typenum::U64;
+use heapless::{self, consts::*, ArrayLength};
 
 /// List of connections to other objects for a given index
 /// Arbitrarily chosen maximum length of a list, backed by `heapless::Vec`
@@ -93,14 +90,16 @@ pub struct Iter<'a>(slice::Iter<'a, Connection>);
 
 impl<'a> Iter<'a> {
     /// Sends the given message to all connected objects in this iterator.
-    pub fn send_message<'pd, A, N>(&mut self, allocator: &mut A, message: &pd::Message<'pd, N>)
-    where
-        A: Allocator<Object>,
+    pub fn send_message<'pd, N>(
+        &mut self,
+        context: &mut pd::Context<'pd>,
+        message: &pd::Message<'pd, N>,
+    ) where
         N: ArrayLength<pd::message::Atom<'pd>>,
     {
         for connection in self {
             connection
-                .object_mut(allocator)
+                .object_mut(context)
                 .receive_message(connection.index(), message);
         }
     }

@@ -33,7 +33,7 @@ class MessageMoses : public MessageObject {
     MessageMoses(PdMessage *init_message, PdGraph *graph);
     ~MessageMoses();
 
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
 
   private:
@@ -42,12 +42,12 @@ class MessageMoses : public MessageObject {
     float constant;
 };
 
-inline const char *MessageMoses::getObjectLabel() {
+inline const char *MessageMoses::get_object_label() {
   return "moses";
 }
 
 inline std::string MessageMoses::toString() {
-  return MessageMoses::getObjectLabel();
+  return MessageMoses::get_object_label();
 }
 
 #endif // _MESSAGE_MOSES_H_

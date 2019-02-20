@@ -63,7 +63,7 @@ typedef enum ZGMessageElementType {
  * The structure will not persistent after the function returns and the pointer will become invalid.
  */
 typedef struct ZGReceiverMessagePair {
-  const char *receiverName;
+  const char *receiver_name;
   ZGMessage *message;
 } ZGReceiverMessagePair;
 
@@ -78,7 +78,7 @@ typedef enum ZGConnectionType {
 
   /** Create a new context to which graphs can be added. */
   ZGContext *zg_context_new(int num_input_channels, int num_output_channels, int block_size, float sample_rate,
-      void *(*callbackFunction)(ZGCallbackFunction function, void *userData, void *ptr), void *userData);
+      void *(*callback_function)(ZGCallbackFunction function, void *userData, void *ptr), void *userData);
 
   /** Create a new empty graph in the given context. Ideal for building graphs on the fly. */
   ZGGraph *zg_context_new_empty_graph(ZGContext *context);
@@ -111,21 +111,21 @@ typedef enum ZGConnectionType {
    * Register an external such that the context can instantiate instances of it. If an object
    * with the same label already exists, then the factory method is replaced with the new one.
    */
-  void zg_context_register_external_object(ZGContext *context, const char *objectLabel,
+  void zg_context_register_external_object(ZGContext *context, const char *object_label,
       ZGObject *(*factory)(ZGMessage *message, ZGGraph *graph));
 
   /** Unregister an external such that the context will be unaware of it. */
-  void zg_context_unregister_external_object(ZGContext *context, const char *objectLabel);
+  void zg_context_unregister_external_object(ZGContext *context, const char *object_label);
 
 
 #pragma mark - Abstractions from Context
 
   /** Register an abstraction from memory. */
-  void zg_context_register_memorymapped_abstraction(ZGContext *context, const char *objectLabel,
+  void zg_context_register_memorymapped_abstraction(ZGContext *context, const char *object_label,
       const char *abstraction);
 
   /** Unregister an abstraction. */
-  void zg_context_unregister_memorymapped_abstraction(ZGContext *context, const char *objectLabel);
+  void zg_context_unregister_memorymapped_abstraction(ZGContext *context, const char *object_label);
 
 #pragma mark - Objects from Context
 
@@ -177,19 +177,19 @@ typedef enum ZGConnectionType {
 #pragma mark - Context Process
 
   /** Process the given context. Audio buffers are channel-uninterleaved with float (32-bit) samples. */
-  void zg_context_process(ZGContext *context, float *inputBuffers, float *outputBuffers);
+  void zg_context_process(ZGContext *context, float *input_buffers, float *output_buffers);
 
   /** Process the given context. Audio buffers are channel-interleaved with signed short (16-bit) samples. */
-  void zg_context_process_s(ZGContext *context, short *inputBuffers, short *outputBuffers);
+  void zg_context_process_s(ZGContext *context, short *input_buffers, short *output_buffers);
 
 
 #pragma mark - Context Send Message
 
   /** Send a message to the named receiver. */
-  void zg_context_send_message(ZGContext *context, const char *receiverName, ZGMessage *message);
+  void zg_context_send_message(ZGContext *context, const char *receiver_name, ZGMessage *message);
 
   /** Send a message described by the <code>initString</code> to the named receiver at the given timestamp. */
-  void zg_context_send_message_from_string(ZGContext *context, const char *receiverName,
+  void zg_context_send_message_from_string(ZGContext *context, const char *receiver_name,
       double timestamp, const char *initString);
 
   /**
@@ -201,7 +201,7 @@ typedef enum ZGConnectionType {
    * E.g., zg_send_message(graph, "test", "s", "hello");
    * E.g., zg_send_message(graph, "test", "b");
    */
-  void zg_context_send_messageV(ZGContext *context, const char *receiverName, double timestamp,
+  void zg_context_send_messageV(ZGContext *context, const char *receiver_name, double timestamp,
       const char *messageFormat, ...);
 
   /**
@@ -217,7 +217,7 @@ typedef enum ZGConnectionType {
    * sends a message containing three floats, each with value 0.0f, to all receivers named "#accelerate"
    * between samples 56th and 57th samples (counting from zero) of the block.
    */
-  void zg_context_send_message_at_blockindex(ZGContext *context, const char *receiverName,
+  void zg_context_send_message_at_blockindex(ZGContext *context, const char *receiver_name,
       double blockIndex, const char *messageFormat, ...);
 
   /**
@@ -231,9 +231,9 @@ typedef enum ZGConnectionType {
 
 #pragma mark - Context Un/Register External Receivers
 
-  void zg_context_register_receiver(ZGContext *context, const char *receiverName);
+  void zg_context_register_receiver(ZGContext *context, const char *receiver_name);
 
-  void zg_context_unregister_receiver(ZGContext *context, const char *receiverName);
+  void zg_context_unregister_receiver(ZGContext *context, const char *receiver_name);
 
 
 #pragma mark - Object

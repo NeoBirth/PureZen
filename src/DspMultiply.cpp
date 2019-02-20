@@ -32,7 +32,7 @@ message::Object *DspMultiply::new_object(pd::Message *init_message, PdGraph *gra
 DspMultiply::DspMultiply(pd::Message *init_message, PdGraph *graph) : DspObject(2, 2, 0, 1, graph) {
   constant = init_message->is_float(0) ? init_message->get_float(0) : 0.0f;
   inputConstant = 0.0f;
-  processFunctionNoMessage = &processScalar;
+  process_functionNoMessage = &processScalar;
 }
 
 DspMultiply::~DspMultiply() {
@@ -41,18 +41,18 @@ DspMultiply::~DspMultiply() {
 
 string DspMultiply::toString() {
   const char *fmt = (constant == 0.0f) ? "%s" : "%s %g";
-  char str[snprintf(NULL, 0, fmt, getObjectLabel(), constant)+1];
-  snprintf(str, sizeof(str), fmt, getObjectLabel(), constant);
+  char str[snprintf(NULL, 0, fmt, get_object_label(), constant)+1];
+  snprintf(str, sizeof(str), fmt, get_object_label(), constant);
   return string(str);
 }
 
 void DspMultiply::onInletConnectionUpdate(unsigned int inlet_index) {
   if (incomingDspConnections[0].size() > 0 && incomingDspConnections[1].size() > 0) {
-    processFunction = &processSignal;
+    process_function = &processSignal;
   } else {
     // because onInletConnectionUpdate can only be called at block boundaries, it is guaranteed
     // that no messages will be in the message queue.
-    processFunction = &processScalar;
+    process_function = &processScalar;
   }
 }
 

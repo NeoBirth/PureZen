@@ -33,7 +33,7 @@ class MessageInteger : public MessageObject {
     MessageInteger(PdMessage *init_message, PdGraph *graph);
     ~MessageInteger();
 
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
 
   private:
@@ -43,12 +43,12 @@ class MessageInteger : public MessageObject {
     float constant;
 };
 
-inline const char *MessageInteger::getObjectLabel() {
+inline const char *MessageInteger::get_object_label() {
   return "int";
 };
 
 inline std::string MessageInteger::toString() {
-  return MessageInteger::getObjectLabel();
+  return MessageInteger::get_object_label();
 }
 
 #endif // _MESSAGE_INTEGER_H_

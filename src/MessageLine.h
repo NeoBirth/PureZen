@@ -38,7 +38,7 @@ class MessageLine : public MessageObject {
     bool shouldDistributeMessageToInlets();
     void sendMessage(int outlet_index, PdMessage *message);
   
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
 
   private:
@@ -59,12 +59,12 @@ inline bool MessageLine::shouldDistributeMessageToInlets() {
   return false;
 }
 
-inline const char *MessageLine::getObjectLabel() {
+inline const char *MessageLine::get_object_label() {
   return "line";
 }
 
 inline std::string MessageLine::toString() {
-  return MessageLine::getObjectLabel();
+  return MessageLine::get_object_label();
 }
 
 #endif // _MESSAGE_LINE_H_

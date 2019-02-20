@@ -38,19 +38,19 @@ class MessageSwitch : public MessageObject {
     MessageSwitch(PdMessage *init_message, PdGraph *graph);
     ~MessageSwitch();
 
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
 
   private:
     void process_message(int inlet_index, PdMessage *message);
 };
 
-inline const char *MessageSwitch::getObjectLabel() {
+inline const char *MessageSwitch::get_object_label() {
   return "switch~";
 }
 
 inline std::string MessageSwitch::toString() {
-  return MessageSwitch::getObjectLabel();
+  return MessageSwitch::get_object_label();
 }
 
 #endif // _MESSAGE_SWITCH_H_

@@ -27,7 +27,7 @@ MessageListPrepend::MessageListPrepend(pd::Message *init_message, PdGraph *graph
 }
 
 MessageListPrepend::~MessageListPrepend() {
-  prependMessage->freeMessage();
+  prependMessage->free_message();
 }
 
 void MessageListPrepend::process_message(int inlet_index, pd::Message *message) {
@@ -46,7 +46,7 @@ void MessageListPrepend::process_message(int inlet_index, pd::Message *message) 
     case 1: {
       // NOTE(mhroth): would be faster to copy in place rather than destroying and creating memory
       // can change if it becomes a problem
-      prependMessage->freeMessage();
+      prependMessage->free_message();
       prependMessage = message->clone_on_heap();
       break;
     }

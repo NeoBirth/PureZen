@@ -30,8 +30,8 @@ message::Object *DspDivide::new_object(pd::Message *init_message, PdGraph *graph
 
 DspDivide::DspDivide(pd::Message *init_message, PdGraph *graph) : DspObject(2, 2, 0, 1, graph) {
   constant = init_message->is_float(0) ? init_message->get_float(0) : 0.0f;
-  processFunction = &processScalar;
-  processFunctionNoMessage = &processScalar;
+  process_function = &processScalar;
+  process_functionNoMessage = &processScalar;
 }
 
 DspDivide::~DspDivide() {
@@ -39,14 +39,14 @@ DspDivide::~DspDivide() {
 }
 
 void DspDivide::onInletConnectionUpdate(unsigned int inlet_index) {
-  processFunction = (incomingDspConnections[0].size() > 0 && incomingDspConnections[1].size() > 0)
+  process_function = (incomingDspConnections[0].size() > 0 && incomingDspConnections[1].size() > 0)
       ? &processSignal : &processScalar;
 }
 
 string DspDivide::toString() {
   const char *fmt = (constant == 0.0f) ? "%s" : "%s %g";
-  char str[snprintf(NULL, 0, fmt, getObjectLabel(), constant)+1];
-  snprintf(str, sizeof(str), fmt, getObjectLabel(), constant);
+  char str[snprintf(NULL, 0, fmt, get_object_label(), constant)+1];
+  snprintf(str, sizeof(str), fmt, get_object_label(), constant);
   return string(str);
 }
 
@@ -55,7 +55,7 @@ void DspDivide::process_message(int inlet_index, pd::Message *message) {
     if (message->is_float(0)) {
       if (message->get_float(0) == 0.0f) {
         constant = 1.0f;
-        graph->printErr("%s received message which set divisor to zero. Divisor set to 1.0f.", getObjectLabel());
+        graph->print_err("%s received message which set divisor to zero. Divisor set to 1.0f.", get_object_label());
       } else {
         constant = message->get_float(0);
       }

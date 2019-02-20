@@ -34,7 +34,7 @@ class DspRifft : public DspObject {
     DspRifft(PdMessage *init_message, PdGraph *graph);
     ~DspRifft();
     
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
     
   private:
@@ -48,10 +48,10 @@ class DspRifft : public DspObject {
 };
 
 inline std::string DspRifft::toString() {
-  return DspRifft::getObjectLabel();
+  return DspRifft::get_object_label();
 }
 
-inline const char *DspRifft::getObjectLabel() {
+inline const char *DspRifft::get_object_label() {
   return "rifft~";
 }
 

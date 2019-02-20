@@ -33,7 +33,7 @@ class DspBang : public DspObject {
     DspBang(PdMessage *init_message, PdGraph *graph);
     ~DspBang();
 
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
 
     connection::Type get_connection_type(int outlet_index) { return MESSAGE; }
@@ -43,10 +43,10 @@ class DspBang : public DspObject {
 };
 
 inline std::string DspBang::toString() {
-  return DspBang::getObjectLabel();
+  return DspBang::get_object_label();
 }
 
-inline const char *DspBang::getObjectLabel() {
+inline const char *DspBang::get_object_label() {
   return "bang~";
 }
 

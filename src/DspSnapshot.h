@@ -33,7 +33,7 @@ class DspSnapshot : public DspObject {
     DspSnapshot(PdMessage *init_message, PdGraph *graph);
     ~DspSnapshot();
 
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
 
     connection::Type get_connection_type(int outlet_index);
@@ -44,10 +44,10 @@ class DspSnapshot : public DspObject {
 };
 
 inline std::string DspSnapshot::toString() {
-  return DspSnapshot::getObjectLabel();
+  return DspSnapshot::get_object_label();
 }
 
-inline const char *DspSnapshot::getObjectLabel() {
+inline const char *DspSnapshot::get_object_label() {
   return "snapshot~";
 }
 

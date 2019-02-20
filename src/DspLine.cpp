@@ -61,7 +61,7 @@ void DspLine::process_message(int inlet_index, pd::Message *message) {
           target = message->get_float(0);
           float timeToTargetMs = message->get_float(1); // no negative time to targets!
           numSamplesToTarget = utils::millisecondsToSamples(
-              (timeToTargetMs < 1.0f) ? 1.0f : timeToTargetMs, graph->getSampleRate());
+              (timeToTargetMs < 1.0f) ? 1.0f : timeToTargetMs, graph->get_sample_rate());
           slope = (target - lastOutputSample) / numSamplesToTarget;
         }
         break;

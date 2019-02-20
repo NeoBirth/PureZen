@@ -34,7 +34,7 @@ class MessageLessThanOrEqualTo : public MessageObject {
     MessageLessThanOrEqualTo(float constant, PdGraph *graph);
     ~MessageLessThanOrEqualTo();
 
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
 
   private:
@@ -45,7 +45,7 @@ class MessageLessThanOrEqualTo : public MessageObject {
     float lastOutput;
 };
 
-inline const char *MessageLessThanOrEqualTo::getObjectLabel() {
+inline const char *MessageLessThanOrEqualTo::get_object_label() {
   return "<=";
 }
 

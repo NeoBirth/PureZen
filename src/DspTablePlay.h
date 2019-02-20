@@ -34,7 +34,7 @@ class DspTablePlay : public DspObject, public TableReceiverInterface {
     DspTablePlay(PdMessage *init_message, PdGraph *graph);
     ~DspTablePlay();
 
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
     object::Type get_object_type();
 
@@ -42,8 +42,8 @@ class DspTablePlay : public DspObject, public TableReceiverInterface {
 
     void sendMessage(int outlet_index, PdMessage *message);
 
-    char *getName();
-    void setTable(MessageTable *table);
+    char *get_name();
+    void set_table(MessageTable *table);
 
   private:
     void process_message(int inlet_index, PdMessage *message);
@@ -67,10 +67,10 @@ class DspTablePlay : public DspObject, public TableReceiverInterface {
 };
 
 inline std::string DspTablePlay::toString() {
-  return DspTablePlay::getObjectLabel();
+  return DspTablePlay::get_object_label();
 }
 
-inline const char *DspTablePlay::getObjectLabel() {
+inline const char *DspTablePlay::get_object_label() {
   return "tabplay~";
 }
 
@@ -78,7 +78,7 @@ inline object::Type DspTablePlay::get_object_type() {
   return DSP_TABLE_PLAY;
 }
 
-inline char *DspTablePlay::getName() {
+inline char *DspTablePlay::get_name() {
   return name;
 }
 

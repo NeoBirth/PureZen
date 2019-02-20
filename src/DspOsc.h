@@ -33,7 +33,7 @@ class DspOsc : public DspObject {
     DspOsc(PdMessage *init_message, PdGraph *graph); // and oscillator of default zero frequency
     ~DspOsc();
   
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
   
     void onInletConnectionUpdate(unsigned int inlet_index);
@@ -55,7 +55,7 @@ class DspOsc : public DspObject {
     #endif
 };
 
-inline const char *DspOsc::getObjectLabel() {
+inline const char *DspOsc::get_object_label() {
   return "osc~";
 }
 

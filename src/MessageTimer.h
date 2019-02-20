@@ -33,7 +33,7 @@ class MessageTimer : public MessageObject {
     MessageTimer(PdMessage *init_message, PdGraph *graph);
     ~MessageTimer();
   
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
   
   private:
@@ -42,12 +42,12 @@ class MessageTimer : public MessageObject {
     double timestampStart;
 };
 
-inline const char *MessageTimer::getObjectLabel() {
+inline const char *MessageTimer::get_object_label() {
   return "timer";
 }
 
 inline std::string MessageTimer::toString() {
-  return MessageTimer::getObjectLabel();
+  return MessageTimer::get_object_label();
 }
 
 #endif // _MESSAGE_TIMER_H_

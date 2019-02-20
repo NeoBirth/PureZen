@@ -33,7 +33,7 @@ class MessageSelect : public MessageObject {
     MessageSelect(PdMessage *init_message, PdGraph *graph);
     ~MessageSelect();
   
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
     
   private:
@@ -42,12 +42,12 @@ class MessageSelect : public MessageObject {
     PdMessage *selectorMessage;
 };
 
-inline const char *MessageSelect::getObjectLabel() {
+inline const char *MessageSelect::get_object_label() {
   return "select";
 }
 
 inline std::string MessageSelect::toString() {
-  return MessageSelect::getObjectLabel();
+  return MessageSelect::get_object_label();
 }
 
 #endif // _MESSAGE_SELECT_H_

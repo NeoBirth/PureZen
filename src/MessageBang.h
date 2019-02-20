@@ -33,7 +33,7 @@ class MessageBang : public MessageObject {
     MessageBang(PdGraph *graph);
     ~MessageBang();
 
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
 
   private:
@@ -41,10 +41,10 @@ class MessageBang : public MessageObject {
 };
 
 inline std::string MessageBang::toString() {
-  return MessageBang::getObjectLabel();
+  return MessageBang::get_object_label();
 }
 
-inline const char *MessageBang::getObjectLabel() {
+inline const char *MessageBang::get_object_label() {
   return "bang";
 }
 

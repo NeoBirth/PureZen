@@ -33,7 +33,7 @@ message::Object *DspOsc::new_object(pd::Message *init_message, PdGraph *graph) {
 
 DspOsc::DspOsc(pd::Message *init_message, PdGraph *graph) : DspObject(2, 2, 0, 1, graph) {
   frequency = init_message->is_float(0) ? init_message->get_float(0) : 0.0f;
-  sampleStep = frequency * 65536.0f / graph->getSampleRate();
+  sampleStep = frequency * 65536.0f / graph->get_sample_rate();
   #if __SSE3__
   short step = (short) roundf(sampleStep);
   inc = _mm_set_epi16(8*step, 8*step, 8*step, 8*step, 8*step, 8*step, 8*step, 8*step);
@@ -49,8 +49,8 @@ DspOsc::DspOsc(pd::Message *init_message, PdGraph *graph) : DspObject(2, 2, 0, 1
     }
   }
   
-  processFunction = &processScalar;
-  processFunctionNoMessage = &processScalar;
+  process_function = &processScalar;
+  process_functionNoMessage = &processScalar;
 }
 
 DspOsc::~DspOsc() {
@@ -65,8 +65,8 @@ void DspOsc::onInletConnectionUpdate(unsigned int inlet_index) {
 }
 
 string DspOsc::toString() {
-  char str[snprintf(NULL, 0, "%s %g", getObjectLabel(), frequency)+1];
-  snprintf(str, sizeof(str), "%s %g", getObjectLabel(), frequency);
+  char str[snprintf(NULL, 0, "%s %g", get_object_label(), frequency)+1];
+  snprintf(str, sizeof(str), "%s %g", get_object_label(), frequency);
   return string(str);
 }
 
@@ -75,7 +75,7 @@ void DspOsc::process_message(int inlet_index, pd::Message *message) {
     case 0: { // update the frequency
       if (message->is_float(0)) {
         frequency = fabsf(message->get_float(0));
-        sampleStep = frequency * 65536.0f / graph->getSampleRate();
+        sampleStep = frequency * 65536.0f / graph->get_sample_rate();
         
         #if __SSE3__
         short step = (short) roundf(sampleStep);

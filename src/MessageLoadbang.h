@@ -33,16 +33,16 @@ class MessageLoadbang : public MessageObject {
     MessageLoadbang(PdGraph *graph);
     ~MessageLoadbang();
   
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
 };
 
-inline const char *MessageLoadbang::getObjectLabel() {
+inline const char *MessageLoadbang::get_object_label() {
   return "loadbang";
 }
 
 inline std::string MessageLoadbang::toString() {
-  return MessageLoadbang::getObjectLabel();
+  return MessageLoadbang::get_object_label();
 }
 
 #endif // _MESSAGE_LOADBANG_H_

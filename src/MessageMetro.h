@@ -35,7 +35,7 @@ class MessageMetro : public MessageObject {
     MessageMetro(PdMessage *init_message, PdGraph *graph);
     ~MessageMetro();
   
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
   
     void sendMessage(int outlet_index, PdMessage *message);
@@ -53,7 +53,7 @@ class MessageMetro : public MessageObject {
     double intervalInMs;
 };
 
-inline const char *MessageMetro::getObjectLabel() {
+inline const char *MessageMetro::get_object_label() {
   return "metro";
 }
 

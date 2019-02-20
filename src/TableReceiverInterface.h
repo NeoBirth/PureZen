@@ -34,9 +34,9 @@ class TableReceiverInterface {
   public:
     virtual ~TableReceiverInterface() { /* nothing to do */ }
 
-    virtual char *getName() = 0;
+    virtual char *get_name() = 0;
   
-    virtual void setTable(MessageTable *table) = 0;
+    virtual void set_table(MessageTable *table) = 0;
 };
 
 #endif // _TABLE_RECEIVER_INTERFACE_H_

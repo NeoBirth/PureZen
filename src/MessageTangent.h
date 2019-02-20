@@ -33,19 +33,19 @@ class MessageTangent : public MessageObject {
     MessageTangent(PdMessage *init_message, PdGraph *graph);
     ~MessageTangent();
 
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
 
   private:
     void process_message(int inlet_index, PdMessage *message);
 };
 
-inline const char *MessageTangent::getObjectLabel() {
+inline const char *MessageTangent::get_object_label() {
   return "tan";
 }
 
 inline std::string MessageTangent::toString() {
-  return MessageTangent::getObjectLabel();
+  return MessageTangent::get_object_label();
 }
 
 #endif // _MESSAGE_TANGENT_H_

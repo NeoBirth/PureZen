@@ -33,7 +33,7 @@ class DspPrint : public DspObject {
     DspPrint(PdMessage *init_message, PdGraph *graph);
     ~DspPrint();
 
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
     
   private:
@@ -43,12 +43,12 @@ class DspPrint : public DspObject {
     char *name;
 };
 
-inline const char *DspPrint::getObjectLabel() {
+inline const char *DspPrint::get_object_label() {
   return "print~";
 }
 
 inline std::string DspPrint::toString() {
-  return std::string(DspPrint::getObjectLabel()) + " " + name;
+  return std::string(DspPrint::get_object_label()) + " " + name;
 }
 
 #endif // _DSP_PRINT_H_

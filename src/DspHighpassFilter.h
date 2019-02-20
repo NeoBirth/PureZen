@@ -36,7 +36,7 @@ class DspHighpassFilter : public DspFilter {
     DspHighpassFilter(PdMessage *init_message, PdGraph *graph);
     ~DspHighpassFilter();
   
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
   
   private:
@@ -45,10 +45,10 @@ class DspHighpassFilter : public DspFilter {
 };
 
 inline std::string DspHighpassFilter::toString() {
-  return DspHighpassFilter::getObjectLabel();
+  return DspHighpassFilter::get_object_label();
 }
 
-inline const char *DspHighpassFilter::getObjectLabel() {
+inline const char *DspHighpassFilter::get_object_label() {
   return "hip~";
 }
 

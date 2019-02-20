@@ -61,7 +61,7 @@ class DspObject : public MessageObject {
 
     virtual ~DspObject();
 
-    virtual void receiveMessage(int inlet_index, PdMessage *message);
+    virtual void receive_message(int inlet_index, PdMessage *message);
 
     /* Override MessageObject::shouldDistributeMessageToInlets() */
     virtual bool shouldDistributeMessageToInlets() { return false; }
@@ -73,10 +73,10 @@ class DspObject : public MessageObject {
     virtual connection::Type get_connection_type(int outlet_index);
 
     /** Get and set buffers at inlets and outlets. */
-    virtual void setDspBufferAtInlet(float *buffer, unsigned int inlet_index);
+    virtual void set_dsp_buffer_at_inlet(float *buffer, unsigned int inlet_index);
     virtual void setDspBufferAtOutlet(float *buffer, unsigned int outlet_index);
-    virtual float *getDspBufferAtInlet(int inlet_index);
-    virtual float *getDspBufferAtOutlet(int outlet_index);
+    virtual float *get_dsp_buffer_at_inlet(int inlet_index);
+    virtual float *get_dsp_buffer_at_outlet(int outlet_index);
 
 
     /** Return true if a buffer from the Buffer Pool should set set at the given outlet. False otherwise. */
@@ -120,7 +120,7 @@ class DspObject : public MessageObject {
     /** Returns only outgoing dsp connections from the given outlet. */
     virtual list<ObjectConnection> getOutgoingDspConnections(unsigned int outlet_index);
 
-    static const char *getObjectLabel() { return "obj~"; }
+    static const char *get_object_label() { return "obj~"; }
 
   protected:
     static void processFunctionDefaultNoMessage(DspObject *dspObject, int fromIndex, int toIndex);

@@ -33,7 +33,7 @@ class MessageArcTangent : public MessageObject {
     MessageArcTangent(PdMessage *init_message, PdGraph *graph);
     ~MessageArcTangent();
 
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
 
   private:
@@ -41,10 +41,10 @@ class MessageArcTangent : public MessageObject {
 };
 
 inline std::string MessageArcTangent::toString() {
-  return MessageArcTangent::getObjectLabel();
+  return MessageArcTangent::get_object_label();
 }
 
-inline const char *MessageArcTangent::getObjectLabel() {
+inline const char *MessageArcTangent::get_object_label() {
   return "atan";
 }
 

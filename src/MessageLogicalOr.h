@@ -33,7 +33,7 @@ class MessageLogicalOr : public MessageObject {
     MessageLogicalOr(PdMessage *init_message, PdGraph *graph);
     ~MessageLogicalOr();
     
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
     
   private:
@@ -43,12 +43,12 @@ class MessageLogicalOr : public MessageObject {
     float right;
 };
 
-inline const char *MessageLogicalOr::getObjectLabel() {
+inline const char *MessageLogicalOr::get_object_label() {
   return "||";
 }
 
 inline std::string MessageLogicalOr::toString() {
-  return MessageLogicalOr::getObjectLabel();
+  return MessageLogicalOr::get_object_label();
 }
 
 #endif // _MESSAGE_LOGICAL_OR_H_

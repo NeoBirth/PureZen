@@ -34,7 +34,7 @@ class MessageCputime : public MessageObject {
     MessageCputime(PdMessage *init_message, PdGraph *graph);
     ~MessageCputime();
     
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
     
   private:
@@ -43,12 +43,12 @@ class MessageCputime : public MessageObject {
     timeval start;
 };
 
-inline const char *MessageCputime::getObjectLabel() {
+inline const char *MessageCputime::get_object_label() {
   return "cputime";
 }
 
 inline std::string MessageCputime::toString() {
-  return MessageCputime::getObjectLabel();
+  return MessageCputime::get_object_label();
 }
 
 #endif // _MESSAGE_CPUTIME_H_

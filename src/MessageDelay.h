@@ -39,7 +39,7 @@ class MessageDelay : public MessageObject {
     MessageDelay(PdMessage *init_message, PdGraph *graph);
     ~MessageDelay();
   
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
   
     void sendMessage(int outlet_index, PdMessage *message);
@@ -53,12 +53,12 @@ class MessageDelay : public MessageObject {
     PdMessage *scheduledMessage;
 };
 
-inline const char *MessageDelay::getObjectLabel() {
+inline const char *MessageDelay::get_object_label() {
   return "delay";
 }
 
 inline std::string MessageDelay::toString() {
-  return MessageDelay::getObjectLabel();
+  return MessageDelay::get_object_label();
 }
 
 #endif // _MESSAGE_DELAY_H_

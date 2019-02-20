@@ -33,7 +33,7 @@ class MessageToggle : public MessageObject {
     MessageToggle(PdMessage *initString, PdGraph *graph);
     ~MessageToggle();
   
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     
   private:
     void process_message(int inlet_index, PdMessage *message);

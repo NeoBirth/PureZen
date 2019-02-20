@@ -36,7 +36,7 @@ class DspBandpassFilter : public DspFilter {
     DspBandpassFilter(PdMessage *init_message, PdGraph *graph);
     ~DspBandpassFilter();
   
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
     
   private:
@@ -48,10 +48,10 @@ class DspBandpassFilter : public DspFilter {
 };
 
 inline std::string DspBandpassFilter::toString() {
-  return DspBandpassFilter::getObjectLabel();
+  return DspBandpassFilter::get_object_label();
 }
 
-inline const char *DspBandpassFilter::getObjectLabel() {
+inline const char *DspBandpassFilter::get_object_label() {
   return "bp~";
 }
 

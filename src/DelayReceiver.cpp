@@ -32,10 +32,10 @@ DelayReceiver::~DelayReceiver() {
   free(name);
 }
 
-const char *DelayReceiver::getName() {
+const char *DelayReceiver::get_name() {
   return name;
 }
 
-void DelayReceiver::setDelayline(DspDelayWrite *delayline) {
+void DelayReceiver::set_delay_line(DspDelayWrite *delayline) {
   this->delayline = delayline;
 }

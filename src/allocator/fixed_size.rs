@@ -29,7 +29,7 @@
 //! TODO(tarcieri): switch to generational indexes? See above link.
 
 use super::{Allocated, Allocator};
-use core::ops;
+use core::{ops, slice};
 use generic_array::{ArrayLength, GenericArray};
 
 /// Allocator with a fixed-size buffer for use in `no_std` environments
@@ -53,6 +53,11 @@ where
             label,
             buffer: GenericArray::default(),
         }
+    }
+
+    /// Iterate over the contents of this allocator mutably
+    pub fn iter_mut(&mut self) -> IterMut<T> {
+        IterMut(self.buffer.iter_mut())
     }
 }
 
@@ -146,5 +151,26 @@ where
     fn index_mut(&mut self, index: T::Id) -> &mut T {
         // TODO: better error handling?
         self.buffer.index_mut(index.into()).as_mut().unwrap()
+    }
+}
+
+/// Mutable allocator iterator
+#[derive(Debug)]
+pub struct IterMut<'a, T: Allocated>(slice::IterMut<'a, Option<T>>);
+
+impl<'a, T> Iterator for IterMut<'a, T>
+where
+    T: Allocated,
+{
+    type Item = &'a mut T;
+
+    fn next(&mut self) -> Option<&'a mut T> {
+        loop {
+            match self.0.next() {
+                Some(Some(value)) => return Some(value),
+                Some(None) => (),
+                None => return None,
+            }
+        }
     }
 }

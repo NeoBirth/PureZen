@@ -31,13 +31,13 @@ message::Object *DspThrow::new_object(pd::Message *init_message, PdGraph *graph)
 DspThrow::DspThrow(pd::Message *init_message, PdGraph *graph) : DspObject(0, 1, 0, 0, graph) {
   if (init_message->is_symbol(0)) {
     name = utils::copy_string(init_message->get_symbol(0));
-    buffer = ALLOC_ALIGNED_BUFFER(graph->getBlockSize() * sizeof(float));
+    buffer = ALLOC_ALIGNED_BUFFER(graph->get_block_size() * sizeof(float));
   } else {
     name = NULL;
     buffer = NULL;
-    graph->printErr("throw~ may not be initialised without a name. \"set\" message not supported.");
+    graph->print_err("throw~ may not be initialised without a name. \"set\" message not supported.");
   }
-  processFunction = &processSignal;
+  process_function = &processSignal;
 }
 
 DspThrow::~DspThrow() {
@@ -47,7 +47,7 @@ DspThrow::~DspThrow() {
 
 void DspThrow::process_message(int inlet_index, pd::Message *message) {
   if (inlet_index == 0 && message->is_symbol_str(0, "set") && message->is_symbol(1)) {
-    graph->printErr("throw~ does not support the \"set\" message.");
+    graph->print_err("throw~ does not support the \"set\" message.");
   }
 }
 
@@ -57,5 +57,5 @@ void DspThrow::processSignal(DspObject *dspObject, int fromIndex, int toIndex) {
 }
 
 bool DspThrow::is_leaf_node() {
-  return graph->getContext()->getDspCatch(name) == NULL;
+  return graph->getContext()->get_dsp_catch(name) == NULL;
 }

@@ -33,19 +33,19 @@ class MessageSqrt : public MessageObject {
     MessageSqrt(PdMessage *init_message, PdGraph *graph);
     ~MessageSqrt();
 
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
 
   private:
     void process_message(int inlet_index, PdMessage *message);
 };
 
-inline const char *MessageSqrt::getObjectLabel() {
+inline const char *MessageSqrt::get_object_label() {
   return "sqrt";
 }
 
 inline std::string MessageSqrt::toString() {
-  return MessageSqrt::getObjectLabel();
+  return MessageSqrt::get_object_label();
 }
 
 #endif // _MESSAGE_SQRT_H_

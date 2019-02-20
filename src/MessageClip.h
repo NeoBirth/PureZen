@@ -33,7 +33,7 @@ class MessageClip : public MessageObject {
     MessageClip(PdMessage *init_message, PdGraph *graph);
     ~MessageClip();
 
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
 
   private:
@@ -44,12 +44,12 @@ class MessageClip : public MessageObject {
     float upperBound;
 };
 
-inline const char *MessageClip::getObjectLabel() {
+inline const char *MessageClip::get_object_label() {
   return "clip";
 }
 
 inline std::string MessageClip::toString() {
-  return MessageClip::getObjectLabel();
+  return MessageClip::get_object_label();
 }
 
 #endif // _MESSAGE_CLIP_H_

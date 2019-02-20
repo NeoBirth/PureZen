@@ -28,8 +28,8 @@ pub use self::{
 };
 
 use crate::{
-    allocator::Allocator,
     message::{object, Object},
+    pd,
 };
 
 /// Types of connections between objects
@@ -77,19 +77,13 @@ impl Connection {
     }
 
     /// Get a reference to the connected object from the given allocator
-    pub fn object<'a, A>(&self, allocator: &'a A) -> &'a Object
-    where
-        A: Allocator<Object>,
-    {
-        self.object_id().get(allocator)
+    pub fn object<'ctx>(&self, context: &'ctx mut pd::Context) -> &'ctx Object {
+        context.get_object_mut(self.object_id()).unwrap()
     }
 
     /// Get a mutable reference to the connected object from the given allocator
-    pub fn object_mut<'a, A>(&self, allocator: &'a mut A) -> &'a mut Object
-    where
-        A: Allocator<Object>,
-    {
-        self.object_id().get_mut(allocator)
+    pub fn object_mut<'ctx>(&self, context: &'ctx mut pd::Context) -> &'ctx mut Object {
+        context.get_object_mut(self.object_id()).unwrap()
     }
 
     /// Get the connection index

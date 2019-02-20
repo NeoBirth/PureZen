@@ -33,7 +33,7 @@ class MessageModulus : public MessageObject {
     MessageModulus(PdMessage *init_message, PdGraph *graph);
     ~MessageModulus();
 
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
 
   private:
@@ -43,7 +43,7 @@ class MessageModulus : public MessageObject {
     float lastOutput;
 };
 
-inline const char *MessageModulus::getObjectLabel() {
+inline const char *MessageModulus::get_object_label() {
   return "mod";
 }
 

@@ -40,9 +40,9 @@ class DspThrow : public DspObject {
     
     float *getBuffer() { return buffer; }
   
-    const char *getName() { return name; }
-    static const char *getObjectLabel() { return "throw~"; }
-    string toString() { return string(getObjectLabel()) + " " + string(name); }
+    const char *get_name() { return name; }
+    static const char *get_object_label() { return "throw~"; }
+    string toString() { return string(get_object_label()) + " " + string(name); }
     object::Type get_object_type() { return DSP_THROW; }
 
     void process_message(int inlet_index, PdMessage *message);

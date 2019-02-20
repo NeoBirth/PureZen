@@ -36,7 +36,7 @@ class MessageTrigger : public MessageObject {
     MessageTrigger(PdMessage *init_message, PdGraph *graph);
     ~MessageTrigger();
   
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
 
   private:
@@ -49,7 +49,7 @@ class MessageTrigger : public MessageObject {
     PdMessage *castMessage;
 };
 
-inline const char *MessageTrigger::getObjectLabel() {
+inline const char *MessageTrigger::get_object_label() {
   return "trigger";
 }
 

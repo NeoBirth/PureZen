@@ -35,7 +35,7 @@ class MessageUntil : public MessageObject {
     MessageUntil(PdMessage *init_message, PdGraph *graph);
     ~MessageUntil();
     
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
     
   private:
@@ -44,12 +44,12 @@ class MessageUntil : public MessageObject {
     unsigned int maxIterations;
 };
 
-inline const char *MessageUntil::getObjectLabel() {
+inline const char *MessageUntil::get_object_label() {
   return "until";
 }
 
 inline std::string MessageUntil::toString() {
-  return MessageUntil::getObjectLabel();
+  return MessageUntil::get_object_label();
 }
 
 #endif // _MESSAGE_UNTIL_H_

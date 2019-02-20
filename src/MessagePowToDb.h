@@ -33,19 +33,19 @@ class MessagePowToDb : public MessageObject {
     MessagePowToDb(PdMessage *init_message, PdGraph *graph);
     ~MessagePowToDb();
 
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
 
   private:
     void process_message(int inlet_index, PdMessage *message);
 };
 
-inline const char *MessagePowToDb::getObjectLabel() {
+inline const char *MessagePowToDb::get_object_label() {
   return "powtodb";
 }
 
 inline std::string MessagePowToDb::toString() {
-  return MessagePowToDb::getObjectLabel();
+  return MessagePowToDb::get_object_label();
 }
 
 #endif // _MESSAGE_POWTODB_H_

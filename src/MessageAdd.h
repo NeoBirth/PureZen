@@ -33,7 +33,7 @@ class MessageAdd : public MessageObject {
     MessageAdd(PdMessage *init_message, PdGraph *graph);
     ~MessageAdd();
 
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
 
   private:
@@ -43,7 +43,7 @@ class MessageAdd : public MessageObject {
     float constant;
 };
 
-inline const char *MessageAdd::getObjectLabel() {
+inline const char *MessageAdd::get_object_label() {
   return "+";
 }
 

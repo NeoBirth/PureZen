@@ -20,10 +20,10 @@
 //! Connection tables (i.e. tables of connection inlets or outlets)
 
 use super::list::List;
-use crate::{allocator::Allocator, message::Object, pd};
+use crate::pd;
 use core::{ops, slice};
-use heapless::{self, ArrayLength};
-use typenum::{Unsigned, U8};
+use heapless::{self, consts::*, ArrayLength};
+use typenum::marker_traits::Unsigned;
 
 /// Size of the connection table
 // TODO(tarcieri): this is pulled out of thin air. Tweak it
@@ -75,16 +75,15 @@ impl Table {
     }
 
     /// Sends the given message to all connected objects at the given outlet index.
-    pub fn send_message<'pd, A, N>(
+    pub fn send_message<'pd, N>(
         &self,
-        allocator: &mut A,
+        context: &mut pd::Context<'pd>,
         outlet_index: Index,
         message: &pd::Message<'pd, N>,
     ) where
-        A: Allocator<Object>,
         N: ArrayLength<pd::message::Atom<'pd>>,
     {
-        self[outlet_index].iter().send_message(allocator, message)
+        self[outlet_index].iter().send_message(context, message)
     }
 }
 

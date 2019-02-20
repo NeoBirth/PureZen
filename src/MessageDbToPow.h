@@ -33,19 +33,19 @@ class MessageDbToPow : public MessageObject {
     MessageDbToPow(PdGraph *graph);
     ~MessageDbToPow();
 
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
 
   private:
     void process_message(int inlet_index, PdMessage *message);
 };
 
-inline const char *MessageDbToPow::getObjectLabel() {
+inline const char *MessageDbToPow::get_object_label() {
   return "dbtopow";
 }
 
 inline std::string MessageDbToPow::toString() {
-  return MessageDbToPow::getObjectLabel();
+  return MessageDbToPow::get_object_label();
 }
 
 #endif // _MESSAGE_DBTOPOW_H_

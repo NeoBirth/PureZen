@@ -28,7 +28,7 @@ message::Object *DspSqrt::new_object(pd::Message *init_message, PdGraph *graph) 
 }
 
 DspSqrt::DspSqrt(pd::Message *init_message, PdGraph *graph) : DspObject(0, 1, 0, 1, graph) {
-  processFunction = &processSignal;
+  process_function = &processSignal;
 }
 
 DspSqrt::~DspSqrt() {

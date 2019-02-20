@@ -46,8 +46,7 @@ use core::{
     fmt::{self, Display, Write},
     ops, str,
 };
-use heapless::{self, ArrayLength};
-use typenum::U1;
+use heapless::{self, consts::*, ArrayLength};
 
 /// Pure Data messages
 ///
@@ -227,8 +226,8 @@ where
     }
 
     /// Set the global timestamp of this message (in milliseconds)
-    pub fn set_timestamp(&mut self, timestamp: f64) {
-        self.timestamp = timestamp.into();
+    pub fn set_timestamp(&mut self, timestamp: Timestamp) {
+        self.timestamp = timestamp;
     }
 
     /// Get the global timestamp of this message (in milliseconds)
@@ -432,12 +431,26 @@ where
     }
 }
 
+impl<'pd, N> PartialEq for Message<'pd, N>
+where
+    N: ArrayLength<Atom<'pd>>,
+{
+    fn eq(&self, other: &Self) -> bool {
+        self.timestamp == other.timestamp
+            && self
+                .atoms
+                .iter()
+                .zip(other.atoms.iter())
+                .all(|(a1, a2)| a1.eq(a2))
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::{Atom, Message};
     use crate::{error::ErrorKind, message::Timestamp};
+    use heapless::consts::*;
     use std::string::ToString;
-    use typenum::{U1, U4};
 
     /// Example timestamp value
     const TIMESTAMP: Timestamp = Timestamp(0.0);

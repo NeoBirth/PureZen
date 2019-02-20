@@ -28,7 +28,7 @@ message::Object *DspImplicitAdd::new_object(pd::Message *init_message, PdGraph *
 }
 
 DspImplicitAdd::DspImplicitAdd(pd::Message *init_message, PdGraph *graph) : DspObject(0, 2, 0, 1, graph) {
-  processFunction = &processSignal;
+  process_function = &processSignal;
 }
 
 DspImplicitAdd::~DspImplicitAdd() {

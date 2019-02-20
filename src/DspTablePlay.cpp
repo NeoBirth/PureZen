@@ -40,7 +40,7 @@ DspTablePlay::~DspTablePlay() {
   free(name);
 }
 
-void DspTablePlay::setTable(MessageTable *aTable) {
+void DspTablePlay::set_table(MessageTable *aTable) {
   table = aTable;
 }
 
@@ -64,7 +64,7 @@ void DspTablePlay::process_message(int inlet_index, pd::Message *message) {
     }
     case SYMBOL: {
       if (message->is_symbol_str(0, "set") && message->is_symbol(1)) {
-        table = graph->getTable(message->get_symbol(1));
+        table = graph->get_table(message->get_symbol(1));
       }
       break;
     }
@@ -82,7 +82,7 @@ void DspTablePlay::playTable(int startIndex, int duration, double startTime) {
   if (startIndex >= 0 && duration >= -1) {
     if (outgoing_message != NULL) {
       // if the table is currently playing, i.e. there is an outstanding scheduled message, cancel it
-      graph->cancelMessage(this, 1, outgoing_message);
+      graph->cancel_message(this, 1, outgoing_message);
       outgoing_message = NULL;
     }
     int bufferLength = 0;
@@ -94,7 +94,7 @@ void DspTablePlay::playTable(int startIndex, int duration, double startTime) {
       if (endTableIndex > bufferLength) {
         endTableIndex = bufferLength;
       }
-      double durationMs = 1000.0 * ((double) (endTableIndex-startIndex)) / (double) graph->getSampleRate();
+      double durationMs = 1000.0 * ((double) (endTableIndex-startIndex)) / (double) graph->get_sample_rate();
       outgoing_message = PD_MESSAGE_ON_STACK(1);
       outgoing_message->from_timestamp_and_bang(startTime + durationMs);
       outgoing_message = graph->schedule_message(this, 1, outgoing_message);

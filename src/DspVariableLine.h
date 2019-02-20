@@ -33,7 +33,7 @@ class DspVariableLine : public DspObject {
     DspVariableLine(PdMessage *init_message, PdGraph *graph);
     ~DspVariableLine();
     
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
   
     // this implementation assumes that all messages arrive only on the left-most inlet
@@ -64,10 +64,10 @@ class DspVariableLine : public DspObject {
 };
 
 inline std::string DspVariableLine::toString() {
-  return DspVariableLine::getObjectLabel();
+  return DspVariableLine::get_object_label();
 }
 
-inline const char *DspVariableLine::getObjectLabel() {
+inline const char *DspVariableLine::get_object_label() {
   return "vline~";
 }
 

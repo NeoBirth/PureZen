@@ -32,7 +32,7 @@ class MessageListPrepend : public MessageObject {
     MessageListPrepend(PdMessage *init_message, PdGraph *graph);
     ~MessageListPrepend();
     
-    static const char *getObjectLabel();
+    static const char *get_object_label();
     std::string toString();
     
   private:
@@ -41,12 +41,12 @@ class MessageListPrepend : public MessageObject {
     PdMessage *prependMessage;
 };
 
-inline const char *MessageListPrepend::getObjectLabel() {
+inline const char *MessageListPrepend::get_object_label() {
   return "list prepend";
 }
 
 inline std::string MessageListPrepend::toString() {
-  return MessageListPrepend::getObjectLabel();
+  return MessageListPrepend::get_object_label();
 }
 
 #endif // _MESSAGE_LIST_PREPEND_H_
